@@ -3,9 +3,8 @@
 
     export type WjDvRow<TRow extends Record<string, any> = Record<string, any>> = TRow & {
         id: string | number;
-        selected?: boolean;
         expanded?: boolean;
-    }
+    };
 
     export type WjDvColumn<TCol extends Record<string, any> = Record<string, any>, TRow extends Record<string, any> = Record<string, any>> = TCol & {
         key: string;
@@ -17,7 +16,7 @@
         alignment?: ColAlignment;
         noTextWrap?: boolean;
         get?: (row: TRow) => any;
-    }
+    };
 </script>
 
 <script lang="ts" generics="TCol extends Record<string, any> = Record<string, any>, TRow extends Record<string, any> = Record<string, any>">
