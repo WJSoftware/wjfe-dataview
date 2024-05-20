@@ -37,15 +37,49 @@
         class: cssClass,
         ...restProps
     }: {
+        /**
+         * Defines the columns the data view component will create.
+         */
         columns: WjDvColumn<TCol, TRow>[];
+        /**
+         * The data that is shown by the data view component.
+         */
         data: WjDvRow<TRow>[];
+        /**
+         * Function that retrieves a column's value using the row and provided key for columns that don't provide one.
+         * 
+         * **HINT**:  Its signature matches that of `dot-prop`'s `getProperty()` function.
+         * @param row Data object for the row being rendered (hence its name).
+         * @param key Key of the column being rendered.
+         */
         get?: (row: TRow, key: string) => any;
+        /**
+         * The width for colums that don't specify its own width, in `em`'s.
+         */
         defaultWidth?: number;
+        /**
+         * Turns the row-highlighting-on-hover feature on and off.
+         */
         rowHighlight?: boolean;
+        /**
+         * Turns the striping of rows on and off.
+         */
         striped?: boolean;
+        /**
+         * Turns the divider between pinned and unpinned columns on and off.
+         */
         pinnedDivider?: boolean;
-        headerCell?: Snippet<[WjDvColumn<TCol, TRow>]>
-        dataCell?: Snippet<[WjDvColumn<TCol,TRow>, WjDvRow<TRow>]>
+        /**
+         * Snippet used to render the contents of header cells.
+         */
+        headerCell?: Snippet<[WjDvColumn<TCol, TRow>]>;
+        /**
+         * Snippet used to render the contents of data cells.
+         */
+        dataCell?: Snippet<[WjDvColumn<TCol,TRow>, WjDvRow<TRow>]>;
+        /**
+         * Additional CSS classes that are applied to the data view's viewport (the top-level element).
+         */
         class?: string;
     } = $props();
 
