@@ -34,7 +34,7 @@ The only two required properties are `columns` and `data`.  The former defines t
 latter provides the data that shows in each column.  By default, the `key` property of each column is treated as the 
 key to retrieve data from the data row, but this can be overridden by providing `get` functions.
 
-> **[Demo Website](https://wjdataview.vercel.app)**
+> **[Demo Website](https://wj-dataview.vercel.app)**
 
 ## Props
 
