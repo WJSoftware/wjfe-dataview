@@ -1,6 +1,6 @@
 # @wj/dataview
 
-> Svelte v5 component suitable for examination of tabular data.
+> Svelte v5 table component suitable for examination of extensive tabular data.
 
 ## Overview
 
