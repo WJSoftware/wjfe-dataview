@@ -116,6 +116,21 @@ as smoothly.  Create responsive CSS variables to perfect the theme.
 > **IMPORTANT**:  All background colors are composed using the provided color and an opacity value.  This is why the 
 > color must be specified in RGB format, or with a CSS variable that defines it in RGB format.
 
+Anyway, use the `WjDataViewTheme` component as a wrapper for any `WjDataView` components that you may have.  This 
+wrapper doesn't have to be the immediate parent, so put it wherever is best according to your needs.
+
+```html
+<script lang="ts">
+    import { bootstrapTheme } from '../dataViewThemes.js';
+</script>
+
+<WjDataViewTheme theme={bootstrapTheme}>
+    <WjDataView ...>
+        <!-- Snippets go here -->
+    </WjDataView>
+</WjDataViewTheme>
+```
+
 The complete list of CSS variables that can be set for the data view component are:
 
 | CSS Variable | Light Default | Dark Default | Description |
