@@ -21,3 +21,5 @@ export function combineClasses(...classes: (string | Record<string, boolean> | n
     }
     return result.join(' ');
 }
+
+export function noop() { };
