@@ -1,4 +1,4 @@
-# @wj/dataview
+# @wjfe/dataview
 
 > Svelte v5 table component suitable for examination of extensive tabular data.
 
@@ -7,6 +7,8 @@
 The data view component renders a table with functionality suitable for close examination of the presented data.  It 
 provides conveniences like pinnable columns and row highlighting on hover, useful to users when following data with 
 their eyes.
+
+> **[Demo Website](https://wj-dataview.vercel.app)**
 
 The component tries to be as unopinionated as possible in terms of styling and tries to provide as little styling as 
 possible.  Certain features, however, impose some appearance requirements.  For example, pinning columns in the grid 
@@ -21,26 +23,53 @@ Tailwind CSS, Bulma, etc.), you may style it in accordance to what is shown in t
 Install the package:
 
 ```powershell
-npm i @wj/dataview
+npm i @wjfe/dataview
 ```
 
 Now import the data view component and use it:
 
 ```typescript
-import { WjDataView } from '@wj/dataview';
+import { WjDataView } from '@wjfe/dataview';
 ```
 
 The only two required properties are `columns` and `data`.  The former defines the columns in the data view; the 
 latter provides the data that shows in each column.  By default, the `key` property of each column is treated as the 
 key to retrieve data from the data row, but this can be overridden by providing `get` functions.
 
-> **[Demo Website](https://wj-dataview.vercel.app)**
+Each column must have the `key` and the `text` properties.  Any other property is optional.  `key` is a unique string, 
+and by default, it is assumed to be the name of a property in the data objects given to the grid via the `data` 
+property.
 
-## Props
+```html
+<script lang="ts">
+    import { WjDataView } from '@wjfe/dataview';
+    import { type MyDataModel } from 'path/to/my-model-types.js';
 
-## Snippets (formerly slots)
+    type MyDataModelGridRow = WjDvRow<MyDataModel>;
+    type MyColumn = WjDvColumn<Record<string, any>, MyDataModelGridRow>;
+    const columns = $state<MyColumn[]>([
+        {
+            key: 'id',
+            text: 'ID'
+        },
+        {
+            key: 'tagName',
+            text: 'Tag'
+        }
+    ]);
+    // Obtain the data somehow.  This could be part of the results of the universal or server load() SvelteKit 
+    // function, or could be obtained in non-SvelteKit projects with a fetch() call.
+    let data: $state<MyDataModel[]> = getDataSomehow();
+</script>
+...
+<WjDataView {columns} {data}>
+    <!-- snippets go here -->
+</WjDataView>
+```
 
-## Events
+This example would render the data view with two columns, whose captions will read `ID` and `Tag`.  The data shown in 
+each column will be extracted from the `MyDataModel.id` and `MyDataModel.tagName` properties of each of the data 
+objects in the `data` array.
 
 ## Theming the Data View
 
@@ -52,8 +81,8 @@ directly defining the CSS variables.
 ### The WjDataViewTheme Component
 
 This component is a mere convenience to setting up themes for data view components.  It works by defining the CSS 
-variables at the end of the section in a `<div>` element with its CSS `display` attribute set to `contets` that wraps 
-the target `WjDataView` component.
+variables in a `<div>` element with its CSS `display` attribute set to `contents` that wraps the target `WjDataView` 
+component.
 
 > **TIP**:  The `WjDataViewTheme` component doesn't have to be the immediate parent of a `WjDataView`.  It can be 
 > placed higher in the hierarchy to, for example, cover more than one `WjDataView` component.
@@ -82,11 +111,13 @@ export type Theme = {
 Since the amount of properties are a lot to set every time, the most effective way to create a theme is to spread the 
 stock theme (light or dark) and then modify what's needed.
 
+> In the future, deep merging instead of spreading will be enabled via the `wj-merge` package.
+
 For example, Bootstrap consumers might want to ensure that the data view always uses the body's background color.  In 
-this case, we could create the following theme in `dataViewThemes.ts`:
+this case, we could create the following theme in a `dataViewThemes.ts`:
 
 ```typescript
-import { stockLight, type Theme } from '@wj/dataview';
+import { stockLight, type Theme } from '@wjfe/dataview';
 
 export const bootstrapTheme: Theme = {
     ...stockLight,
@@ -106,15 +137,16 @@ export const bootstrapTheme: Theme = {
 };
 ```
 
-As seen, one can take advantage of CSS variables to define things.  In Bootstrap that provides light and dark modes, 
-have different definitions for these CSS variables, making the data view's theme immediately responsive to theme 
-selection changes.
+As seen, one can take advantage of CSS variables to define things.  Bootstrap provides light and dark modes, and these 
+variables have different definitions depending on the mode, making the data view's theme immediately responsive to 
+mode selection changes.
 
 This is not perfect, however, because Bootstrap doesn't have `-rgb` variables for every color, so not everything goes 
 as smoothly.  Create responsive CSS variables to perfect the theme.
 
 > **IMPORTANT**:  All background colors are composed using the provided color and an opacity value.  This is why the 
-> color must be specified in RGB format, or with a CSS variable that defines it in RGB format.
+> color must be specified in RGB format, or with a CSS variable that defines it in RGB format.  Formats like `#rrggbb` 
+> simply won't work.
 
 Anyway, use the `WjDataViewTheme` component as a wrapper for any `WjDataView` components that you may have.  This 
 wrapper doesn't have to be the immediate parent, so put it wherever is best according to your needs.
@@ -147,6 +179,42 @@ The complete list of CSS variables that can be set for the data view component a
 | `--wjdv-sticky-divider-width` | `0.1em` | `0.1em` | Width of the border that divides pinned columns from unpinned ones. |
 | `--wjdv-sticky-divider-style` | `solid` | `solid` | Style of the border that divides pinned columns from unpinned ones. |
 | `--wjdv-sticky-divider-color` | `darkgray` | `lightgray` | Color of the border that divides pinned columns from unpinned ones. |
+| `--wjdv-resizer-width` | `0.4em` | `0.4em` | Column resizer's width. |
+| `--wjdv-resizer-bg-color-rgb` | `0, 0, 0` | `255, 255, 255` | Resizer handle's background color. |
+| `--wjdv-resizer-bg-opacity` | `0.05` | `0.05` | Resizer handle's background's opacity. |
+| `--wjdv-resizer-overlay-opacity` | `0.7` | `0.7` | Opacity of the entire resizer overlay. |
+| `--wjdv-resizer-overlay-bg-color` | `lightblue` | `#0578ea` | Background color of the overlay section that represents the original column's size. |
+| `--wjdv-resizer-overlay-border-color` | `blue` | `#13aeff` | Border color of the overlay section that represents the original column's size. |
+| `--wjdv-resizer-deltapos-bg-color` | `lightgreen` | `lightgreen` | Background color of the overlay setion that represents the column's size increase. |
+| `--wjdv-resizer-deltapos-border-color` | `green` | `green` | Border color of the overlay setion that represents the column's size increase. |
+| `--wjdv-resizer-deltaneg-bg-color` | `pink` | `pink` | Background color of the overlay setion that represents the column's size reduction. |
+| `--wjdv-resizer-deltaneg-border-color` | `red` | `red` | Border color of the overlay setion that represents the column's size reduction. |
+
+## Reference
+
+### Props
+
+| Property | Type | Default Value | Description |
+| - | - | - | - |
+| `columns` | `WjDvColumn<TCol, TRow>[]` | (none) | Defines the columns the data view component will create. |
+| `data` | `WjDvRow<TRow>[]` | (none) | The data that is shown by the data view component. |
+| `get` | `(row: TRow, key: string) => any` | (function) | Function that retrieves a column's value using the row and provided key for columns that don't provide one. |
+| `defaultWidth` | `number` | `10` | The width for colums that don't specify its own width, in `em`'s. |
+| `rowHighlight` | `boolean` | `true` | Turns the row-highlighting-on-hover feature on and off. |
+| `striped` | `boolean` | `true` | Turns the striping of rows on and off. |
+| `pinnedDivider` | `boolean` | `true` | Turns the divider between pinned and unpinned columns on and off. |
+| `class` | `string` | `undefined` | Additional CSS classes that are applied to the data view's viewport (the top-level element). |
+
+### Snippets (formerly slots)
+
+| Name | Signature | Description |
+| - | - | - |
+| `headerCell` | `(col: WjDvColumn<TCol, TRow>)` | Renders header cells' content.  The snippet is passed the column definition. |
+| `dataCell` | `(col: WjDvColumn<TCol, TRow>, row: WjDvRow<TRow>])` | Renders data cells' content.  The snippet is passed the column definition and the data object for the row being rendered. |
+
+### Events
+
+None.
 
 ## Roadmap
 
@@ -154,15 +222,16 @@ The complete list of CSS variables that can be set for the data view component a
 - [x] Striped look
 - [x] Row highlighting effect on hover
 - [x] Column alignment
+- [x] Text wrap control
 - [x] Hideable columns
 - [x] Pinnable columns
 - [x] Customizable appearance
 - [x] Theme component
 - [x] headerCell snippet
 - [x] dataCell snippet
+- [x] Resizable columns
 - [ ] headerControl snippet
 - [ ] dataControl snippet
 - [ ] Expansible rows (expansionRow snippet)
-- [ ] Resizable columns
 - [ ] Make cell/row/column padding themeable
 - [ ] dataRow snippet

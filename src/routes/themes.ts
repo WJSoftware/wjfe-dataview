@@ -1,4 +1,4 @@
-import { stockLight, type Theme } from "$lib/stockTheme.js";
+import { stockLight, stockDark, type Theme } from "$lib/stockTheme.js";
 
 export const bootstrapTheme: Theme = {
     ...stockLight,
@@ -14,6 +14,9 @@ export const bootstrapTheme: Theme = {
         ...stockLight.rowHighlight,
         backgroundColor: 'var(--bs-primary-rgb)',
         opacity: 0.2
+    },
+    resizer: {
+        ...stockLight.resizer
     }
 };
 

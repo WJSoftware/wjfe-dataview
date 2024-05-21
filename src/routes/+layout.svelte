@@ -1,5 +1,6 @@
 <script lang="ts">
     import type { Snippet } from "svelte";
+    import ThemeSwitch from "./ThemeSwitch.svelte";
 
     let { children }: {
         children: Snippet
@@ -9,6 +10,7 @@
 <div class="d-flex flex-column doc-container">
     <nav class="navbar bg-primary-subtle px-3">
         <span class="navbar-brand">WjDataView Demo</span>
+        <ThemeSwitch />
     </nav>
     <div class="flex-fill overflow-auto">
         <div class="container overflow-auto h-100">

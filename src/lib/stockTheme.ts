@@ -4,6 +4,11 @@ export type ComponentColor = {
     color?: string;
 }
 
+export type ResizerColor = {
+    backgroundColor?: string;
+    borderColor?: string;
+}
+
 export type Theme = {
     table?: ComponentColor;
     stripes?: ComponentColor;
@@ -12,7 +17,16 @@ export type Theme = {
         width?: string;
         style?: 'dashed' | 'dotted' | 'double' | 'groove' | 'inset' | 'outset' | 'ridge' | 'solid' | 'unset';
         color?: string;
-    }
+    },
+    resizer?: Omit<ComponentColor, 'color'> & {
+        width?: string;
+        overlay?: {
+            opacity?: number;
+            item?: ResizerColor;
+            positiveDelta?: ResizerColor;
+            negativeDelta?: ResizerColor;
+        }
+    };
 }
 
 export const stockLight: Theme = {
@@ -35,6 +49,26 @@ export const stockLight: Theme = {
         width: '0.1em',
         style: 'solid',
         color: 'darkgray'
+    },
+    resizer: {
+        width: '0.4em',
+        backgroundColor: '0, 0, 0',
+        opacity: 0.05,
+        overlay: {
+            opacity: 0.7,
+            item: {
+                backgroundColor: 'lightblue',
+                borderColor: 'blue'
+            },
+            positiveDelta: {
+                backgroundColor: 'lightgreen',
+                borderColor: 'green'
+            },
+            negativeDelta: {
+                backgroundColor: 'pink',
+                borderColor: 'red'
+            }
+        }
     }
 };
 
@@ -58,5 +92,25 @@ export const stockDark: Theme = {
         width: '0.1em',
         style: 'solid',
         color: 'lightgray'
+    },
+    resizer: {
+        width: '0.4em',
+        backgroundColor: '255, 255, 255',
+        opacity: 0.05,
+        overlay: {
+            opacity: 0.7,
+            item: {
+                backgroundColor: '#0578ea',
+                borderColor: '#13aeff'
+            },
+            positiveDelta: {
+                backgroundColor: 'lightgreen',
+                borderColor: 'green'
+            },
+            negativeDelta: {
+                backgroundColor: 'pink',
+                borderColor: 'red'
+            }
+        }
     }
 };

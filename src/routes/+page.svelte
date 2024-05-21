@@ -1,9 +1,9 @@
 <script lang="ts">
+    import { browser } from "$app/environment";
     import { goto } from "$app/navigation";
     import { page } from "$app/stores";
     import WjDataView, { type WjDvColumn, type WjDvRow } from "$lib/WjDataView.svelte";
     import WjDataViewTheme from "$lib/WjDataViewTheme.svelte";
-    import { stockDark, stockLight } from "$lib/stockTheme.js";
     import type { Person } from "../data-models.js";
     import { bootstrapTheme, mineralBlue, mineralGreen } from "./themes.js";
 
@@ -13,8 +13,6 @@
         data: { data: PersonGridRow[]; }
     } = $props();
 
-
-
     type PersonGridRow = WjDvRow<Person>;
 
     const columns = $state<WjDvColumn<Record<string, any>, PersonGridRow>[]>([
@@ -22,12 +20,14 @@
             key: 'id',
             text: 'ID',
             width: 4,
+            resizable: false,
             pinned: true
         },
         {
             key: 'first_name',
             text: 'First Name',
             width: 8,
+            minWidth: 5,
             hidden: false
         },
         {
@@ -98,9 +98,9 @@
                 <div class="col-lg-6 col-md-8">
                     <div class="alert alert-info mb-0 d-flex flex-row flex-nowrap gap-3">
                         <i class="bi bi-lightbulb-fill"></i>
-                        <pre class="mb-0">npm i @wj/dataview
+                        <pre class="mb-0">npm i @wjfe/dataview
 
-import &#123; WjDataView &#125; from '@wj/dataview';
+import &#123; WjDataView &#125; from '@wjfe/dataview';
                         </pre>
                     </div>
                 </div>
@@ -109,6 +109,14 @@ import &#123; WjDataView &#125; from '@wj/dataview';
         </div>
     </div>
     <div class="btn-toolbar py-3 gap-2">
+        <button
+            class="btn btn-sm btn-info"
+            title="Click to show additional information"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#helpCanvas"
+        >
+            <i class="bi bi-info-circle"></i>
+        </button>
         <div class="btn-group btn-sm">
             <input type="checkbox" id="striped" bind:checked={striped} class="btn-check" />
             <label for="striped" class="btn btn-outline-primary">Striped</label>
@@ -116,9 +124,12 @@ import &#123; WjDataView &#125; from '@wj/dataview';
             <label for="rowHighlight" class="btn btn-outline-primary">Row Highlight</label>
         </div>
         <div class="btn-group btn-sm">
-            <div class="input-group-text">
+            <!-- <div class="input-group-text">
                 <span title="Row Count:"><i class="bi bi-person-lines-fill"></i></span>
-            </div>
+            </div> -->
+            <button class="btn" title="Row Count:" disabled>
+                <span title="Row Count:"><i class="bi bi-person-lines-fill"></i></span>
+            </button>
             {#each numRecordsOptions as nro (nro)}
             <input
                 type="radio"
@@ -131,6 +142,51 @@ import &#123; WjDataView &#125; from '@wj/dataview';
                 {nro}
             </label>
             {/each}
+        </div>
+        <div class="input-group">
+            <div class="input-group-text">
+                <span title="Theme:"><i class="bi bi-palette"></i></span>
+            </div>
+            <select class="form-control">
+                <option value="bootstrap">Bootstrap</option>
+            </select>
+        </div>
+    </div>
+    <div class="offcanvas offcanvas-end bg-info bg-glass" id="helpCanvas" data-bs-backdrop="false">
+        <div class="offcanvas-header">
+            <h3 class="offcanvas-title">WjDataView</h3>
+        </div>
+        <div class="offcanvas-body">
+            <p>
+                The data view component shows data in tabular format.
+            </p>
+            <p>
+                The following is the list of features.  Some of these may not be evident if the browser's width is 
+                enough to show all data at once, such as the pinnable columns.  To overcome this, either make the 
+                browser window smaller, or resize some columns until the data goes off view.
+            </p>
+            <h4>List of Features</h4>
+            <ul>
+                <li>Scrollable viewport</li>
+                <li>Striped rows</li>
+                <li>Row highlighting on hover</li>
+                <li>Hideable columns</li>
+                <li>Pinnable columns</li>
+                <li>Resizable columns</li>
+                <li>Customizable header content</li>
+                <li>Customizable data cell content</li>
+                <li>Customizable appearance via CSS variables</li>
+            </ul>
+            <h4>Can it be used to edit data?</h4>
+            <p>
+                The short answer is <strong>Yes!</strong>  The cell contents are rendered by providing a custom 
+                snippet named <span class="code">dataCell</span>.  However, note that <span class="code">WjDataView</span> 
+                will not provide any form of keyboard navigation of any kind.
+            </p>
+            <p>
+                Having said this, use <span class="code">dataCell</span> to provide cell content with controls such as 
+                textboxes, checkboxes, radio buttons, selects, etc.
+            </p>
         </div>
     </div>
     <div
@@ -145,10 +201,12 @@ import &#123; WjDataView &#125; from '@wj/dataview';
                 class="position-absolute top-0 bottom-0"
             >
                 {#snippet headerCell(col)}
-                    <div class="d-flex flex-row px-2">
+                    <div class="d-flex flex-row ps-2">
                         <span class="fw-semibold text-nowrap text-truncate">{col.text}</span>
                         <button class="btn btn-sm ms-auto" onclick={() => col.pinned = !col.pinned}>
-                            <i class="bi bi-pin-{col.pinned ? 'fill' : 'angle'}"></i>
+                            <span title="Click to {col.pinned ? 'un' : ''}pin">
+                                <i class="bi bi-pin-{col.pinned ? 'fill' : 'angle'}"></i>
+                            </span>
                         </button>
                     </div>
                 {/snippet}
@@ -167,7 +225,7 @@ import &#123; WjDataView &#125; from '@wj/dataview';
 </div>
 
 {#snippet Numeric(value: number)}
-    {@const formatter = new Intl.NumberFormat('es-cr', { maximumFractionDigits: 4 })}
+    {@const formatter = new Intl.NumberFormat(browser ? navigator?.language : undefined, { maximumFractionDigits: 4 })}
     <span class="numeric">{formatter.format(value)}</span>
 
     <style>
@@ -176,3 +234,23 @@ import &#123; WjDataView &#125; from '@wj/dataview';
         }
     </style>
 {/snippet}
+
+<style lang="scss">
+    .bg-glass {
+        --bs-bg-opacity: 0.3;
+        backdrop-filter: blur(7px) saturate(110%);
+    }
+    span.code {
+        font-family: monospace;
+        background-color: rgba(0, 0, 0, 0.2);
+        padding: 0.2em 0.3em;
+        border-radius: 0.2em;
+
+        :global([data-bs-theme="dark"]) & {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+    }
+    :global([data-bs-theme="dark"]) .offcanvas.bg-info {
+        color: var(--bs-white);
+    }
+</style>
