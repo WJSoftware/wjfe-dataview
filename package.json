@@ -1,5 +1,5 @@
 {
-	"name": "@wj/dataview",
+	"name": "@wjfe/dataview",
 	"version": "0.0.1",
 	"scripts": {
 		"dev": "vite dev",

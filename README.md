@@ -1,4 +1,4 @@
-# @wj/dataview
+# @wjfe/dataview
 
 > Svelte v5 table component suitable for examination of extensive tabular data.
 
@@ -23,13 +23,13 @@ Tailwind CSS, Bulma, etc.), you may style it in accordance to what is shown in t
 Install the package:
 
 ```powershell
-npm i @wj/dataview
+npm i @wjfe/dataview
 ```
 
 Now import the data view component and use it:
 
 ```typescript
-import { WjDataView } from '@wj/dataview';
+import { WjDataView } from '@wjfe/dataview';
 ```
 
 The only two required properties are `columns` and `data`.  The former defines the columns in the data view; the 
@@ -42,7 +42,7 @@ property.
 
 ```html
 <script lang="ts">
-    import { WjDataView } from '@wj/dataview';
+    import { WjDataView } from '@wjfe/dataview';
     import { type MyDataModel } from 'path/to/my-model-types.js';
 
     type MyDataModelGridRow = WjDvRow<MyDataModel>;
@@ -117,7 +117,7 @@ For example, Bootstrap consumers might want to ensure that the data view always 
 this case, we could create the following theme in a `dataViewThemes.ts`:
 
 ```typescript
-import { stockLight, type Theme } from '@wj/dataview';
+import { stockLight, type Theme } from '@wjfe/dataview';
 
 export const bootstrapTheme: Theme = {
     ...stockLight,

@@ -98,9 +98,9 @@
                 <div class="col-lg-6 col-md-8">
                     <div class="alert alert-info mb-0 d-flex flex-row flex-nowrap gap-3">
                         <i class="bi bi-lightbulb-fill"></i>
-                        <pre class="mb-0">npm i @wj/dataview
+                        <pre class="mb-0">npm i @wjfe/dataview
 
-import &#123; WjDataView &#125; from '@wj/dataview';
+import &#123; WjDataView &#125; from '@wjfe/dataview';
                         </pre>
                     </div>
                 </div>
