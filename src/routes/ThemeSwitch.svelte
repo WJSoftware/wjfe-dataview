@@ -2,7 +2,7 @@
     import { fly } from "svelte/transition";
 
     let darkTheme = $state(false);
-    let htmlEl = document.querySelector("html");
+    let htmlEl = document?.querySelector("html");
 
     $effect(() => htmlEl?.setAttribute("data-bs-theme", darkTheme ? "dark" : "light"));
 </script>
