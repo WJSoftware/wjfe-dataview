@@ -10,7 +10,8 @@
         key: string;
         text: string;
         width?: number;
-        pinnable?: boolean;
+        minWidth?: number;
+        resizable?: boolean;
         pinned?: boolean;
         hidden?: boolean;
         alignment?: ColAlignment;
@@ -20,6 +21,7 @@
 </script>
 
 <script lang="ts" generics="TCol extends Record<string, any> = Record<string, any>, TRow extends Record<string, any> = Record<string, any>">
+    import Resizer from "./Resizer.svelte";
     import { combineClasses } from "./utils.js";
     import { type Snippet } from "svelte";
 
@@ -127,14 +129,22 @@
         role="columnheader"
         style:width={`${columnWidth(ci.column)}em`}
         style:left={ci.left !== undefined && !!ci.column.pinned ? `${ci.left}em` : undefined}
+        style:z-index={!!ci.column.pinned ? cols.length - index : undefined}
     >
-        {#if headerCell}
-            {@render headerCell(ci.column)}
-        {:else}
-            <div class="default-header-content">
-                {ci.column.text}
-            </div>
-        {/if}
+        <div>
+            {#if headerCell}
+                {@render headerCell(ci.column)}
+            {:else}
+                <div class="default-header-content">
+                    {ci.column.text}
+                </div>
+            {/if}
+            {#if ci.column.resizable ?? true}
+                <Resizer minSize={ci.column.minWidth} resize={newSize => ci.column.width = newSize} />
+            {:else}
+                <div></div>
+            {/if}
+        </div>
     </div>
     {/each}
 {/snippet}
@@ -261,11 +271,28 @@
     }
 
     div.col-header {
-        box-shadow: inset 0 -0.4em 1em rgba(0, 0, 0, 0.1);
+        // box-shadow: inset 0 -0.4em 1em rgba(0, 0, 0, 0.1);
         &.sticky-header {
             position: sticky;
             top: 0;
             background-color: var(--wjdv-bg-color);
+        }
+
+        & > div {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            position: relative;
+            
+            & > :global(*:first-child) {
+                flex: 1;
+                overflow: hidden;
+            }
+
+            & > :global(*:last-child) {
+                flex-grow: 0;
+                flex-shrink: 0;
+            }
         }
     }
 

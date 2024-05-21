@@ -25,6 +25,16 @@
     style:--wjdv-sticky-divider-width={theme.pinnedColumnsDivider?.width}
     style:--wjdv-sticky-divider-style={theme.pinnedColumnsDivider?.style}
     style:--wjdv-sticky-divider-color={theme.pinnedColumnsDivider?.color}
+    style:--wjdv-resizer-width={theme.resizer?.width}
+    style:--wjdv-resizer-bg-color-rgb={theme.resizer?.backgroundColor}
+    style:--wjdv-resizer-bg-opacity={theme.resizer?.opacity}
+    style:--wjdv-resizer-overlay-opacity={theme.resizer?.overlay?.opacity}
+    style:--wjdv-resizer-overlay-bg-color={theme.resizer?.overlay?.item?.backgroundColor}
+    style:--wjdv-resizer-overlay-border-color={theme.resizer?.overlay?.item?.borderColor}
+    style:--wjdv-resizer-deltapos-bg-color={theme.resizer?.overlay?.positiveDelta?.backgroundColor}
+    style:--wjdv-resizer-deltapos-border-color={theme.resizer?.overlay?.positiveDelta?.borderColor}
+    style:--wjdv-resizer-deltaneg-bg-color={theme.resizer?.overlay?.negativeDelta?.backgroundColor}
+    style:--wjdv-resizer-deltaneg-border-color={theme.resizer?.overlay?.negativeDelta?.borderColor}
 >
     {@render children()}
 </div>
