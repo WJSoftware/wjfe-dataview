@@ -20,17 +20,6 @@ export const skyTheme: Theme = {
     }
 };
 
-export const mineralGreenTheme: Theme = {
-    table: {
-        backgroundColor: '12, 50, 12',
-        color: 'lightyellow'
-    },
-    pinnedColumnsDivider: {
-        color: '#107710',
-        style: 'dashed',
-    }
-};
-
 export const themeOptions = $state({ darkTheme: false, currentTheme: bootstrapTheme });
 
 const stockTheme = $derived(themeOptions.darkTheme ? stockDark : stockLight);
@@ -42,5 +31,4 @@ export function getStockTheme() {
 export const allThemes: Record<string, Theme> = {
     'Bootstrap': bootstrapTheme,
     'Sky': skyTheme,
-    'Mineral Green': mineralGreenTheme
 };
