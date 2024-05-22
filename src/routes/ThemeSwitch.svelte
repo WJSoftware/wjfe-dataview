@@ -1,10 +1,10 @@
 <script lang="ts">
     import { fly } from "svelte/transition";
+    import { themeOptions } from "./themeOptions.svelte.js";
 
-    let darkTheme = $state(false);
     let htmlEl = globalThis?.document?.querySelector("html");
 
-    $effect(() => htmlEl?.setAttribute("data-bs-theme", darkTheme ? "dark" : "light"));
+    $effect(() => htmlEl?.setAttribute("data-bs-theme", themeOptions.darkTheme ? "dark" : "light"));
 </script>
 
 <div class="form-check form-switch">
@@ -13,16 +13,16 @@
             type="checkbox"
             class="form-check-input"
             role="switch"
-            bind:checked={darkTheme}
+            bind:checked={themeOptions.darkTheme}
         />
         <div class="animation">
-            {#key darkTheme}
+            {#key themeOptions.darkTheme}
                 <i
                     in:fly={{ duration: 600, y: 20 }}
                     out:fly={{ duration: 600, y: -20 }}
                     class="bi"
-                    class:bi-brightness-high-fill={!darkTheme}
-                    class:bi-moon-stars-fill={darkTheme}
+                    class:bi-brightness-high-fill={!themeOptions.darkTheme}
+                    class:bi-moon-stars-fill={themeOptions.darkTheme}
                 ></i>
             {/key}
         </div>
