@@ -126,14 +126,22 @@
 	style:height="{parentH}px"
 	role="separator"
 	aria-valuenow={delta}
-></div>
+>
+	<svg viewBox="0 0 10 50" xmlns="http://www.w3.org/2000/svg">
+		<line x1="5" y1="5" x2="5" y2="45" stroke="currentColor" stroke-width="2" />
+	</svg>
+</div>
 
-<style>
+<style lang="scss">
 	div.handle {
 		width: var(--wjdv-resizer-width, 0.3em);
 		cursor: col-resize;
 		margin-left: auto;
-		background-color: rgba(var(--wjdv-resizer-bg-color-rgb, 0, 0, 0), var(--wjdv-resizer-bg-opacity, 0.05));
+
+		& > svg {
+			height: 100%;
+			width: 100%;
+		}
 	}
 
 	div.parent-template {
