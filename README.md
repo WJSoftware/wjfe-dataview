@@ -96,6 +96,11 @@ export type ComponentColor = {
     color?: string;
 };
 
+export type ResizerColor = {
+    backgroundColor?: string;
+    borderColor?: string;
+};
+
 export type Theme = {
     table?: ComponentColor;
     stripes?: ComponentColor;
@@ -104,45 +109,51 @@ export type Theme = {
         width?: string;
         style?: 'dashed' | 'dotted' | 'double' | 'groove' | 'inset' | 'outset' | 'ridge' | 'solid' | 'unset';
         color?: string;
-    }
+    },
+    resizer?: {
+        width?: string;
+        overlay?: {
+            opacity?: number;
+            item?: ResizerColor;
+            positiveDelta?: ResizerColor;
+            negativeDelta?: ResizerColor;
+        }
+    };
 };
 ```
 
-Since the amount of properties are a lot to set every time, the most effective way to create a theme is to spread the 
-stock theme (light or dark) and then modify what's needed.
-
-> In the future, deep merging instead of spreading will be enabled via the `wj-merge` package.
+While the amount of properties are a lot, each one of them are optional.  Simply set the properties that you wish to 
+customize.  The properties that aren't set will take the default documented in the table further down this document.
 
 For example, Bootstrap consumers might want to ensure that the data view always uses the body's background color.  In 
-this case, we could create the following theme in a `dataViewThemes.ts`:
+this case, we could create the following theme in a `dataViewThemes.ts` (potential) file:
 
 ```typescript
-import { stockLight, type Theme } from '@wjfe/dataview';
+import { type Theme } from '@wjfe/dataview';
 
 export const bootstrapTheme: Theme = {
-    ...stockLight,
     table: {
-        ...stockLight.table,
         backgroundColor: 'var(--bs-body-bg-rgb)'
     },
     stripes: {
-        ...stockLight.stripes,
         backgroundColor: 'var(--bs-emphasis-color-rgb)'
     },
     rowHighlight: {
-        ...stockLight.rowHighlight,
         backgroundColor: 'var(--bs-primary-rgb)',
         opacity: 0.2
     }
 };
 ```
 
-As seen, one can take advantage of CSS variables to define things.  Bootstrap provides light and dark modes, and these 
+> Besides setting the table's background color, it also uses the emphasis color for striping, and changes the 
+> highlight color to the primary color with 20% opacity, all for good measure.
+
+As seen, one can take advantage of CSS variables to define values.  Bootstrap provides light and dark modes, and these 
 variables have different definitions depending on the mode, making the data view's theme immediately responsive to 
 mode selection changes.
 
 This is not perfect, however, because Bootstrap doesn't have `-rgb` variables for every color, so not everything goes 
-as smoothly.  Create responsive CSS variables to perfect the theme.
+as smoothly.  Create CSS variables that adjust to the color mode to perfect the theme.
 
 > **IMPORTANT**:  All background colors are composed using the provided color and an opacity value.  This is why the 
 > color must be specified in RGB format, or with a CSS variable that defines it in RGB format.  Formats like `#rrggbb` 

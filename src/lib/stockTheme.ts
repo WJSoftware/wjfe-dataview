@@ -2,12 +2,12 @@ export type ComponentColor = {
     backgroundColor?: string;
     opacity?: number;
     color?: string;
-}
+};
 
 export type ResizerColor = {
     backgroundColor?: string;
     borderColor?: string;
-}
+};
 
 export type Theme = {
     table?: ComponentColor;
@@ -18,7 +18,7 @@ export type Theme = {
         style?: 'dashed' | 'dotted' | 'double' | 'groove' | 'inset' | 'outset' | 'ridge' | 'solid' | 'unset';
         color?: string;
     },
-    resizer?: Omit<ComponentColor, 'color'> & {
+    resizer?: {
         width?: string;
         overlay?: {
             opacity?: number;
@@ -27,7 +27,7 @@ export type Theme = {
             negativeDelta?: ResizerColor;
         }
     };
-}
+};
 
 export const stockLight: Theme = {
     table: {
@@ -52,8 +52,6 @@ export const stockLight: Theme = {
     },
     resizer: {
         width: '0.4em',
-        backgroundColor: '0, 0, 0',
-        opacity: 0.05,
         overlay: {
             opacity: 0.7,
             item: {
@@ -95,8 +93,6 @@ export const stockDark: Theme = {
     },
     resizer: {
         width: '0.4em',
-        backgroundColor: '255, 255, 255',
-        opacity: 0.05,
         overlay: {
             opacity: 0.7,
             item: {

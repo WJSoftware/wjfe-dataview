@@ -182,7 +182,7 @@
 {/snippet}
 
 <div class={combineClasses('dataview-container', cssClass)}>
-    <div class="datatable" role="table" {...restProps}>
+    <div class="dataview" role="table" {...restProps}>
         <div class="header-group" role="rowheader">
             <div role="row">
                 {#if segregatedColumns.pinned.length}
@@ -251,7 +251,7 @@
         --wjdv-sticky-divider: var(--wjdv-sticky-divider-width, 0.1em) var(--wjdv-sticky-divider-style, solid) var(--wjdv-sticky-divider-color, darkgray);
     }
 
-    div.datatable {
+    div.dataview {
         display: table;
         color: var(--wjdv-color);
         min-width: 100%; // Needed so the extra column can occupy the rest of the width and keep a nice look.

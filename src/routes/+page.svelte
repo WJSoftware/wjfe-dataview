@@ -5,7 +5,9 @@
     import WjDataView, { type WjDvColumn, type WjDvRow } from "$lib/WjDataView.svelte";
     import WjDataViewTheme from "$lib/WjDataViewTheme.svelte";
     import type { Person } from "../data-models.js";
-    import { bootstrapTheme, mineralBlue, mineralGreen } from "./themes.js";
+    import Toolbar from "./Toolbar.svelte";
+    import { demoOptions } from "./demoOptions.svelte.js";
+    import { themeOptions } from "./themeOptions.svelte.js";
 
     let {
         data,
@@ -71,13 +73,8 @@
             alignment: 'end'
         },
     ]);
-    let striped = $state(true);
-    let rowHighlight = $state(true);
 
-    const numRecordsOptions = [100, 200, 300, 400];
-    let numRecords = $state(+($page.url.searchParams.get('records') ?? '200'));
-
-    $effect(() => reloadData(numRecords));
+    $effect(() => reloadData(demoOptions.records));
 
     function reloadData(records: number) {
         const url = new URL($page.url);
@@ -86,7 +83,7 @@
     }
 </script>
 
-<div class="d-flex flex-column overflow-auto h-100">
+<div class="d-flex flex-column overflow-auto h-100 theme-def">
     <div>
         <h1>WjDataView Demo Page</h1>
         <p>
@@ -106,50 +103,6 @@ import &#123; WjDataView &#125; from '@wjfe/dataview';
                 </div>
                 <div class="col-lg-3 col-md-2"></div>
             </div>
-        </div>
-    </div>
-    <div class="btn-toolbar py-3 gap-2">
-        <button
-            class="btn btn-sm btn-info"
-            title="Click to show additional information"
-            data-bs-toggle="offcanvas"
-            data-bs-target="#helpCanvas"
-        >
-            <i class="bi bi-info-circle"></i>
-        </button>
-        <div class="btn-group btn-sm">
-            <input type="checkbox" id="striped" bind:checked={striped} class="btn-check" />
-            <label for="striped" class="btn btn-outline-primary">Striped</label>
-            <input type="checkbox" id="rowHighlight" bind:checked={rowHighlight} class="btn-check" />
-            <label for="rowHighlight" class="btn btn-outline-primary">Row Highlight</label>
-        </div>
-        <div class="btn-group btn-sm">
-            <!-- <div class="input-group-text">
-                <span title="Row Count:"><i class="bi bi-person-lines-fill"></i></span>
-            </div> -->
-            <button class="btn" title="Row Count:" disabled>
-                <span title="Row Count:"><i class="bi bi-person-lines-fill"></i></span>
-            </button>
-            {#each numRecordsOptions as nro (nro)}
-            <input
-                type="radio"
-                id="numRecords_{nro}"
-                class="btn-check"
-                bind:group={numRecords}
-                value={nro}
-            />
-            <label for="numRecords_{nro}" class="btn btn-outline-primary">
-                {nro}
-            </label>
-            {/each}
-        </div>
-        <div class="input-group">
-            <div class="input-group-text">
-                <span title="Theme:"><i class="bi bi-palette"></i></span>
-            </div>
-            <select class="form-control">
-                <option value="bootstrap">Bootstrap</option>
-            </select>
         </div>
     </div>
     <div class="offcanvas offcanvas-end bg-info bg-glass" id="helpCanvas" data-bs-backdrop="false">
@@ -189,15 +142,16 @@ import &#123; WjDataView &#125; from '@wjfe/dataview';
             </p>
         </div>
     </div>
+    <Toolbar />
     <div
         class="flex-fill position-relative"
     >
-        <WjDataViewTheme theme={bootstrapTheme}>
+        <WjDataViewTheme theme={themeOptions.currentTheme}>
             <WjDataView
                 {columns}
                 data={data.data}
-                {striped}
-                {rowHighlight}
+                striped={demoOptions.striped}
+                rowHighlight={demoOptions.rowHighlight}
                 class="position-absolute top-0 bottom-0"
             >
                 {#snippet headerCell(col)}
@@ -252,5 +206,13 @@ import &#123; WjDataView &#125; from '@wjfe/dataview';
     }
     :global([data-bs-theme="dark"]) .offcanvas.bg-info {
         color: var(--bs-white);
+    }
+    .theme-def {
+        --wjdv-sky-bg-rgb: 200, 240, 250;
+        --wjdv-sky-color: var(--bs-black);
+        :global([data-bs-theme="dark"]) & {
+            --wjdv-sky-bg-rgb: 30, 90, 120;
+            --wjdv-sky-color: var(--bs-white);
+        }
     }
 </style>
