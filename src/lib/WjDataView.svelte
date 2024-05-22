@@ -26,7 +26,7 @@
     import { type Snippet } from "svelte";
 
     let {
-        columns,
+        columns = $bindable(),
         data,
         get = (r, k) => r[k],
         defaultWidth = 10,
