@@ -17,7 +17,7 @@
 
     type PersonGridRow = WjDvRow<Person>;
 
-    const columns = $state<WjDvColumn<Record<string, any>, PersonGridRow>[]>([
+    let columns = $state<WjDvColumn<Record<string, any>, PersonGridRow>[]>([
         {
             key: 'id',
             text: 'ID',
@@ -148,7 +148,7 @@ import &#123; WjDataView &#125; from '@wjfe/dataview';
     >
         <WjDataViewTheme theme={themeOptions.currentTheme}>
             <WjDataView
-                {columns}
+                bind:columns
                 data={data.data}
                 striped={demoOptions.striped}
                 rowHighlight={demoOptions.rowHighlight}
