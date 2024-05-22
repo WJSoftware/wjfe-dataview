@@ -2,12 +2,12 @@ export type ComponentColor = {
     backgroundColor?: string;
     opacity?: number;
     color?: string;
-}
+};
 
 export type ResizerColor = {
     backgroundColor?: string;
     borderColor?: string;
-}
+};
 
 export type Theme = {
     table?: ComponentColor;
@@ -27,7 +27,7 @@ export type Theme = {
             negativeDelta?: ResizerColor;
         }
     };
-}
+};
 
 export const stockLight: Theme = {
     table: {
