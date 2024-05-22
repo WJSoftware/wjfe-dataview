@@ -262,7 +262,7 @@
         position: sticky;
         z-index: 2;
         top: 0;
-        background-color: var(--wjdv-bg-color);
+        background-color: rgba(var(--wjdv-bg-color-rgb, 255, 255, 255), 1);
 
         & > div {
             display: flex;
@@ -275,7 +275,7 @@
         &.sticky-header {
             position: sticky;
             top: 0;
-            background-color: var(--wjdv-bg-color);
+            background-color: rgba(var(--wjdv-bg-color-rgb, 255, 255, 255), 1);
         }
 
         & > div {
@@ -327,7 +327,7 @@
     }
 
     div.dataview-cell-bg.sticky-data {
-        background-color: var(--wjdv-bg-color);
+        background-color: rgba(var(--wjdv-bg-color-rgb, 255, 255, 255), 1);
     }
 
     div.dataview-cell-bg2, div.dataview-cell {
