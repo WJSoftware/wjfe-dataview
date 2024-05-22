@@ -180,8 +180,6 @@ The complete list of CSS variables that can be set for the data view component a
 | `--wjdv-sticky-divider-style` | `solid` | `solid` | Style of the border that divides pinned columns from unpinned ones. |
 | `--wjdv-sticky-divider-color` | `darkgray` | `lightgray` | Color of the border that divides pinned columns from unpinned ones. |
 | `--wjdv-resizer-width` | `0.4em` | `0.4em` | Column resizer's width. |
-| `--wjdv-resizer-bg-color-rgb` | `0, 0, 0` | `255, 255, 255` | Resizer handle's background color. |
-| `--wjdv-resizer-bg-opacity` | `0.05` | `0.05` | Resizer handle's background's opacity. |
 | `--wjdv-resizer-overlay-opacity` | `0.7` | `0.7` | Opacity of the entire resizer overlay. |
 | `--wjdv-resizer-overlay-bg-color` | `lightblue` | `#0578ea` | Background color of the overlay section that represents the original column's size. |
 | `--wjdv-resizer-overlay-border-color` | `blue` | `#13aeff` | Border color of the overlay section that represents the original column's size. |
