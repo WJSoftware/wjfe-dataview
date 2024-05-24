@@ -10,7 +10,12 @@
 <div class="d-flex flex-column doc-container">
     <nav class="navbar bg-primary-subtle px-3">
         <span class="navbar-brand">WjDataView Demo</span>
-        <a href="https://github.com/WJSoftware/wjfe-dataview" title="Repository" class="nav-link ms-auto me-3">
+        <a
+            href="https://github.com/WJSoftware/wjfe-dataview"
+            title="Repository"
+            class="nav-link ms-auto me-3"
+            target="_blank"
+        >
             <i class="bi bi-github"></i>
         </a>
         <ThemeSwitch />
