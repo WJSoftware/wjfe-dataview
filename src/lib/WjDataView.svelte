@@ -1,9 +1,13 @@
 <script context="module" lang="ts">
     export type ColAlignment = 'start' | 'center' | 'end';
 
+    export type WjDvRowProps = {
+        expanded?: boolean;
+    };
+
     export type WjDvRow<TRow extends Record<string, any> = Record<string, any>> = TRow & {
         id: string | number;
-        expanded?: boolean;
+        wjdv?: WjDvRowProps;
     };
 
     export type WjDvColumn<TCol extends Record<string, any> = Record<string, any>, TRow extends Record<string, any> = Record<string, any>> = TCol & {
@@ -21,13 +25,15 @@
 </script>
 
 <script lang="ts" generics="TCol extends Record<string, any> = Record<string, any>, TRow extends Record<string, any> = Record<string, any>">
+    import { slide } from "svelte/transition";
+
     import Resizer from "./Resizer.svelte";
     import { combineClasses } from "./utils.js";
     import { type Snippet } from "svelte";
 
     let {
         columns = $bindable(),
-        data,
+        data = $bindable(),
         get = (r, k) => r[k],
         defaultWidth = 10,
         rowHighlight = true,
@@ -35,6 +41,7 @@
         pinnedDivider = true,
         headerCell,
         dataCell,
+        rowExpansion,
         class: cssClass,
         ...restProps
     }: {
@@ -78,6 +85,10 @@
          * Snippet used to render the contents of data cells.
          */
         dataCell?: Snippet<[WjDvColumn<TCol,TRow>, WjDvRow<TRow>]>;
+        /**
+         * Snipped used to render the extra row contents of rows with the `wjdv.expanded` property set to `true`.
+         */
+        rowExpansion?: Snippet<[WjDvRow<TRow>]>;
         /**
          * Additional CSS classes that are applied to the data view's viewport (the top-level element).
          */
@@ -196,11 +207,18 @@
             {#each data as row (row.id)}
             <div class="dataview-row-bg" role="row">
                 <div class={combineClasses('dataview-row')}>
-                    {#if segregatedColumns.pinned.length}
-                        {@render colData(row, segregatedColumns.pinned)}
+                    <div>
+                        {#if segregatedColumns.pinned.length}
+                            {@render colData(row, segregatedColumns.pinned)}
+                        {/if}
+                        {@render colData(row, segregatedColumns.unpinned)}
+                        <div class="dataview-cell">&nbsp;</div>
+                    </div>
+                    {#if row.wjdv?.expanded && rowExpansion}
+                        <div class="dataview-row-expansion">
+                            {@render rowExpansion(row)}
+                        </div>
                     {/if}
-                    {@render colData(row, segregatedColumns.unpinned)}
-                    <div class="dataview-cell">&nbsp;</div>
                 </div>
             </div>
             {/each}
@@ -336,7 +354,12 @@
 
     div.dataview-row {
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
+
+        & > div {
+            display: flex;
+            flex-direction: row;
+        }
 
         & div.dataview-cell-bg {
             & div.dataview-cell {
