@@ -40,6 +40,9 @@ Each column must have the `key` and the `text` properties.  Any other property i
 and by default, it is assumed to be the name of a property in the data objects given to the grid via the `data` 
 property.
 
+> **IMPORTANT**:  Always bind `columns` and `data`.  The data view control will mutate properties inside this data, 
+> so the best practice is to bind.
+
 ```html
 <script lang="ts">
     import { WjDataView } from '@wjfe/dataview';
@@ -62,7 +65,7 @@ property.
     let data: $state<MyDataModel[]> = getDataSomehow();
 </script>
 ...
-<WjDataView {columns} {data}>
+<WjDataView bind:columns bind:data>
     <!-- snippets go here -->
 </WjDataView>
 ```
@@ -219,7 +222,8 @@ The complete list of CSS variables that can be set for the data view component a
 | Name | Signature | Description |
 | - | - | - |
 | `headerCell` | `(col: WjDvColumn<TCol, TRow>)` | Renders header cells' content.  The snippet is passed the column definition. |
-| `dataCell` | `(col: WjDvColumn<TCol, TRow>, row: WjDvRow<TRow>])` | Renders data cells' content.  The snippet is passed the column definition and the data object for the row being rendered. |
+| `dataCell` | `(col: WjDvColumn<TCol, TRow>, row: WjDvRow<TRow>)` | Renders data cells' content.  The snippet is passed the column definition and the data object for the row being rendered. |
+| `rowExpansion` | `(row: WjDvRow<TRow>)` | Renders arbitrary content immediately below the data cells of the row.  It is only rendered when `WjDvRow<TRow>.wjdv.expanded` is `true`. |
 
 ### Events
 
@@ -239,8 +243,9 @@ None.
 - [x] headerCell snippet
 - [x] dataCell snippet
 - [x] Resizable columns
+- [x] Expansible rows (rowExpansion snippet)
 - [ ] headerControl snippet
 - [ ] dataControl snippet
-- [ ] Expansible rows (expansionRow snippet)
+- [ ] Row selection (only the coloring of the row part, not any controls to perform selection)
 - [ ] Make cell/row/column padding themeable
 - [ ] dataRow snippet

@@ -9,15 +9,22 @@
     import { demoOptions } from "./demoOptions.svelte.js";
     import { themeOptions } from "./themeOptions.svelte.js";
 
+    type PersonGridRow = WjDvRow<Person>;
+
     let {
         data,
     }: {
         data: { data: PersonGridRow[]; }
     } = $props();
 
-    type PersonGridRow = WjDvRow<Person>;
-
     let columns = $state<WjDvColumn<Record<string, any>, PersonGridRow>[]>([
+        {
+            key: 'control',
+            text: '',
+            width: 3,
+            resizable: false,
+            pinned: true
+        },
         {
             key: 'id',
             text: 'ID',
@@ -123,6 +130,7 @@ import &#123; WjDataView &#125; from '@wjfe/dataview';
                 <li>Scrollable viewport</li>
                 <li>Striped rows</li>
                 <li>Row highlighting on hover</li>
+                <li>Expansible rows</li>
                 <li>Hideable columns</li>
                 <li>Pinnable columns</li>
                 <li>Resizable columns</li>
@@ -149,28 +157,52 @@ import &#123; WjDataView &#125; from '@wjfe/dataview';
         <WjDataViewTheme theme={themeOptions.currentTheme}>
             <WjDataView
                 bind:columns
-                data={data.data}
+                bind:data={data.data}
                 striped={demoOptions.striped}
                 rowHighlight={demoOptions.rowHighlight}
                 class="position-absolute top-0 bottom-0"
             >
                 {#snippet headerCell(col)}
-                    <div class="d-flex flex-row ps-2">
-                        <span class="fw-semibold text-nowrap text-truncate">{col.text}</span>
-                        <button class="btn btn-sm ms-auto" onclick={() => col.pinned = !col.pinned}>
-                            <span title="Click to {col.pinned ? 'un' : ''}pin">
-                                <i class="bi bi-pin-{col.pinned ? 'fill' : 'angle'}"></i>
-                            </span>
-                        </button>
-                    </div>
+                    {#if col.key === 'control'}
+                        <span>&nbsp;</span>
+                    {:else}
+                        <div class="d-flex flex-row ps-2">
+                            <span class="fw-semibold text-nowrap text-truncate">{col.text}</span>
+                            <button class="btn btn-sm ms-auto" onclick={() => col.pinned = !col.pinned}>
+                                <span title="Click to {col.pinned ? 'un' : ''}pin">
+                                    <i class="bi bi-pin-{col.pinned ? 'fill' : 'angle'}"></i>
+                                </span>
+                            </button>
+                        </div>
+                    {/if}
                 {/snippet}
                 {#snippet dataCell(col, row)}
-                    <div class="data px-2 text-truncate">
-                        {#if col.key === 'credit_score' || col.key === 'net_worth'}
-                            {@render Numeric(row[col.key])}
-                        {:else}
-                            {row[col.key as keyof typeof row]}
-                        {/if}
+                    {#if col.key === 'control'}
+                        <div class="px-2">
+                            <button
+                                type="button"
+                                class="btn btn-sm border"
+                                onclick={() => row.wjdv!.expanded = !row.wjdv!.expanded}
+                            >
+                                <i class="bi bi-chevron-bar-{row.wjdv?.expanded ? 'contract' : 'expand'}"></i>
+                            </button>
+                        </div>
+                    {:else}
+                        <div class="data px-2 text-truncate">
+                            {#if col.key === 'credit_score' || col.key === 'net_worth'}
+                                {@render Numeric(row[col.key])}
+                            {:else}
+                                {row[col.key as keyof typeof row]}
+                            {/if}
+                        </div>
+                    {/if}
+                {/snippet}
+                {#snippet rowExpansion(row)}
+                    <div class="card mx-3 my-2">
+                        <h4 class="card-header">Data Drilldown</h4>
+                        <div class="card-body">
+                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Tenetur vero voluptatibus libero laboriosam nisi explicabo quia ab nam mollitia, rem beatae soluta inventore doloribus. Iure omnis saepe blanditiis, fugit voluptates, sit eaque perferendis minima doloremque ea quia dolores hic ipsam! Odit esse voluptatibus minus corrupti harum, mollitia, temporibus corporis quam enim velit vitae eaque? Dolor sunt laudantium possimus ea iusto quam suscipit exercitationem dicta? Id reiciendis iusto magni vitae animi corrupti illum quaerat nisi repudiandae enim, saepe officiis ab cupiditate in, aliquid totam incidunt dolores nam recusandae at sequi ipsa? Ipsa, placeat! Debitis maiores quos eum nihil ducimus eligendi eaque.
+                        </div>
                     </div>
                 {/snippet}
             </WjDataView>
@@ -194,6 +226,7 @@ import &#123; WjDataView &#125; from '@wjfe/dataview';
         --bs-bg-opacity: 0.3;
         backdrop-filter: blur(7px) saturate(110%);
     }
+
     span.code {
         font-family: monospace;
         background-color: rgba(0, 0, 0, 0.2);
@@ -204,9 +237,11 @@ import &#123; WjDataView &#125; from '@wjfe/dataview';
             background-color: rgba(255, 255, 255, 0.2);
         }
     }
+
     :global([data-bs-theme="dark"]) .offcanvas.bg-info {
         color: var(--bs-white);
     }
+
     .theme-def {
         --wjdv-sky-bg-rgb: 200, 240, 250;
         --wjdv-sky-color: var(--bs-black);
