@@ -130,6 +130,7 @@ import &#123; WjDataView &#125; from '@wjfe/dataview';
                 <li>Scrollable viewport</li>
                 <li>Striped rows</li>
                 <li>Row highlighting on hover</li>
+                <li>Expansible rows</li>
                 <li>Hideable columns</li>
                 <li>Pinnable columns</li>
                 <li>Resizable columns</li>
