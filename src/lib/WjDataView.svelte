@@ -3,6 +3,7 @@
 
     export type WjDvRowProps = {
         expanded?: boolean;
+        selected?: boolean;
     };
 
     export type WjDvRow<TRow extends Record<string, any> = Record<string, any>> = TRow & {
@@ -37,6 +38,7 @@
         get = (r, k) => r[k],
         defaultWidth = 10,
         rowHighlight = true,
+        rowSelectionBg = true,
         striped = true,
         pinnedDivider = true,
         headerCell,
@@ -69,6 +71,10 @@
          * Turns the row-highlighting-on-hover feature on and off.
          */
         rowHighlight?: boolean;
+        /**
+         * Turns the row-highlighting-on-selection feature on and off.
+         */
+        rowSelectionBg?: boolean;
         /**
          * Turns the striping of rows on and off.
          */
@@ -172,13 +178,13 @@
         style:width={`${ci.column.width ?? defaultWidth}em`}
         style:left={ci.left !== undefined ? `${ci.left}em` : undefined}
     >
-        <div class="dataview-cell-bg2">
-            <div class={combineClasses("dataview-cell", {
+        <div class="dataview-cell-s">
+            <div class={combineClasses("dataview-cell-d", {
                 'align-start': ci.column.alignment === 'start',
                 'align-center': ci.column.alignment === 'center',
                 'align-end': ci.column.alignment === 'end',
                 'no-wrap': ci.column.noTextWrap ?? false,
-            })}> <!-- THIS GUY!  WHEN RENDERED, THE SCOPING CLASS IS NOT THERE.-->
+            })}>
                 {#if dataCell}
                     {@render dataCell(ci.column, row)}
                 {:else}
@@ -205,20 +211,22 @@
         </div>
         <div class={combineClasses('dataview-body', { striped, 'row-highlight': rowHighlight })} role="rowgroup">
             {#each data as row (row.id)}
-            <div class="dataview-row-bg" role="row">
-                <div class={combineClasses('dataview-row')}>
-                    <div>
-                        {#if segregatedColumns.pinned.length}
-                            {@render colData(row, segregatedColumns.pinned)}
-                        {/if}
-                        {@render colData(row, segregatedColumns.unpinned)}
-                        <div class="dataview-cell">&nbsp;</div>
-                    </div>
-                    {#if row.wjdv?.expanded && rowExpansion}
-                        <div class="dataview-row-expansion">
-                            {@render rowExpansion(row)}
+            <div class="dataview-row-bg" class:selected={rowSelectionBg && row.wjdv?.selected} role="row">
+                <div class="dataview-row-s">
+                    <div class="dataview-row-h">
+                        <div class="dataview-row-d">
+                            {#if segregatedColumns.pinned.length}
+                                {@render colData(row, segregatedColumns.pinned)}
+                            {/if}
+                            {@render colData(row, segregatedColumns.unpinned)}
+                            <div class="dataview-cell">&nbsp;</div>
                         </div>
-                    {/if}
+                        {#if row.wjdv?.expanded && rowExpansion}
+                            <div class="dataview-row-expansion">
+                                {@render rowExpansion(row)}
+                            </div>
+                        {/if}
+                    </div>
                 </div>
             </div>
             {/each}
@@ -267,6 +275,8 @@
         --wjdv-rowhighlight-bg-color: rgba(var(--wjdv-rowhighlight-bg-color-rgb, 0, 0, 0), var(--wjdv-rowhighlight-bg-opacity, 0.07));
         --wjdv-rowhighlight-color: rgba(--wjdv-rowhighlight-fg-color, inherit);
         --wjdv-sticky-divider: var(--wjdv-sticky-divider-width, 0.1em) var(--wjdv-sticky-divider-style, solid) var(--wjdv-sticky-divider-color, darkgray);
+        --wjdv-selected-bg-color: rgba(var(--wjdv-selected-bg-color-rgb, 227, 240, 254), var(--wjdv-selected-bg-opacity, 1));
+        --wjdv-selected-color: var(--wjdv-selected-fg-color, inherit);
     }
 
     div.dataview {
@@ -324,53 +334,82 @@
 
         &.striped {
             & > div.dataview-row-bg:nth-of-type(2n) {
-                background-color: var(--wjdv-striping-bg-color);
-                color: var(--wjdv-striping-color);
-
-                & div.dataview-cell-bg.sticky-data > :global(div.dataview-cell-bg2) {
+                & > div.dataview-row-s {
                     background-color: var(--wjdv-striping-bg-color);
                     color: var(--wjdv-striping-color);
                 }
+
+                // The following is correct, but Svelte says it is an unused CSS selector.
+                // It's been re-written outside the SCSS block with :global() as workaround.
+
+                // & div.sticky-data div.dataview-cell-s {
+                //     background-color: var(--wjdv-striping-bg-color);
+                //     color: var(--wjdv-striping-color);
+                // }
             }
         }
 
-        &.row-highlight div.dataview-row {
-            &:hover, &.hover {
+        &.row-highlight div.dataview-row-h {
+            &:hover {
                 background-color: var(--wjdv-rowhighlight-bg-color);
-                div.dataview-cell-bg.sticky-data :global(div.dataview-cell) {
-                    background-color: var(--wjdv-rowhighlight-bg-color) !important;
-                }
+
+                // The following is correct, but Svelte says it is an unused CSS selector.
+                // It's been re-written outside the SCSS block with :global() as workaround.
+
+                // div.sticky-data div.dataview-cell-d {
+                //     background-color: var(--wjdv-rowhighlight-bg-color) !important;
+                // }
             }
         }
     }
 
-    div.dataview-cell-bg.sticky-data {
-        background-color: rgba(var(--wjdv-bg-color-rgb, 255, 255, 255), 1);
+    // WORKAROUNDS:  :global() isn't needed, but Svelte keeps on filtering it out alleging it is unused.
+    :global(div.dataview-body.striped) > div.dataview-row-bg:nth-of-type(2n) div.sticky-data :global(div.dataview-cell-s) {
+        background-color: var(--wjdv-striping-bg-color);
+        color: var(--wjdv-striping-color);
+    }
+    :global(div.dataview-body.row-highlight) div.dataview-row-h:hover div.sticky-data :global(div.dataview-cell-d) {
+        background-color: var(--wjdv-rowhighlight-bg-color) !important;
     }
 
-    div.dataview-cell-bg2, div.dataview-cell {
-        height: 100%;
-    }
-
-    div.dataview-row {
+    div.dataview-row-s {
         display: flex;
         flex-direction: column;
+    }
+    
+    div.dataview-row-d {
+        display: flex;
+        flex-direction: row;
 
-        & > div {
-            display: flex;
-            flex-direction: row;
+        & div.dataview-cell-d {
+            overflow: hidden;
         }
 
         & div.dataview-cell-bg {
-            & div.dataview-cell {
-                overflow: hidden;
-            }
 
             &.sticky-data {
                 position: sticky;
                 z-index: 1;
             }
         }
+    }
+
+    div.dataview-row-bg.selected {
+        background-color: var(--wjdv-selected-bg-color);
+        color: var(--wjdv-selected-color);
+        
+        & div.dataview-cell-bg.sticky-data {
+            background-color: var(--wjdv-selected-bg-color);
+            color: var(--wjdv-selected-color);
+        }
+    }
+
+    div.dataview-cell-bg.sticky-data {
+        background-color: var(--wjdv-bg-color);
+    }
+
+    div.dataview-cell-s, div.dataview-cell-d {
+        height: 100%;
     }
 
     .sticky-divider {

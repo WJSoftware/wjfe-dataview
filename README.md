@@ -108,6 +108,7 @@ export type Theme = {
     table?: ComponentColor;
     stripes?: ComponentColor;
     rowHighlight?: ComponentColor;
+    rowSelection?: ComponentColor;
     pinnedColumnsDivider?: {
         width?: string;
         style?: 'dashed' | 'dotted' | 'double' | 'groove' | 'inset' | 'outset' | 'ridge' | 'solid' | 'unset';
@@ -144,26 +145,42 @@ export const bootstrapTheme: Theme = {
     rowHighlight: {
         backgroundColor: 'var(--bs-primary-rgb)',
         opacity: 0.2
+    },
+    rowSelection: {
+        backgroundColor: 'var(--bs-row-selection-bg-color-rgb)',
     }
 };
 ```
 
-> Besides setting the table's background color, it also uses the emphasis color for striping, and changes the 
-> highlight color to the primary color with 20% opacity, all for good measure.
+> This is the actual modification set in the demonstration page.  The first three variables are provided by Bootstrap, 
+> while the last one (`--bs-row-selection-bg-color-rgb`) is defined inside the demo project.
 
 As seen, one can take advantage of CSS variables to define values.  Bootstrap provides light and dark modes, and these 
 variables have different definitions depending on the mode, making the data view's theme immediately responsive to 
 mode selection changes.
 
 This is not perfect, however, because Bootstrap doesn't have `-rgb` variables for every color, so not everything goes 
-as smoothly.  Create CSS variables that adjust to the color mode to perfect the theme.
+as smoothly.  Create CSS variables that adjust to the color mode to perfect the theme.  For example, the last one has 
+been defined as:
+
+```scss
+.theme-def {
+    --bs-row-selection-bg-color-rgb: 221, 235, 255;
+    
+    :global([data-bs-theme="dark"]) & {
+        --bs-row-selection-bg-color-rgb: 21, 35, 55;
+    }
+}
+```
+
+With this technique, we can create fully responsive themes for the data view component.
 
 > **IMPORTANT**:  All background colors are composed using the provided color and an opacity value.  This is why the 
 > color must be specified in RGB format, or with a CSS variable that defines it in RGB format.  Formats like `#rrggbb` 
 > simply won't work.
 
-Anyway, use the `WjDataViewTheme` component as a wrapper for any `WjDataView` components that you may have.  This 
-wrapper doesn't have to be the immediate parent, so put it wherever is best according to your needs.
+Use the `WjDataViewTheme` component as a wrapper for any `WjDataView` components that you may have.  This wrapper 
+doesn't have to be the immediate parent, so put it wherever is best according to your needs.
 
 ```html
 <script lang="ts">
@@ -197,10 +214,13 @@ The complete list of CSS variables that can be set for the data view component a
 | `--wjdv-resizer-overlay-opacity` | `0.7` | `0.7` | Opacity of the entire resizer overlay. |
 | `--wjdv-resizer-overlay-bg-color` | `lightblue` | `#0578ea` | Background color of the overlay section that represents the original column's size. |
 | `--wjdv-resizer-overlay-border-color` | `blue` | `#13aeff` | Border color of the overlay section that represents the original column's size. |
-| `--wjdv-resizer-deltapos-bg-color` | `lightgreen` | `lightgreen` | Background color of the overlay setion that represents the column's size increase. |
-| `--wjdv-resizer-deltapos-border-color` | `green` | `green` | Border color of the overlay setion that represents the column's size increase. |
-| `--wjdv-resizer-deltaneg-bg-color` | `pink` | `pink` | Background color of the overlay setion that represents the column's size reduction. |
-| `--wjdv-resizer-deltaneg-border-color` | `red` | `red` | Border color of the overlay setion that represents the column's size reduction. |
+| `--wjdv-resizer-deltapos-bg-color` | `lightgreen` | `lightgreen` | Background color of the overlay section that represents the column's size increase. |
+| `--wjdv-resizer-deltapos-border-color` | `green` | `green` | Border color of the overlay section that represents the column's size increase. |
+| `--wjdv-resizer-deltaneg-bg-color` | `pink` | `pink` | Background color of the overlay section that represents the column's size reduction. |
+| `--wjdv-resizer-deltaneg-border-color` | `red` | `red` | Border color of the overlay section that represents the column's size reduction. |
+| `--wjdv-selected-bg-color-rgb` | `227, 240, 254` | `15, 25, 74` | Background color of rows that have been selected. |
+| `--wjdv-selected-bgopacity` | `1` | `1` | Background opacity of rows that have been selected. |
+| `--wjdv-selected-fg-color` | `inherit` | `inherit` | Foreground color of rows that have been selected. |
 
 ## Reference
 
@@ -213,6 +233,7 @@ The complete list of CSS variables that can be set for the data view component a
 | `get` | `(row: TRow, key: string) => any` | (function) | Function that retrieves a column's value using the row and provided key for columns that don't provide one. |
 | `defaultWidth` | `number` | `10` | The width for colums that don't specify its own width, in `em`'s. |
 | `rowHighlight` | `boolean` | `true` | Turns the row-highlighting-on-hover feature on and off. |
+| `rowSelectionBg` | `boolean` | `true` |   Turns the row-highlighting-on-selection feature on and off. |
 | `striped` | `boolean` | `true` | Turns the striping of rows on and off. |
 | `pinnedDivider` | `boolean` | `true` | Turns the divider between pinned and unpinned columns on and off. |
 | `class` | `string` | `undefined` | Additional CSS classes that are applied to the data view's viewport (the top-level element). |
@@ -243,9 +264,8 @@ None.
 - [x] headerCell snippet
 - [x] dataCell snippet
 - [x] Resizable columns
-- [x] Expansible rows (rowExpansion snippet)
-- [ ] headerControl snippet
-- [ ] dataControl snippet
-- [ ] Row selection (only the coloring of the row part, not any controls to perform selection)
+- [x] Expansible rows
+- [x] Row selection
+- [ ] headerControl and dataControl snippets
 - [ ] Make cell/row/column padding themeable
-- [ ] dataRow snippet
+- [ ] dataRow snippet (complex)
