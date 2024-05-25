@@ -181,7 +181,7 @@ import &#123; WjDataView &#125; from '@wjfe/dataview';
                         <div class="px-2">
                             <button
                                 type="button"
-                                class="btn btn-sm border"
+                                class="btn btn-sm btn-neutral"
                                 onclick={() => row.wjdv!.expanded = !row.wjdv!.expanded}
                             >
                                 <i class="bi bi-chevron-bar-{row.wjdv?.expanded ? 'contract' : 'expand'}"></i>
