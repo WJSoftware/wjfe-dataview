@@ -11,6 +11,9 @@ export const bootstrapTheme: Theme = {
         backgroundColor: 'var(--bs-primary-rgb)',
         opacity: 0.2
     },
+    rowSelection: {
+        backgroundColor: 'var(--bs-row-selection-bg-color-rgb)',
+    }
 };
 
 export const skyTheme: Theme = {

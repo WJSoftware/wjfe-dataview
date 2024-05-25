@@ -21,7 +21,7 @@
         {
             key: 'control',
             text: '',
-            width: 3,
+            width: 4,
             resizable: false,
             pinned: true
         },
@@ -81,12 +81,39 @@
         },
     ]);
 
+    const allSelected = $derived.by(() => {
+        let oneSelected: boolean | null = null;
+        let oneUnselected: boolean | null = null;
+        for (let person of data.data) {
+            if (person.wjdv?.selected) {
+                oneSelected = true;
+            }
+            if (!person.wjdv?.selected) {
+                oneUnselected = true;
+            }
+            if (oneSelected !== null && oneUnselected !== null) {
+                // Indeterminate state.
+                return null;
+            }
+        }
+        return oneSelected === true;
+    });
+
     $effect(() => reloadData(demoOptions.records));
 
     function reloadData(records: number) {
+        if ($page.url.searchParams.get('records') ?? 200 == records) {
+            return;
+        }
         const url = new URL($page.url);
         url.searchParams.set('records', records.toString());
         goto(url);
+    }
+
+    function selectAllData(selected: boolean) {
+        for (let person of data.data) {
+            person.wjdv!.selected = selected;
+        }
     }
 </script>
 
@@ -160,11 +187,20 @@ import &#123; WjDataView &#125; from '@wjfe/dataview';
                 bind:data={data.data}
                 striped={demoOptions.striped}
                 rowHighlight={demoOptions.rowHighlight}
+                rowSelectionBg={demoOptions.rowSelectionBg}
                 class="position-absolute top-0 bottom-0"
             >
                 {#snippet headerCell(col)}
                     {#if col.key === 'control'}
-                        <span>&nbsp;</span>
+                    <div class="ps-2">
+                        <input
+                        type="checkbox"
+                        class="form-check-input"
+                        indeterminate="{allSelected === null}"
+                        checked={!!allSelected}
+                        oninput="{ev => selectAllData(ev.currentTarget.checked)}"
+                        >
+                    </div>
                     {:else}
                         <div class="d-flex flex-row ps-2">
                             <span class="fw-semibold text-nowrap text-truncate">{col.text}</span>
@@ -178,7 +214,12 @@ import &#123; WjDataView &#125; from '@wjfe/dataview';
                 {/snippet}
                 {#snippet dataCell(col, row)}
                     {#if col.key === 'control'}
-                        <div class="px-2">
+                        <div class="px-2 d-flex flex-row gap-1">
+                            <input
+                                type="checkbox"
+                                class="form-check-input"
+                                bind:checked={row.wjdv!.selected}
+                            >
                             <button
                                 type="button"
                                 class="btn btn-sm btn-neutral"
@@ -245,9 +286,12 @@ import &#123; WjDataView &#125; from '@wjfe/dataview';
     .theme-def {
         --wjdv-sky-bg-rgb: 200, 240, 250;
         --wjdv-sky-color: var(--bs-black);
+        --bs-row-selection-bg-color-rgb: 221, 235, 255;
+        
         :global([data-bs-theme="dark"]) & {
             --wjdv-sky-bg-rgb: 30, 90, 120;
             --wjdv-sky-color: var(--bs-white);
+            --bs-row-selection-bg-color-rgb: 21, 35, 55;
         }
     }
 </style>
