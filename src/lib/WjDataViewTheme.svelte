@@ -33,6 +33,9 @@
     style:--wjdv-resizer-deltapos-border-color={theme.resizer?.overlay?.positiveDelta?.borderColor}
     style:--wjdv-resizer-deltaneg-bg-color={theme.resizer?.overlay?.negativeDelta?.backgroundColor}
     style:--wjdv-resizer-deltaneg-border-color={theme.resizer?.overlay?.negativeDelta?.borderColor}
+    style:--wjdv-selected-bg-color-rgb={theme.rowSelection?.backgroundColor}
+    style:--wjdv-selected-bg-opacity={theme.rowSelection?.opacity}
+    style:--wjdv-selected-fg-color={theme.rowSelection?.color}
 >
     {@render children()}
 </div>

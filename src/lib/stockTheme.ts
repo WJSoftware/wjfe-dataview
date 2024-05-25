@@ -13,6 +13,7 @@ export type Theme = {
     table?: ComponentColor;
     stripes?: ComponentColor;
     rowHighlight?: ComponentColor;
+    rowSelection?: ComponentColor;
     pinnedColumnsDivider?: {
         width?: string;
         style?: 'dashed' | 'dotted' | 'double' | 'groove' | 'inset' | 'outset' | 'ridge' | 'solid' | 'unset';
@@ -43,6 +44,11 @@ export const stockLight: Theme = {
     rowHighlight: {
         backgroundColor: '0, 0, 0',
         opacity: 0.07,
+        color: 'inherit'
+    },
+    rowSelection: {
+        backgroundColor: '227, 240, 254',
+        opacity: 1,
         color: 'inherit'
     },
     pinnedColumnsDivider: {
@@ -84,6 +90,11 @@ export const stockDark: Theme = {
     rowHighlight: {
         backgroundColor: '255, 255, 255',
         opacity: 0.15,
+        color: 'inherit'
+    },
+    rowSelection: {
+        backgroundColor: '15, 25, 74',
+        opacity: 1,
         color: 'inherit'
     },
     pinnedColumnsDivider: {

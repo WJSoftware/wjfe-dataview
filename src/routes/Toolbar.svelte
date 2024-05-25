@@ -23,6 +23,8 @@
         <label for="striped" class="btn btn-outline-primary">Striped</label>
         <input type="checkbox" id="rowHighlight" bind:checked={demoOptions.rowHighlight} class="btn-check" />
         <label for="rowHighlight" class="btn btn-outline-primary">Row Highlight</label>
+        <input type="checkbox" id="rowSelectionBg" bind:checked={demoOptions.rowSelectionBg} class="btn-check" />
+        <label for="rowSelectionBg" class="btn btn-outline-primary">Row Selection BG</label>
     </div>
     <div class="input-group">
         <span class="input-group-text" title="Row Count:"><i class="bi bi-person-lines-fill"></i></span>

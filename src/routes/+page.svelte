@@ -5,6 +5,7 @@
     import WjDataView, { type WjDvColumn, type WjDvRow } from "$lib/WjDataView.svelte";
     import WjDataViewTheme from "$lib/WjDataViewTheme.svelte";
     import type { Person } from "../data-models.js";
+    import MoreInfo from "./MoreInfo.svelte";
     import Toolbar from "./Toolbar.svelte";
     import { demoOptions } from "./demoOptions.svelte.js";
     import { themeOptions } from "./themeOptions.svelte.js";
@@ -21,7 +22,7 @@
         {
             key: 'control',
             text: '',
-            width: 3,
+            width: 4,
             resizable: false,
             pinned: true
         },
@@ -81,12 +82,39 @@
         },
     ]);
 
+    const allSelected = $derived.by(() => {
+        let oneSelected: boolean | null = null;
+        let oneUnselected: boolean | null = null;
+        for (let person of data.data) {
+            if (person.wjdv?.selected) {
+                oneSelected = true;
+            }
+            if (!person.wjdv?.selected) {
+                oneUnselected = true;
+            }
+            if (oneSelected !== null && oneUnselected !== null) {
+                // Indeterminate state.
+                return null;
+            }
+        }
+        return oneSelected === true;
+    });
+
     $effect(() => reloadData(demoOptions.records));
 
     function reloadData(records: number) {
+        if ($page.url.searchParams.get('records') ?? 200 == records) {
+            return;
+        }
         const url = new URL($page.url);
         url.searchParams.set('records', records.toString());
         goto(url);
+    }
+
+    function selectAllData(selected: boolean) {
+        for (let person of data.data) {
+            person.wjdv!.selected = selected;
+        }
     }
 </script>
 
@@ -112,44 +140,7 @@ import &#123; WjDataView &#125; from '@wjfe/dataview';
             </div>
         </div>
     </div>
-    <div class="offcanvas offcanvas-end bg-info bg-glass" id="helpCanvas" data-bs-backdrop="false">
-        <div class="offcanvas-header">
-            <h3 class="offcanvas-title">WjDataView</h3>
-        </div>
-        <div class="offcanvas-body">
-            <p>
-                The data view component shows data in tabular format.
-            </p>
-            <p>
-                The following is the list of features.  Some of these may not be evident if the browser's width is 
-                enough to show all data at once, such as the pinnable columns.  To overcome this, either make the 
-                browser window smaller, or resize some columns until the data goes off view.
-            </p>
-            <h4>List of Features</h4>
-            <ul>
-                <li>Scrollable viewport</li>
-                <li>Striped rows</li>
-                <li>Row highlighting on hover</li>
-                <li>Expansible rows</li>
-                <li>Hideable columns</li>
-                <li>Pinnable columns</li>
-                <li>Resizable columns</li>
-                <li>Customizable header content</li>
-                <li>Customizable data cell content</li>
-                <li>Customizable appearance via CSS variables</li>
-            </ul>
-            <h4>Can it be used to edit data?</h4>
-            <p>
-                The short answer is <strong>Yes!</strong>  The cell contents are rendered by providing a custom 
-                snippet named <span class="code">dataCell</span>.  However, note that <span class="code">WjDataView</span> 
-                will not provide any form of keyboard navigation of any kind.
-            </p>
-            <p>
-                Having said this, use <span class="code">dataCell</span> to provide cell content with controls such as 
-                textboxes, checkboxes, radio buttons, selects, etc.
-            </p>
-        </div>
-    </div>
+    <MoreInfo />
     <Toolbar />
     <div
         class="flex-fill position-relative"
@@ -160,11 +151,20 @@ import &#123; WjDataView &#125; from '@wjfe/dataview';
                 bind:data={data.data}
                 striped={demoOptions.striped}
                 rowHighlight={demoOptions.rowHighlight}
+                rowSelectionBg={demoOptions.rowSelectionBg}
                 class="position-absolute top-0 bottom-0"
             >
                 {#snippet headerCell(col)}
                     {#if col.key === 'control'}
-                        <span>&nbsp;</span>
+                    <div class="ps-2">
+                        <input
+                        type="checkbox"
+                        class="form-check-input"
+                        indeterminate="{allSelected === null}"
+                        checked={!!allSelected}
+                        oninput="{ev => selectAllData(ev.currentTarget.checked)}"
+                        >
+                    </div>
                     {:else}
                         <div class="d-flex flex-row ps-2">
                             <span class="fw-semibold text-nowrap text-truncate">{col.text}</span>
@@ -178,10 +178,15 @@ import &#123; WjDataView &#125; from '@wjfe/dataview';
                 {/snippet}
                 {#snippet dataCell(col, row)}
                     {#if col.key === 'control'}
-                        <div class="px-2">
+                        <div class="px-2 d-flex flex-row gap-1">
+                            <input
+                                type="checkbox"
+                                class="form-check-input"
+                                bind:checked={row.wjdv!.selected}
+                            >
                             <button
                                 type="button"
-                                class="btn btn-sm border"
+                                class="btn btn-sm btn-neutral"
                                 onclick={() => row.wjdv!.expanded = !row.wjdv!.expanded}
                             >
                                 <i class="bi bi-chevron-bar-{row.wjdv?.expanded ? 'contract' : 'expand'}"></i>
@@ -222,32 +227,15 @@ import &#123; WjDataView &#125; from '@wjfe/dataview';
 {/snippet}
 
 <style lang="scss">
-    .bg-glass {
-        --bs-bg-opacity: 0.3;
-        backdrop-filter: blur(7px) saturate(110%);
-    }
-
-    span.code {
-        font-family: monospace;
-        background-color: rgba(0, 0, 0, 0.2);
-        padding: 0.2em 0.3em;
-        border-radius: 0.2em;
-
-        :global([data-bs-theme="dark"]) & {
-            background-color: rgba(255, 255, 255, 0.2);
-        }
-    }
-
-    :global([data-bs-theme="dark"]) .offcanvas.bg-info {
-        color: var(--bs-white);
-    }
-
     .theme-def {
         --wjdv-sky-bg-rgb: 200, 240, 250;
         --wjdv-sky-color: var(--bs-black);
+        --bs-row-selection-bg-color-rgb: 221, 235, 255;
+        
         :global([data-bs-theme="dark"]) & {
             --wjdv-sky-bg-rgb: 30, 90, 120;
             --wjdv-sky-color: var(--bs-white);
+            --bs-row-selection-bg-color-rgb: 21, 35, 55;
         }
     }
 </style>
