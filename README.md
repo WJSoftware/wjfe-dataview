@@ -8,7 +8,7 @@ The data view component renders a table with functionality suitable for close ex
 provides conveniences like pinnable columns and row highlighting on hover, useful to users when following data with 
 their eyes.
 
-> **[Demo Website](https://wj-dataview.vercel.app)**
+> **[Demo Website](https://wjsoftware.github.io/wjfe-dataview)**
 
 The component tries to be as unopinionated as possible in terms of styling and tries to provide as little styling as 
 possible.  Certain features, however, impose some appearance requirements.  For example, pinning columns in the grid 
