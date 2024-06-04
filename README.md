@@ -16,7 +16,8 @@ requires opaque background colors or else the data from other columns will be se
 the data view is scrolled horizontally.
 
 To theme the table to your needs or otherwise make it play well with your styling framework of choice (Bootstrap, 
-Tailwind CSS, Bulma, etc.), you may style it in accordance to what is shown in the **Theming the Data View** section.
+Tailwind CSS, Bulma, etc.), you may style it in accordance to what is shown in the 
+**[Theming the Data View](#theming-the-data-view)** section.
 
 ## Quickstart
 
@@ -36,9 +37,11 @@ The only two required properties are `columns` and `data`.  The former defines t
 latter provides the data that shows in each column.  By default, the `key` property of each column is treated as the 
 key to retrieve data from the data row, but this can be overridden by providing `get` functions.
 
-Each column must have the `key` and the `text` properties.  Any other property is optional.  `key` is a unique string, 
-and by default, it is assumed to be the name of a property in the data objects given to the grid via the `data` 
-property.
+Each column must have the `key` and the `text` properties.  Any other property is optional.
+
+Each data object (the rows) must have an `id` property of type `number` or `string`, and the `wjdv` property, which is 
+an object that holds operational data for each row.  The `defineData()` function is a helper function that helps you 
+fulfill these 2 requirements.  The `id` values are meant to be unique amongst the data set.
 
 > **IMPORTANT**:  Always bind `columns` and `data`.  The data view control will mutate properties inside this data, 
 > so the best practice is to bind.
@@ -48,8 +51,7 @@ property.
     import { WjDataView, defineData } from '@wjfe/dataview';
     import { type MyDataModel } from 'path/to/my-model-types.js';
 
-    type MyDataModelGridRow = WjDvRow<MyDataModel>;
-    type MyColumn = WjDvColumn<Record<string, any>, MyDataModelGridRow>;
+    type MyColumn = WjDvColumn<MyDataModel>;
     const columns = $state<MyColumn[]>([
         {
             key: 'id',
@@ -63,8 +65,10 @@ property.
     // Obtain the data somehow.  This could be part of the results of the universal or server load() SvelteKit 
     // function, or could be obtained in non-SvelteKit projects with a fetch() call.
     const dataFromApi = getDataSomehow();
-    // Now ensure the data fulfills the requirements using "defineData":
-    let data: $state<MyDataModel[]> = defineData(dataFromApi);
+    // Now ensure the data fulfills the component requirements using "defineData":
+    let data = $state(defineData<MyDataModel>(dataFromApi));
+    // The model type here ------^^^^^^^^^^^ may not be needed if you have properly typed the `getDataSomehow()` 
+    // function or the `dataFromApi` variable.
 </script>
 
 ...
@@ -76,6 +80,9 @@ property.
 This example would render the data view with two columns, whose captions will read `ID` and `Tag`.  The data shown in 
 each column will be extracted from the `MyDataModel.id` and `MyDataModel.tagName` properties of each of the data 
 objects in the `data` array.
+
+> The `defineData()` function mutates the data for performance reasons.  It works the items directly as opposed to 
+> cloning them.  Also, the same array is returned for the same performance reasons.
 
 ## Theming the Data View
 
@@ -129,8 +136,8 @@ export type Theme = {
 };
 ```
 
-While the amount of properties are a lot, each one of them are optional.  Simply set the properties that you wish to 
-customize.  The properties that aren't set will take the default documented in the table further down this document.
+While the amount of properties is many, each one of them are optional.  Simply set the properties that you wish to 
+customize.  The properties that aren't set will take the default value documented in the table further down.
 
 For example, Bootstrap consumers might want to ensure that the data view always uses the body's background color.  In 
 this case, we could create the following theme in a `dataViewThemes.ts` (potential) file:

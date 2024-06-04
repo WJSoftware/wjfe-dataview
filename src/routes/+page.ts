@@ -1,6 +1,6 @@
 import type { LoadEvent } from "@sveltejs/kit";
 import type { Person } from "../data-models.js";
-import { defineData, type WjDvRow } from "$lib/WjDataView.svelte";
+import { defineData } from "$lib/WjDataView.svelte";
 import { demoOptions } from "./demoOptions.svelte.js";
 
 export async function load(ev: LoadEvent): Promise<{ total: number; data: Person[] }> {
