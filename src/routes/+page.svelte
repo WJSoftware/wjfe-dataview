@@ -10,15 +10,13 @@
     import { demoOptions } from "./demoOptions.svelte.js";
     import { themeOptions } from "./themeOptions.svelte.js";
 
-    type PersonGridRow = WjDvRow<Person>;
-
     let {
         data,
     }: {
-        data: { data: PersonGridRow[]; }
+        data: { data: WjDvRow<Person>[]; }
     } = $props();
 
-    let columns = $state<WjDvColumn<Record<string, any>, PersonGridRow>[]>([
+    let columns = $state<WjDvColumn<Person>[]>([
         {
             key: 'control',
             text: '',
