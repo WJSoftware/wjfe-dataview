@@ -86,10 +86,10 @@
         let oneSelected: boolean | null = null;
         let oneUnselected: boolean | null = null;
         for (let person of data.data) {
-            if (person.wjdv?.selected) {
+            if (person.wjdv.selected) {
                 oneSelected = true;
             }
-            if (!person.wjdv?.selected) {
+            if (!person.wjdv.selected) {
                 oneUnselected = true;
             }
             if (oneSelected !== null && oneUnselected !== null) {
@@ -103,7 +103,7 @@
     $effect(() => reloadData(demoOptions.records));
 
     function reloadData(records: number) {
-        if ($page.url.searchParams.get('records') ?? 200 == records) {
+        if (($page.url.searchParams.get('records') ?? 200) == records) {
             return;
         }
         const url = new URL($page.url);
@@ -113,7 +113,7 @@
 
     function selectAllData(selected: boolean) {
         for (let person of data.data) {
-            person.wjdv!.selected = selected;
+            person.wjdv.selected = selected;
         }
     }
 </script>
@@ -182,14 +182,14 @@ import &#123; WjDataView &#125; from '@wjfe/dataview';
                             <input
                                 type="checkbox"
                                 class="form-check-input"
-                                bind:checked={row.wjdv!.selected}
+                                bind:checked={row.wjdv.selected}
                             >
                             <button
                                 type="button"
                                 class="btn btn-sm btn-neutral"
-                                onclick={() => row.wjdv!.expanded = !row.wjdv!.expanded}
+                                onclick={() => row.wjdv.expanded = !row.wjdv.expanded}
                             >
-                                <i class="bi bi-chevron-bar-{row.wjdv?.expanded ? 'contract' : 'expand'}"></i>
+                                <i class="bi bi-chevron-bar-{row.wjdv.expanded ? 'contract' : 'expand'}"></i>
                             </button>
                         </div>
                     {:else}

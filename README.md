@@ -45,7 +45,7 @@ property.
 
 ```html
 <script lang="ts">
-    import { WjDataView } from '@wjfe/dataview';
+    import { WjDataView, defineData } from '@wjfe/dataview';
     import { type MyDataModel } from 'path/to/my-model-types.js';
 
     type MyDataModelGridRow = WjDvRow<MyDataModel>;
@@ -62,8 +62,11 @@ property.
     ]);
     // Obtain the data somehow.  This could be part of the results of the universal or server load() SvelteKit 
     // function, or could be obtained in non-SvelteKit projects with a fetch() call.
-    let data: $state<MyDataModel[]> = getDataSomehow();
+    const dataFromApi = getDataSomehow();
+    // Now ensure the data fulfills the requirements using "defineData":
+    let data: $state<MyDataModel[]> = defineData(dataFromApi);
 </script>
+
 ...
 <WjDataView bind:columns bind:data>
     <!-- snippets go here -->
