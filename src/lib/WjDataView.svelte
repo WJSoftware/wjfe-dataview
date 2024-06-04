@@ -8,7 +8,7 @@
 
     export type WjDvRow<TRow extends Record<string, any> = Record<string, any>> = TRow & {
         id: string | number;
-        wjdv?: WjDvRowProps;
+        wjdv: WjDvRowProps;
     };
 
     export type WjDvColumn<TCol extends Record<string, any> = Record<string, any>, TRow extends Record<string, any> = Record<string, any>> = TCol & {
@@ -23,6 +23,42 @@
         noTextWrap?: boolean;
         get?: (row: TRow) => any;
     };
+
+    /**
+     * Makes sure every data object in the provided array satisfies the data requirements imposed by the `WjDataView` 
+     * component.  The optional function parameter can accept a function that returns the value of the `id` property 
+     * for the data object, just in case the data doesn't already have an `id` property.
+     * 
+     * **REMEMBER**:  `WjDataView` has 2 requirements on the data objects:  They must have an `id` property and the 
+     * `wjdv` property.  The purpose of this function is to ensure these requirements are met.  The use of the funtion 
+     * itself is optional, though, and you may ensure the requirements are met in any other way.
+     * 
+     * @example
+     * ```typescript
+     * // Where "data" comes from, say, the load() function in +page.ts.
+     * // The function provided as second argument is used to generate
+     * const dataRows = defineData(data, m => crypto.randomUUID());
+     * ```
+     * @param {TData[]} data Array of data objects that will be used as source of data for a `WjDataView` component.
+     * @param {(model: TData) => WjDvRow<TData>['id']} idGenFn Optional ID-generation function used to create unique 
+     * identifiers for the data objects.
+     * @returns {WjDvRow<TData>[]} The same `data` array typed as `WjDvRow<TData>[]`.
+     */
+    export function defineData<TData extends Record<string, any>>(
+        data: TData[],
+        idGenFn?: (model: TData) => WjDvRow<TData>['id']
+    ) {
+        for (let item of data) {
+            (item as WjDvRow<TData>).wjdv = {};
+            if (idGenFn && !item.id) {
+                (item as WjDvRow<TData>).id = idGenFn(item);
+            }
+            else if (item.id === undefined) {
+                throw new Error(`'A data object in the array doesn't have the "id" property and no ID generation function was provided.  Either provide the generation function, or ensure the data comes with the "id" property.`);
+            }
+        }
+        return data as WjDvRow<TData>[];
+    }
 </script>
 
 <script lang="ts" generics="TCol extends Record<string, any> = Record<string, any>, TRow extends Record<string, any> = Record<string, any>">
@@ -211,7 +247,7 @@
         </div>
         <div class={combineClasses('dataview-body', { striped, 'row-highlight': rowHighlight })} role="rowgroup">
             {#each data as row (row.id)}
-            <div class="dataview-row-bg" class:selected={rowSelectionBg && row.wjdv?.selected} role="row">
+            <div class="dataview-row-bg" class:selected={rowSelectionBg && row.wjdv.selected} role="row">
                 <div class="dataview-row-s">
                     <div class="dataview-row-h">
                         <div class="dataview-row-d">
@@ -221,7 +257,7 @@
                             {@render colData(row, segregatedColumns.unpinned)}
                             <div class="dataview-cell">&nbsp;</div>
                         </div>
-                        {#if row.wjdv?.expanded && rowExpansion}
+                        {#if row.wjdv.expanded && rowExpansion}
                             <div class="dataview-row-expansion">
                                 {@render rowExpansion(row)}
                             </div>
