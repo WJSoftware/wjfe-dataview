@@ -21,9 +21,11 @@
             <li>Hideable columns</li>
             <li>Pinnable columns</li>
             <li>Resizable columns</li>
+            <li>Column alignment</li>
+            <li>Text wrap control</li>
             <li>Customizable header content</li>
             <li>Customizable data cell content</li>
-            <li>Customizable appearance via CSS variables</li>
+            <li>Customizable appearance via CSS variables (theme component available)</li>
         </ul>
         <h4>Can it be used to edit data?</h4>
         <p>
