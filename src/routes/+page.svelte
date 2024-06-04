@@ -27,55 +27,47 @@
         {
             key: 'id',
             text: 'ID',
-            width: 4,
+            width: 5,
             resizable: false,
             pinned: true
         },
         {
             key: 'first_name',
             text: 'First Name',
-            width: 8,
             minWidth: 5,
             hidden: false
         },
         {
             key: 'last_name',
             text: 'Last Name',
-            width: 8
         },
         {
             key: 'email',
             text: 'E-Mail',
-            width: 12,
             pinned: true
         },
         {
             key: 'gender',
             text: 'Gender',
-            width: 6.5,
             alignment: 'center'
         },
         {
             key: 'birth_date',
             text: 'Birth Date',
-            width: 8,
             noTextWrap: true,
         },
         {
             key: 'country_code',
             text: 'Country Code',
-            width: 9,
         },
         {
             key: 'credit_score',
             text: 'Credit Score',
-            width: 8,
             alignment: 'end'
         },
         {
             key: 'net_worth',
             text: 'Net Worth',
-            width: 9,
             alignment: 'end'
         },
     ]);
@@ -130,8 +122,7 @@
                         <i class="bi bi-lightbulb-fill"></i>
                         <pre class="mb-0">npm i @wjfe/dataview
 
-import &#123; WjDataView &#125; from '@wjfe/dataview';
-                        </pre>
+import &#123; WjDataView &#125; from '@wjfe/dataview';</pre>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-2"></div>
@@ -150,6 +141,7 @@ import &#123; WjDataView &#125; from '@wjfe/dataview';
                 striped={demoOptions.striped}
                 rowHighlight={demoOptions.rowHighlight}
                 rowSelectionBg={demoOptions.rowSelectionBg}
+                defaultWidth={15}
                 class="position-absolute top-0 bottom-0"
             >
                 {#snippet headerCell(col)}
@@ -210,6 +202,14 @@ import &#123; WjDataView &#125; from '@wjfe/dataview';
                 {/snippet}
             </WjDataView>
         </WjDataViewTheme>
+        <a
+            class="position-absolute bottom-0 end-0 rounded-circle btn btn-sm btn-secondary mb-3 me-3 semi-transparent"
+            title="See an error?  Want to improve the demo?  Curious about the source code?  View/edit this page in GitHub."
+            href="https://github.com/WJSoftware/wjfe-dataview/blob/main/src/routes/%2Bpage.svelte"
+            target="_blank"
+        >
+            <i class="bi bi-pencil"></i>
+        </a>
     </div>
 </div>
 
@@ -234,6 +234,13 @@ import &#123; WjDataView &#125; from '@wjfe/dataview';
             --wjdv-sky-bg-rgb: 30, 90, 120;
             --wjdv-sky-color: var(--bs-white);
             --bs-row-selection-bg-color-rgb: 21, 35, 55;
+        }
+    }
+
+    .semi-transparent {
+        opacity: 0.4;
+        &:hover {
+            opacity: 1;
         }
     }
 </style>
