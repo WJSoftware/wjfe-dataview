@@ -1,27 +1,89 @@
 <script context="module" lang="ts">
+    /**
+     * Possible column alignments.
+     */
     export type ColAlignment = 'start' | 'center' | 'end';
 
+    /**
+     * Properties that `WjDataView` mutates inside the data objects's `wjdv` property.
+     * 
+     * **TIP**:  Use the `defineData()` function to easily comply with data row requirements.
+     */
     export type WjDvRowProps = {
+        /**
+         * Optional.  Boolean value that determines if the row is expanded.
+         */
         expanded?: boolean;
+        /**
+         * Optional.  Boolean value that determines if the row is selected.
+         */
         selected?: boolean;
     };
 
+    /**
+     * Type of (data) row objects being fed to the `WjDataView` component.
+     * 
+     * **TIP**:  Use the `defineData()` function to easily comply with data row requirements.
+     */
     export type WjDvRow<TRow extends Record<string, any> = Record<string, any>> = TRow & {
+        /**
+         * Mandatory row identifier that is used to key the row user interface element.
+         */
         id: string | number;
+        /**
+         * Container object for properties that the `WjDataView` component mutates during the course of its execution.
+         */
         wjdv: WjDvRowProps;
     };
 
-    export type WjDvColumn<TCol extends Record<string, any> = Record<string, any>, TRow extends Record<string, any> = Record<string, any>> = TCol & {
+    /**
+     * Type that defines the necessary and optional properties of column definition objects.
+     */
+    export type WjDvColumn<TRow extends Record<string, any> = Record<string, any>, TCol extends Record<string, any> = Record<string, any>> = TCol & {
+        /**
+         * Column's key.  A string value that is meant to be unique amongst the list of columns.  It is used to key 
+         * the rendered column elements, and if no `get` property is defined, it also serves as property name to 
+         * obtain data row data values.
+         */
         key: string;
+        /**
+         * Column's caption.
+         */
         text: string;
+        /**
+         * Optional.  Column's width, in *em*'s.  The default value is 10 em's.
+         */
         width?: number;
+        /**
+         * Optional.  Minimum column's width, in *em*'s.  The default value is 3 em's.
+         */
         minWidth?: number;
+        /**
+         * Optional.  Boolean value that indicates if the column can be resized.  The default value is `true`.
+         */
         resizable?: boolean;
+        /**
+         * Optional.  Boolean value that indicates if the column is pinned.  The default value is `false`.
+         */
         pinned?: boolean;
+        /**
+         * Optional.  Boolean value that indicates if the column is hidden.  The default value is `false`.
+        */
         hidden?: boolean;
+        /**
+         * Optional.  Column alignment.  The default value is to be unset, so no explicit alignment takes place.
+         */
         alignment?: ColAlignment;
+        /**
+         * Optional.  Prevents data to wrap to a new line.  The default value is `false`.
+         */
         noTextWrap?: boolean;
-        get?: (row: TRow) => any;
+        /**
+         * Optional.  A function that returns the data that is to be rendered in the column.
+         * @param row The data row object that is about to be rendered.
+         * @returns The data meant to be rendered for this column.
+         */
+        get?: (row: WjDvRow<TRow>) => any;
     };
 
     /**
@@ -86,7 +148,7 @@
         /**
          * Defines the columns the data view component will create.
          */
-        columns: WjDvColumn<TCol, TRow>[];
+        columns: WjDvColumn<TRow, TCol>[];
         /**
          * The data that is shown by the data view component.
          */
@@ -98,7 +160,7 @@
          * @param row Data object for the row being rendered (hence its name).
          * @param key Key of the column being rendered.
          */
-        get?: (row: TRow, key: string) => any;
+        get?: (row: WjDvRow<TRow>, key: string) => any;
         /**
          * The width for colums that don't specify its own width, in `em`'s.
          */
@@ -122,11 +184,11 @@
         /**
          * Snippet used to render the contents of header cells.
          */
-        headerCell?: Snippet<[WjDvColumn<TCol, TRow>]>;
+        headerCell?: Snippet<[WjDvColumn<TRow, TCol>]>;
         /**
          * Snippet used to render the contents of data cells.
          */
-        dataCell?: Snippet<[WjDvColumn<TCol,TRow>, WjDvRow<TRow>]>;
+        dataCell?: Snippet<[WjDvColumn<TRow, TCol>, WjDvRow<TRow>]>;
         /**
          * Snipped used to render the extra row contents of rows with the `wjdv.expanded` property set to `true`.
          */
@@ -138,7 +200,7 @@
     } = $props();
 
     type ColumnInfo = {
-        column: WjDvColumn<TCol, TRow>;
+        column: WjDvColumn<TRow, TCol>;
         left?: number;
     }
 
@@ -167,7 +229,7 @@
         return p;
     }, { accPinnedWidth: 0, accUnpinnedWidth: 0, pinned: [], unpinned: [] }));
 
-    function columnWidth(col: WjDvColumn<TCol, TRow>) {
+    function columnWidth(col: WjDvColumn<TRow, TCol>) {
         return col.width ?? defaultWidth;
     }
 </script>
