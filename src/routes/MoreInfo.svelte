@@ -23,6 +23,7 @@
             <li>Resizable columns</li>
             <li>Column alignment</li>
             <li>Text wrap control</li>
+            <li>Grid lines for columns and rows</li>
             <li>Customizable header content</li>
             <li>Customizable data cell content</li>
             <li>Customizable appearance via CSS variables (theme component available)</li>
