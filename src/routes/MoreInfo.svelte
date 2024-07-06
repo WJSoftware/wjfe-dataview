@@ -15,7 +15,7 @@
         <ul>
             <li>Scrollable viewport</li>
             <li>Striped rows</li>
-            <li>Row highlighting on hover</li>
+            <li>Row tracking on mouse hover</li>
             <li>Row highlighting on selection</li>
             <li>Expansible rows</li>
             <li>Hideable columns</li>

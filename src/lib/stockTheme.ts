@@ -18,7 +18,7 @@ export type BorderDefinition = {
 export type Theme = {
     table?: ComponentColor;
     stripes?: ComponentColor;
-    rowHighlight?: ComponentColor;
+    rowTracking?: ComponentColor;
     rowSelection?: ComponentColor;
     pinnedColumnsDivider?: BorderDefinition,
     resizer?: {
@@ -44,7 +44,7 @@ export const stockLight: Theme = {
         opacity: 0.04,
         color: 'inherit'
     },
-    rowHighlight: {
+    rowTracking: {
         backgroundColor: '0, 0, 0',
         opacity: 0.07,
         color: 'inherit'
@@ -95,7 +95,7 @@ export const stockDark: Theme = {
         opacity: 0.07,
         color: 'inherit'
     },
-    rowHighlight: {
+    rowTracking: {
         backgroundColor: '255, 255, 255',
         opacity: 0.15,
         color: 'inherit'

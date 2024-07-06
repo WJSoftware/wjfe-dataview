@@ -123,7 +123,7 @@ export type BorderDefinition = {
 export type Theme = {
     table?: ComponentColor;
     stripes?: ComponentColor;
-    rowHighlight?: ComponentColor;
+    rowTracking?: ComponentColor;
     rowSelection?: ComponentColor;
     pinnedColumnsDivider?: BorderDefinition,
     resizer?: {
@@ -155,7 +155,7 @@ export const bootstrapTheme: Theme = {
     stripes: {
         backgroundColor: 'var(--bs-emphasis-color-rgb)'
     },
-    rowHighlight: {
+    rowTracking: {
         backgroundColor: 'var(--bs-primary-rgb)',
         opacity: 0.2
     },
@@ -217,9 +217,9 @@ The complete list of CSS variables that can be set for the data view component a
 | `--wjdv-striping-bg-color-rgb` | `0, 0, 0` | `255, 255, 255` | Striping background color.  Set the opacity as well. |
 | `--wjdv-striping-bg-opacity` | `0.04` | `0.07` | Striping background color's opacity. |
 | `--wjdv-striping-fg-color` | `inherit` | `inherit` | Foreground (or text) color for striped rows. |
-| `--wjdv-rowhighlight-bg-color-rgb` | `0, 0, 0` | `255, 255, 255` | Background color for row highlighting on hover. |
-| `--wjdv-rowhighlight-bg-opacity` | `0.07` | `0.15` | Opacity for row highlighting.  Usually set higher than the striping one or the effect doesn't look very good. |
-| `--wjdv-rowhighlight-fg-color` | `inherit` | `inherit` | Foreground (or text) color for highlighted rows. |
+| `--wjdv-rowtracking-bg-color-rgb` | `0, 0, 0` | `255, 255, 255` | Background color for row tracking. |
+| `--wjdv-rowtracking-bg-opacity` | `0.07` | `0.15` | Opacity for row tracking.  Usually set higher than the striping one or the effect doesn't look very good. |
+| `--wjdv-rowtracking-fg-color` | `inherit` | `inherit` | Foreground (or text) color for tracked rows. |
 | `--wjdv-sticky-divider-width` | `0.1em` | `0.1em` | Width of the border that divides pinned columns from unpinned ones. |
 | `--wjdv-sticky-divider-style` | `solid` | `solid` | Style of the border that divides pinned columns from unpinned ones. |
 | `--wjdv-sticky-divider-color` | `darkgray` | `lightgray` | Color of the border that divides pinned columns from unpinned ones. |
@@ -248,7 +248,7 @@ The complete list of CSS variables that can be set for the data view component a
 | `data` | `WjDvRow<TRow>[]` | (none) | The data that is shown by the data view component. |
 | `get` | `(row: TRow, key: string) => any` | (function) | Function that retrieves a column's value using the row and provided key for columns that don't provide one. |
 | `defaultWidth` | `number` | `10` | The width for colums that don't specify its own width, in `em`'s. |
-| `rowHighlight` | `boolean` | `true` | Turns the row-highlighting-on-hover feature on and off. |
+| `rowTracking` | `boolean` | `true` | Turns the row tracking feature on and off. |
 | `rowSelectionBg` | `boolean` | `true` |   Turns the row-highlighting-on-selection feature on and off. |
 | `striped` | `boolean` | `true` | Turns the striping of rows on and off. |
 | `pinnedDivider` | `boolean` | `true` | Turns the divider between pinned and unpinned columns on and off. |

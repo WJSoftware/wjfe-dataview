@@ -24,8 +24,8 @@
         <div class="btn-group btn-sm">
             <input type="checkbox" id="striped" bind:checked={demoOptions.striped} class="btn-check" />
             <label for="striped" class="btn btn-outline-primary rounded-0">Striped</label>
-            <input type="checkbox" id="rowHighlight" bind:checked={demoOptions.rowHighlight} class="btn-check" />
-            <label for="rowHighlight" class="btn btn-outline-primary">Row Highlight</label>
+            <input type="checkbox" id="rowTracking" bind:checked={demoOptions.rowTracking} class="btn-check" />
+            <label for="rowTracking" class="btn btn-outline-primary">Row Tracking</label>
             <input type="checkbox" id="rowSelectionBg" bind:checked={demoOptions.rowSelectionBg} class="btn-check" />
             <label for="rowSelectionBg" class="btn btn-outline-primary">Row Selection BG</label>
         </div>

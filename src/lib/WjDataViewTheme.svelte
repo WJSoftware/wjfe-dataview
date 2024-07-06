@@ -19,9 +19,9 @@
     style:--wjdv-striping-bg-color-rgb={theme.stripes?.backgroundColor}
     style:--wjdv-striping-bg-opacity={theme.stripes?.opacity}
     style:--wjdv-striping-fg-color={theme.stripes?.color}
-    style:--wjdv-rowhighlight-bg-color-rgb={theme.rowHighlight?.backgroundColor}
-    style:--wjdv-rowhighlight-bg-opacity={theme.rowHighlight?.opacity}
-    style:--wjdv-rowhighlight-fg-color={theme.rowHighlight?.color}
+    style:--wjdv-rowtracking-bg-color-rgb={theme.rowTracking?.backgroundColor}
+    style:--wjdv-rowtracking-bg-opacity={theme.rowTracking?.opacity}
+    style:--wjdv-rowtracking-fg-color={theme.rowTracking?.color}
     style:--wjdv-sticky-divider-width={theme.pinnedColumnsDivider?.width}
     style:--wjdv-sticky-divider-style={theme.pinnedColumnsDivider?.style}
     style:--wjdv-sticky-divider-color={theme.pinnedColumnsDivider?.color}
