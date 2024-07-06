@@ -2,7 +2,7 @@ import { GridBorders } from "$lib/WjDataView.svelte";
 
 export const demoOptions = $state({
     striped: true,
-    rowHighlight: true,
+    rowTracking: true,
     rowSelectionBg: true,
     records: 200,
     borders: [] as GridBorders[],

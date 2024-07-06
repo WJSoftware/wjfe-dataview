@@ -7,7 +7,7 @@ export const bootstrapTheme: Theme = {
     stripes: {
         backgroundColor: 'var(--bs-emphasis-color-rgb)'
     },
-    rowHighlight: {
+    rowTracking: {
         backgroundColor: 'var(--bs-primary-rgb)',
         opacity: 0.2
     },

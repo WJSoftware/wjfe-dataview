@@ -156,7 +156,7 @@
         data = $bindable(),
         get = (r, k) => r[k],
         defaultWidth = 10,
-        rowHighlight = true,
+        rowTracking = true,
         rowSelectionBg = true,
         striped = true,
         gridBorders = GridBorders.None,
@@ -188,9 +188,9 @@
          */
         defaultWidth?: number;
         /**
-         * Turns the row-highlighting-on-hover feature on and off.
+         * Turns the row tracking feature on and off.
          */
-        rowHighlight?: boolean;
+        rowTracking?: boolean;
         /**
          * Turns the row-highlighting-on-selection feature on and off.
          */
@@ -335,7 +335,7 @@
                 <div class="col-header extra-header">&nbsp;</div>
             </div>
         </div>
-        <div class={combineClasses('dataview-body', { striped, 'row-highlight': rowHighlight })} role="rowgroup">
+        <div class={combineClasses('dataview-body', { striped, 'row-tracking': rowTracking })} role="rowgroup">
             {#each data as row (row.id)}
             <div
                 class="dataview-row-bg"
@@ -403,8 +403,8 @@
         --wjdv-color: var(--wjdv-fg-color, inherit);
         --wjdv-striping-bg-color: rgba(var(--wjdv-striping-bg-color-rgb, 0, 0, 0), var(--wjdv-striping-bg-opacity, 0.04));
         --wjdv-striping-color: var(--wjdv-striping-fg-color, inherit);
-        --wjdv-rowhighlight-bg-color: rgba(var(--wjdv-rowhighlight-bg-color-rgb, 0, 0, 0), var(--wjdv-rowhighlight-bg-opacity, 0.07));
-        --wjdv-rowhighlight-color: rgba(--wjdv-rowhighlight-fg-color, inherit);
+        --wjdv-rowtracking-bg-color: rgba(var(--wjdv-rowtracking-bg-color-rgb, 0, 0, 0), var(--wjdv-rowtracking-bg-opacity, 0.07));
+        --wjdv-rowtracking-color: rgba(--wjdv-rowtracking-fg-color, inherit);
         --wjdv-sticky-divider: var(--wjdv-sticky-divider-width, 0.2em) var(--wjdv-sticky-divider-style, solid) var(--wjdv-sticky-divider-color, darkgray);
         --wjdv-selected-bg-color: rgba(var(--wjdv-selected-bg-color-rgb, 227, 240, 254), var(--wjdv-selected-bg-opacity, 1));
         --wjdv-selected-color: var(--wjdv-selected-fg-color, inherit);
@@ -494,15 +494,15 @@
             }
         }
 
-        &.row-highlight div.dataview-row-h {
+        &.row-tracking div.dataview-row-h {
             &:hover {
-                background-color: var(--wjdv-rowhighlight-bg-color);
+                background-color: var(--wjdv-rowtracking-bg-color);
 
                 // The following is correct, but Svelte says it is an unused CSS selector.
                 // It's been re-written outside the SCSS block with :global() as workaround.
 
                 // div.sticky-data div.dataview-cell-d {
-                //     background-color: var(--wjdv-rowhighlight-bg-color) !important;
+                //     background-color: var(--wjdv-rowtracking-bg-color) !important;
                 // }
             }
         }
@@ -513,8 +513,8 @@
         background-color: var(--wjdv-striping-bg-color);
         color: var(--wjdv-striping-color);
     }
-    :global(div.dataview-body.row-highlight) div.dataview-row-h:hover div.sticky-data :global(div.dataview-cell-d) {
-        background-color: var(--wjdv-rowhighlight-bg-color) !important;
+    :global(div.dataview-body.row-tracking) div.dataview-row-h:hover div.sticky-data :global(div.dataview-cell-d) {
+        background-color: var(--wjdv-rowtracking-bg-color) !important;
     }
 
     div.dataview-row-s {
