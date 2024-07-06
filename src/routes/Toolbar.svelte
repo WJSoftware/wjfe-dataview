@@ -3,8 +3,8 @@
     import { allThemes, getStockTheme, themeOptions } from "./themeOptions.svelte.js";
 
     const numRecordsOptions = [100, 200, 300, 400];
-    let themeKey = $state('Bootstrap');
     const stockThemeKey = 'Stock';
+    let themeKey = $state('Bootstrap');
 
     $effect(() => {themeOptions.currentTheme = themeKey === stockThemeKey ? getStockTheme() : allThemes[themeKey]; });
 </script>
@@ -18,13 +18,16 @@
     >
         <i class="bi bi-info-circle"></i>
     </button>
-    <div class="btn-group btn-sm">
-        <input type="checkbox" id="striped" bind:checked={demoOptions.striped} class="btn-check" />
-        <label for="striped" class="btn btn-outline-primary">Striped</label>
-        <input type="checkbox" id="rowHighlight" bind:checked={demoOptions.rowHighlight} class="btn-check" />
-        <label for="rowHighlight" class="btn btn-outline-primary">Row Highlight</label>
-        <input type="checkbox" id="rowSelectionBg" bind:checked={demoOptions.rowSelectionBg} class="btn-check" />
-        <label for="rowSelectionBg" class="btn btn-outline-primary">Row Selection BG</label>
+    <div class="input-group">
+        <span class="input-group-text" title="Row Options:"><i class="bi bi-list-check"></i></span>
+        <div class="btn-group btn-sm">
+            <input type="checkbox" id="striped" bind:checked={demoOptions.striped} class="btn-check" />
+            <label for="striped" class="btn btn-outline-primary rounded-0">Striped</label>
+            <input type="checkbox" id="rowHighlight" bind:checked={demoOptions.rowHighlight} class="btn-check" />
+            <label for="rowHighlight" class="btn btn-outline-primary">Row Highlight</label>
+            <input type="checkbox" id="rowSelectionBg" bind:checked={demoOptions.rowSelectionBg} class="btn-check" />
+            <label for="rowSelectionBg" class="btn btn-outline-primary">Row Selection BG</label>
+        </div>
     </div>
     <div class="input-group">
         <span class="input-group-text" title="Row Count:"><i class="bi bi-person-lines-fill"></i></span>
