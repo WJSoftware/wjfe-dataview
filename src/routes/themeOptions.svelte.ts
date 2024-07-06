@@ -1,4 +1,4 @@
-import { stockLight, stockDark, type Theme } from "$lib/stockTheme.js";
+import { stockDark, stockLight, type Theme } from "$lib/stockTheme.js";
 
 export const bootstrapTheme: Theme = {
     table: {
