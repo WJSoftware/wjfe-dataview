@@ -36,6 +36,9 @@
     style:--wjdv-selected-bg-color-rgb={theme.rowSelection?.backgroundColor}
     style:--wjdv-selected-bg-opacity={theme.rowSelection?.opacity}
     style:--wjdv-selected-fg-color={theme.rowSelection?.color}
+    style:--wjdv-grid-line-width={theme.gridBorders?.width}
+    style:--wjdv-grid-line-style={theme.gridBorders?.style}
+    style:--wjdv-grid-line-color={theme.gridBorders?.color}
 >
     {@render children()}
 </div>

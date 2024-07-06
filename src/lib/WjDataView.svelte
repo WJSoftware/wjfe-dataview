@@ -87,6 +87,28 @@
     };
 
     /**
+     * Defines the possible grid border options for the `WjDataView` component.
+     */
+    export enum GridBorders {
+        /**
+         * No borders.
+         */
+        None = 0x0,
+        /**
+         * Row borders.
+         */
+        Row = 0x1,
+        /**
+         * Column borders.
+         */
+        Column = 0x2,
+        /**
+         * All borders.
+         */
+        All = Row | Column
+    };
+
+    /**
      * Makes sure every data object in the provided array satisfies the data requirements imposed by the `WjDataView` 
      * component.  The optional function parameter can accept a function that returns the value of the `id` property 
      * for the data object, just in case the data doesn't already have an `id` property.
@@ -124,11 +146,10 @@
 </script>
 
 <script lang="ts" generics="TCol extends Record<string, any> = Record<string, any>, TRow extends Record<string, any> = Record<string, any>">
-    import { slide } from "svelte/transition";
-
+    
+    import { type Snippet } from "svelte";
     import Resizer from "./Resizer.svelte";
     import { combineClasses } from "./utils.js";
-    import { type Snippet } from "svelte";
 
     let {
         columns = $bindable(),
@@ -138,6 +159,7 @@
         rowHighlight = true,
         rowSelectionBg = true,
         striped = true,
+        gridBorders = GridBorders.None,
         pinnedDivider = true,
         headerCell,
         dataCell,
@@ -177,6 +199,10 @@
          * Turns the striping of rows on and off.
          */
         striped?: boolean;
+        /**
+         * Turns the grid borders on and off.
+         */
+        gridBorders?: GridBorders;
         /**
          * Turns the divider between pinned and unpinned columns on and off.
          */
@@ -239,7 +265,8 @@
     <div
         class={combineClasses('col-header', {
             'sticky-header': !!ci.column.pinned,
-            'sticky-divider': pinnedDivider && index + 1 === cols.length
+            'sticky-divider': pinnedDivider && index + 1 === cols.length,
+            'col-grid-line': !!((gridBorders ?? GridBorders.None) & GridBorders.Column)
         })}
         role="columnheader"
         style:width={`${columnWidth(ci.column)}em`}
@@ -270,7 +297,8 @@
     <div
         class={combineClasses('dataview-cell-bg', {
             'sticky-data': !!ci.column.pinned,
-            'sticky-divider': pinnedDivider && index + 1 === cols.length
+            'sticky-divider': pinnedDivider && index + 1 === cols.length,
+            'col-grid-line': !!((gridBorders ?? GridBorders.None) & GridBorders.Column)
         })}
         role="cell"
         style:width={`${ci.column.width ?? defaultWidth}em`}
@@ -299,7 +327,7 @@
 <div class={combineClasses('dataview-container', cssClass)}>
     <div class="dataview" role="table" {...restProps}>
         <div class="header-group" role="rowheader">
-            <div role="row">
+            <div role="row" class:row-grid-line={!!((gridBorders ?? GridBorders.None) & GridBorders.Row)}>
                 {#if segregatedColumns.pinned.length}
                     {@render colHeaders(segregatedColumns.pinned)}
                 {/if}
@@ -309,7 +337,12 @@
         </div>
         <div class={combineClasses('dataview-body', { striped, 'row-highlight': rowHighlight })} role="rowgroup">
             {#each data as row (row.id)}
-            <div class="dataview-row-bg" class:selected={rowSelectionBg && row.wjdv.selected} role="row">
+            <div
+                class="dataview-row-bg"
+                class:selected={rowSelectionBg && row.wjdv.selected}
+                class:row-grid-line={!!((gridBorders ?? GridBorders.None) & GridBorders.Row)}
+                role="row"
+            >
                 <div class="dataview-row-s">
                     <div class="dataview-row-h">
                         <div class="dataview-row-d">
@@ -372,9 +405,10 @@
         --wjdv-striping-color: var(--wjdv-striping-fg-color, inherit);
         --wjdv-rowhighlight-bg-color: rgba(var(--wjdv-rowhighlight-bg-color-rgb, 0, 0, 0), var(--wjdv-rowhighlight-bg-opacity, 0.07));
         --wjdv-rowhighlight-color: rgba(--wjdv-rowhighlight-fg-color, inherit);
-        --wjdv-sticky-divider: var(--wjdv-sticky-divider-width, 0.1em) var(--wjdv-sticky-divider-style, solid) var(--wjdv-sticky-divider-color, darkgray);
+        --wjdv-sticky-divider: var(--wjdv-sticky-divider-width, 0.2em) var(--wjdv-sticky-divider-style, solid) var(--wjdv-sticky-divider-color, darkgray);
         --wjdv-selected-bg-color: rgba(var(--wjdv-selected-bg-color-rgb, 227, 240, 254), var(--wjdv-selected-bg-opacity, 1));
         --wjdv-selected-color: var(--wjdv-selected-fg-color, inherit);
+        --wjdv-grid-line: var(--wjdv-grid-line-width, 0.01em) var(--wjdv-grid-line-style, solid) var(--wjdv-grid-line-color, currentColor);
     }
 
     div.dataview {
@@ -396,8 +430,21 @@
         }
     }
 
+    .col-grid-line {
+        border-right: var(--wjdv-grid-line);
+        &:last-of-type {
+            border-right: none;
+        }
+    }
+    
+    .row-grid-line {
+        border-bottom: var(--wjdv-grid-line);
+        &:last-of-type {
+            border-right: none;
+        }
+    }
+
     div.col-header {
-        // box-shadow: inset 0 -0.4em 1em rgba(0, 0, 0, 0.1);
         &.sticky-header {
             position: sticky;
             top: 0;
