@@ -114,16 +114,18 @@ export type ResizerColor = {
     borderColor?: string;
 };
 
+export type BorderDefinition = {
+    width?: string;
+    style?: 'dashed' | 'dotted' | 'double' | 'groove' | 'inset' | 'outset' | 'ridge' | 'solid' | 'unset';
+    color?: string;
+};
+
 export type Theme = {
     table?: ComponentColor;
     stripes?: ComponentColor;
     rowHighlight?: ComponentColor;
     rowSelection?: ComponentColor;
-    pinnedColumnsDivider?: {
-        width?: string;
-        style?: 'dashed' | 'dotted' | 'double' | 'groove' | 'inset' | 'outset' | 'ridge' | 'solid' | 'unset';
-        color?: string;
-    },
+    pinnedColumnsDivider?: BorderDefinition,
     resizer?: {
         width?: string;
         overlay?: {
@@ -133,10 +135,11 @@ export type Theme = {
             negativeDelta?: ResizerColor;
         }
     };
+    gridBorders?: BorderDefinition;
 };
 ```
 
-While the amount of properties is many, each one of them are optional.  Simply set the properties that you wish to 
+While the amount of properties is large, each one of them are optional.  Simply set the properties that you wish to 
 customize.  The properties that aren't set will take the default value documented in the table further down.
 
 For example, Bootstrap consumers might want to ensure that the data view always uses the body's background color.  In 
@@ -231,6 +234,9 @@ The complete list of CSS variables that can be set for the data view component a
 | `--wjdv-selected-bg-color-rgb` | `227, 240, 254` | `15, 25, 74` | Background color of rows that have been selected. |
 | `--wjdv-selected-bgopacity` | `1` | `1` | Background opacity of rows that have been selected. |
 | `--wjdv-selected-fg-color` | `inherit` | `inherit` | Foreground color of rows that have been selected. |
+| `--wjdv-grid-line-width` | `0.01em` | `0.01em` | Width of the table's border lines. |
+| `--wjdv-grid-line-style` | `solid` | `solid` | Style used in the table's border lines. |
+| `--wjdv-grid-line-color` | `currentColor` | `currentColor` | Color used in the table's border lines. |
 
 ## Reference
 

@@ -9,16 +9,18 @@ export type ResizerColor = {
     borderColor?: string;
 };
 
+export type BorderDefinition = {
+    width?: string;
+    style?: 'dashed' | 'dotted' | 'double' | 'groove' | 'inset' | 'outset' | 'ridge' | 'solid' | 'unset';
+    color?: string;
+};
+
 export type Theme = {
     table?: ComponentColor;
     stripes?: ComponentColor;
     rowHighlight?: ComponentColor;
     rowSelection?: ComponentColor;
-    pinnedColumnsDivider?: {
-        width?: string;
-        style?: 'dashed' | 'dotted' | 'double' | 'groove' | 'inset' | 'outset' | 'ridge' | 'solid' | 'unset';
-        color?: string;
-    },
+    pinnedColumnsDivider?: BorderDefinition,
     resizer?: {
         width?: string;
         overlay?: {
@@ -28,6 +30,7 @@ export type Theme = {
             negativeDelta?: ResizerColor;
         }
     };
+    gridBorders?: BorderDefinition;
 };
 
 export const stockLight: Theme = {
@@ -52,7 +55,7 @@ export const stockLight: Theme = {
         color: 'inherit'
     },
     pinnedColumnsDivider: {
-        width: '0.1em',
+        width: '0.2em',
         style: 'solid',
         color: 'darkgray'
     },
@@ -73,6 +76,11 @@ export const stockLight: Theme = {
                 borderColor: 'red'
             }
         }
+    },
+    gridBorders: {
+        width: '0.01em',
+        style: 'solid',
+        color: 'currentColor'
     }
 };
 
@@ -98,7 +106,7 @@ export const stockDark: Theme = {
         color: 'inherit'
     },
     pinnedColumnsDivider: {
-        width: '0.1em',
+        width: '0.2em',
         style: 'solid',
         color: 'lightgray'
     },
@@ -119,5 +127,10 @@ export const stockDark: Theme = {
                 borderColor: 'red'
             }
         }
+    },
+    gridBorders: {
+        width: '0.01em',
+        style: 'solid',
+        color: 'currentColor'
     }
 };
