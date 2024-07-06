@@ -127,8 +127,8 @@
 	role="separator"
 	aria-valuenow={delta}
 >
-	<svg viewBox="0 0 10 50" xmlns="http://www.w3.org/2000/svg">
-		<line x1="5" y1="5" x2="5" y2="45" stroke="currentColor" stroke-width="2" />
+	<svg viewBox="0 0 2 50" xmlns="http://www.w3.org/2000/svg">
+		<line x1="0" y1="10" x2="0" y2="40" stroke="currentColor" stroke-width="2" />
 	</svg>
 </div>
 
