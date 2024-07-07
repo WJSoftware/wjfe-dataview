@@ -58,7 +58,7 @@
 	"bugs": {
 		"url": "https://github.com/WJSoftware/wjfe-dataview/issues"
 	},
-	"homepage": "https://wj-dataview.vercel.app",
+	"homepage": "https://wjsoftware.github.io/wjfe-dataview/",
 	"svelte": "./dist/index.js",
 	"types": "./dist/index.d.ts",
 	"type": "module"
