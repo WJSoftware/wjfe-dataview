@@ -87,23 +87,23 @@
     };
 
     /**
-     * Defines the possible grid border options for the `WjDataView` component.
+     * Defines the possible grid line options for the `WjDataView` component.
      */
-    export enum GridBorders {
+    export enum GridLines {
         /**
-         * No borders.
+         * No lines.
          */
         None = 0x0,
         /**
-         * Row borders.
+         * Row lines.
          */
         Row = 0x1,
         /**
-         * Column borders.
+         * Column lines.
          */
         Column = 0x2,
         /**
-         * All borders.
+         * All lines.
          */
         All = Row | Column
     };
@@ -185,9 +185,9 @@
          */
         striped?: boolean;
         /**
-         * Turns the grid borders on and off.
+         * Turns the grid lines on and off.
          */
-        gridBorders?: GridBorders;
+        gridLines?: GridLines;
         /**
          * Turns the divider between pinned and unpinned columns on and off.
          */
@@ -247,7 +247,7 @@
         rowTracking = true,
         rowSelectionHighlight = true,
         striped = true,
-        gridBorders = GridBorders.None,
+        gridLines = GridLines.None,
         pinnedDivider = true,
         class: cssClass,
         headerCell,
@@ -314,7 +314,7 @@
         class={combineClasses('col-header', {
             'sticky-header': !!ci.column.pinned,
             'sticky-divider': pinnedDivider && index + 1 === cols.length,
-            'col-grid-line': !!((gridBorders ?? GridBorders.None) & GridBorders.Column)
+            'col-grid-line': !!((gridLines ?? GridLines.None) & GridLines.Column)
         })}
         role="columnheader"
         style:width={`${columnWidth(ci.column)}em`}
@@ -348,7 +348,7 @@
         class={combineClasses('dataview-cell-bg', {
             'sticky-data': !!ci.column.pinned,
             'sticky-divider': pinnedDivider && index + 1 === cols.length,
-            'col-grid-line': !!((gridBorders ?? GridBorders.None) & GridBorders.Column)
+            'col-grid-line': !!((gridLines ?? GridLines.None) & GridLines.Column)
         })}
         role="cell"
         style:width={`${ci.column.width ?? defaultWidth}em`}
@@ -379,7 +379,7 @@
 <div class={combineClasses('dataview-container', cssClass)}>
     <div class="dataview" role="table" {...restProps}>
         <div class="header-group" role="rowheader">
-            <div role="row" class:row-grid-line={!!((gridBorders ?? GridBorders.None) & GridBorders.Row)}>
+            <div role="row" class:row-grid-line={!!((gridLines ?? GridLines.None) & GridLines.Row)}>
                 {#if segregatedColumns.pinned.length}
                     {@render colHeaders(segregatedColumns.pinned)}
                 {/if}
@@ -392,7 +392,7 @@
             <div
                 class="dataview-row-bg"
                 class:selected={rowSelectionHighlight && row.wjdv.selected}
-                class:row-grid-line={!!((gridBorders ?? GridBorders.None) & GridBorders.Row)}
+                class:row-grid-line={!!((gridLines ?? GridLines.None) & GridLines.Row)}
                 role="row"
             >
                 <div class="dataview-row-s">

@@ -1,13 +1,13 @@
-import { GridBorders } from "$lib/WjDataView.svelte";
+import { GridLines } from "$lib/WjDataView.svelte";
 
 export const demoOptions = $state({
     striped: true,
     rowTracking: true,
     rowSelectionHighlight: true,
     records: 200,
-    borders: [] as GridBorders[],
-    get gridBorders() {
-        return this.borders.reduce((p, c) => p | c, GridBorders.None);
+    grid_lines: [] as GridLines[],
+    get gridLines() {
+        return this.grid_lines.reduce((p, c) => p | c, GridLines.None);
     },
     showControlColumn: true,
 });
