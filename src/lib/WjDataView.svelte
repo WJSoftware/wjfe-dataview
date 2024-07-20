@@ -620,3 +620,126 @@
         }
     }
 </style>
+
+<!--
+@component
+
+# WjDataView
+
+This is a data visualization component that renders data in a table.  This table provides several aids to make this 
+visualization more enjoyable
+
+## Main Features
+
+1. **Pinnable colums**.  Columns can be pinned to the left so tables with multiple columns (that produce a horizontal 
+scrollbar) do not drag columns that may be important for the user as the table is examinated.
+2. **Row mouse tracking**.  Rows get highlighted as the mouse cursor is hovered over them.
+3. **Row selection highlighting**.  The grid supports the concept of row selection.  It doesn't provide a user 
+interface to actually select rows, but can highlight rows in color when the associated data item is flagged as 
+selected.
+4. **Row striping**.  Odd and even rows are given different backgrounds so reading tabular data is easier.
+5. **Row expansion**.  Again, no user interface is actually provided for row expansion, but supports the notion by 
+allocating a physical space below the row of cells for content related to this row.  Normally used for data drilldown.
+6. **Control column**.  An extra column that is always pinned where user interface controls can be added to perform 
+actions on the data represented by the row.
+7. **Themeable**.  Almost every aspect of the visual appearance can be customized.  Use the `WjDataViewTheme` 
+component for easier themeing.
+
+## Examples
+
+### Basic Use
+
+This is the simplest form of use:  Provide column definitions and data.  Columns require the `key` and the `text` 
+properties; data items require an `id` and the special `wjdv` properties.  For data items, both can be fulfilled using 
+the `defineData` function.
+
+**IMPORTANT**:  The `columns` and `data` props must always be bound.
+
+```typescript
+import { defineData, WjDataView, type WjDvColumn } from "@wjfe/dataview";
+
+const columns: WjDvColumn[] = [
+    {
+        key: 'colA',
+        text: 'Column A'
+    },
+    {
+        key: 'colB',
+        text: 'Column B'
+    },
+];
+
+type MyData = {
+    colA: string;
+    colB: number;
+}
+
+const data = defineData<MyData>([
+    {
+        id: 1,
+        colA: 'Hello',
+        colB: 5
+    },
+    {
+        id: 1,
+        colA: 'World!',
+        colB: 6
+    },
+]);
+```
+
+```html
+<WjDataView bind:columns bind:data>
+</WjDataView>
+```
+
+### Custom Content
+
+Custom content is achieved by using the `headerCell` and `dataCell` snippets.
+
+```typescript
+import { defineData, WjDataView, type WjDvColumn } from "@wjfe/dataview";
+
+const columns: WjDvColumn[] = [
+    {
+        key: 'colA',
+        text: 'Column A'
+    },
+    {
+        key: 'colB',
+        text: 'Column B'
+    },
+];
+
+type MyData = {
+    colA: string;
+    colB: number;
+}
+
+const data = defineData<MyData>([
+    {
+        id: 1,
+        colA: 'Hello',
+        colB: 5
+    },
+    {
+        id: 1,
+        colA: 'World!',
+        colB: 6
+    },
+]);
+```
+
+```html
+<WjDataView bind:columns bind:data>
+    {#snippet headerCell(column)}
+        <strong>{column.text}</strong>
+    {/snippet}
+    {#snippet dataCell(column, row)}
+        {#if column.key === 'colB'}
+            {row.colB} letters
+        {/if}
+    {/snippet}
+</WjDataView>
+```
+-->
