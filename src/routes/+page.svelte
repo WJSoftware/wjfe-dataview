@@ -103,7 +103,10 @@
 
 <div class="d-flex flex-column overflow-auto h-100 theme-def">
     <div>
-        <h1>WjDataView: Tabular Data Visualization</h1>
+        <hgroup>
+            <h1>WjDataView</h1>
+            <h4>Tabular Data Visualization</h4>
+        </hgroup>
         <div class="container">
             <div class="row">
                 <div class="col-lg-3 col-md-2"></div>
