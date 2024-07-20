@@ -242,25 +242,28 @@ The complete list of CSS variables that can be set for the data view component a
 
 ### Props
 
-| Property | Type | Default Value | Description |
-| - | - | - | - |
-| `columns` | `WjDvColumn<TCol, TRow>[]` | (none) | Defines the columns the data view component will create. |
-| `data` | `WjDvRow<TRow>[]` | (none) | The data that is shown by the data view component. |
-| `get` | `(row: TRow, key: string) => any` | (function) | Function that retrieves a column's value using the row and provided key for columns that don't provide one. |
-| `defaultWidth` | `number` | `10` | The width for colums that don't specify its own width, in `em`'s. |
-| `rowTracking` | `boolean` | `true` | Turns the row tracking feature on and off. |
-| `rowSelectionBg` | `boolean` | `true` |   Turns the row-highlighting-on-selection feature on and off. |
-| `striped` | `boolean` | `true` | Turns the striping of rows on and off. |
-| `pinnedDivider` | `boolean` | `true` | Turns the divider between pinned and unpinned columns on and off. |
-| `class` | `string` | `undefined` | Additional CSS classes that are applied to the data view's viewport (the top-level element). |
+| Property | Type | Default Value | Bindable | Description |
+| - | - | - | - | - |
+| `columns` | `WjDvColumn<TCol, TRow>[]` | (none) | Yes | Defines the columns the data view component will create. |
+| `data` | `WjDvRow<TRow>[]` | (none) | Yes | The data that is shown by the data view component. |
+| `get` | `(row: TRow, key: string) => any` | (function) | | Function that retrieves a column's value using the row and provided key for columns that don't provide one. |
+| `defaultWidth` | `number` | `10` | | The width for colums that don't specify its own width, in `em`'s. |
+| `rowTracking` | `boolean` | `true` | | Turns the row tracking feature on and off. |
+| `rowSelectionBg` | `boolean` | `true` | | Turns the row-highlighting-on-selection feature on and off. |
+| `striped` | `boolean` | `true` | | Turns the striping of rows on and off. |
+| `pinnedDivider` | `boolean` | `true` | | Turns the divider between pinned and unpinned columns on and off. |
+| `class` | `string` | `undefined` | | Additional CSS classes that are applied to the data view's viewport (the top-level element). |
+| `controlColumn` | `object` | `undefined` | | Specifies the shape of the control column, which an extra column that is always the first pinned column. |
 
-### Snippets (formerly slots)
+### Snippets
 
-| Name | Signature | Description |
+| Name | Parameters | Description |
 | - | - | - |
-| `headerCell` | `(col: WjDvColumn<TCol, TRow>)` | Renders header cells' content.  The snippet is passed the column definition. |
-| `dataCell` | `(col: WjDvColumn<TCol, TRow>, row: WjDvRow<TRow>)` | Renders data cells' content.  The snippet is passed the column definition and the data object for the row being rendered. |
-| `rowExpansion` | `(row: WjDvRow<TRow>)` | Renders arbitrary content immediately below the data cells of the row.  It is only rendered when `WjDvRow<TRow>.wjdv.expanded` is `true`. |
+| `headerCell` | `col: WjDvColumn<TCol, TRow>` | Renders header cells' content.  The snippet is passed the column definition. |
+| `dataCell` | `col: WjDvColumn<TCol, TRow>, row: WjDvRow<TRow>` | Renders data cells' content.  The snippet is passed the column definition and the data object for the row being rendered. |
+| `rowExpansion` | `row: WjDvRow<TRow>` | Renders arbitrary content immediately below the data cells of the row.  It is only rendered when `WjDvRow<TRow>.wjdv.expanded` is `true`. |
+| `controlColumn.headerCell` | (none) | Renders the contents of the control column's header cell. |
+| `controlColumn.dataCell` | `row: WjDvRow<TRow>, rowIndex: number` | Renders the contents of the control column's data cells. |
 
 ### Events
 
@@ -282,6 +285,6 @@ None.
 - [x] Resizable columns
 - [x] Expansible rows
 - [x] Row selection
-- [ ] headerControl and dataControl snippets
+- [x] Control column
 - [ ] Make cell/row/column padding themeable
 - [ ] dataRow snippet (complex)

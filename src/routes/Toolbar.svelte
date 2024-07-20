@@ -30,6 +30,8 @@
             <label for="rowSelectionBg" class="btn btn-outline-primary">Row Selection BG</label>
         </div>
     </div>
+    <input type="checkbox" id="controlColumn" bind:checked={demoOptions.showControlColumn} class="btn-check" />
+    <label for="controlColumn" class="btn btn-outline-primary">Control Column</label>
     <div class="input-group">
         <span class="input-group-text" title="Row Count:"><i class="bi bi-person-lines-fill"></i></span>
         <div class="btn-group btn-sm">
