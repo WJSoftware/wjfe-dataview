@@ -2,13 +2,21 @@
     import type { Snippet } from "svelte";
     import type { Theme } from "./stockTheme.js";
 
+    type Props = {
+        /**
+         * Theme object that carries the desired appearance personalizations.
+         */
+        theme: Theme;
+        /**
+         * Renders the provided child content.
+         */
+        children: Snippet;
+    };
+
     let {
         theme,
         children
-    }: {
-        theme: Theme;
-        children: Snippet
-    } = $props();
+    }: Props = $props();
 </script>
 
 <div
@@ -42,3 +50,52 @@
 >
     {@render children()}
 </div>
+
+<!--
+@component
+
+# WjDataViewTheme
+
+This is a helper component that helps to set CSS variables for `WjDataView` components.  There are over 2 dozen 
+different properties, and as per usual CSS naming convention, their names are very elaborated.
+
+This component translates an object of type `Theme`, which is hierarchically ordered and with friendlier names, into 
+CSS variable definitions.
+
+## Examples
+
+This is a basic Bootstrap theme:
+
+```typescript
+const bootstrapTheme: Theme = {
+    table: {
+        backgroundColor: 'var(--bs-body-bg-rgb)'
+    },
+    stripes: {
+        backgroundColor: 'var(--bs-emphasis-color-rgb)'
+    },
+    rowTracking: {
+        backgroundColor: 'var(--bs-primary-rgb)',
+        opacity: 0.2
+    },
+    rowSelection: {
+        backgroundColor: 'var(--bs-row-selection-bg-color-rgb)',
+    }
+};
+```
+
+The CSS variable used last doesn't really exist in Bootstrap.  It has been defined like this:
+
+```scss
+.theme-def {
+    --bs-row-selection-bg-color-rgb: 221, 235, 255;
+    
+    :global([data-bs-theme="dark"]) & {
+        --bs-row-selection-bg-color-rgb: 21, 35, 55;
+    }
+}
+```
+
+By using CSS variables that react towards the theme mode selection, `WjDataView` components will react and change 
+naturally.
+-->
