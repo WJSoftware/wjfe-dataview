@@ -10,7 +10,8 @@
     $effect(() => {themeOptions.currentTheme = themeKey === stockThemeKey ? getStockTheme() : allThemes[themeKey]; });
 </script>
 
-<div class="btn-toolbar py-3 gap-2">
+<div class="btn-toolbar my-2 py-1 px-1 gap-2 border border-1 rounded">
+    <span class="toolbar-name fw-bold px-2 py-1 rounded-start">Features</span>
     <button
         class="btn btn-sm btn-info"
         title="Click to show additional information"
@@ -78,3 +79,12 @@
         </div>
     </div>
 </div>
+
+<style lang="scss">
+    .toolbar-name {
+        background: linear-gradient(to right top, rgb(246, 121, 102), var(--bs-body-bg));
+        :global([data-bs-theme="dark"]) & {
+            background: linear-gradient(to right top, rgb(102, 30, 2), var(--bs-body-bg));
+        }
+    }
+</style>

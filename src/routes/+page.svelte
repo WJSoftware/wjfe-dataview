@@ -103,10 +103,7 @@
 
 <div class="d-flex flex-column overflow-auto h-100 theme-def">
     <div>
-        <h1>WjDataView Demo Page</h1>
-        <p>
-            Use the toolbar to control various features of the data view control, such as row striping and highlighting.
-        </p>
+        <h1>WjDataView: Tabular Data Visualization</h1>
         <div class="container">
             <div class="row">
                 <div class="col-lg-3 col-md-2"></div>
