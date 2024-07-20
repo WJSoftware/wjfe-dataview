@@ -8,5 +8,6 @@ export const demoOptions = $state({
     borders: [] as GridBorders[],
     get gridBorders() {
         return this.borders.reduce((p, c) => p | c, GridBorders.None);
-    }
+    },
+    showControlColumn: true,
 });

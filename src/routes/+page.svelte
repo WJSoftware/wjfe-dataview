@@ -18,13 +18,6 @@
 
     let columns = $state<WjDvColumn<Person>[]>([
         {
-            key: 'control',
-            text: '',
-            width: 4,
-            resizable: false,
-            pinned: true
-        },
-        {
             key: 'id',
             text: 'ID',
             width: 5,
@@ -144,54 +137,33 @@ import &#123; WjDataView &#125; from '@wjfe/dataview';</pre>
                 gridBorders={demoOptions.gridBorders}
                 defaultWidth={15}
                 class="position-absolute top-0 bottom-0"
+                controlColumn={demoOptions.showControlColumn ? ({
+                    definition: {
+                        width: 4,
+                        minWidth: 4
+                    },
+                    headerCell: controlHeaderCell,
+                    dataCell: controlDataCell
+                }) : undefined}
             >
                 {#snippet headerCell(col)}
-                    {#if col.key === 'control'}
-                    <div class="ps-2">
-                        <input
-                        type="checkbox"
-                        class="form-check-input"
-                        indeterminate="{allSelected === null}"
-                        checked={!!allSelected}
-                        oninput="{ev => selectAllData(ev.currentTarget.checked)}"
-                        >
+                    <div class="d-flex flex-row ps-2">
+                        <span class="fw-semibold text-nowrap text-truncate">{col.text}</span>
+                        <button class="btn btn-sm ms-auto" onclick={() => col.pinned = !col.pinned}>
+                            <span title="Click to {col.pinned ? 'un' : ''}pin">
+                                <i class="bi bi-pin-{col.pinned ? 'fill' : 'angle'}"></i>
+                            </span>
+                        </button>
                     </div>
-                    {:else}
-                        <div class="d-flex flex-row ps-2">
-                            <span class="fw-semibold text-nowrap text-truncate">{col.text}</span>
-                            <button class="btn btn-sm ms-auto" onclick={() => col.pinned = !col.pinned}>
-                                <span title="Click to {col.pinned ? 'un' : ''}pin">
-                                    <i class="bi bi-pin-{col.pinned ? 'fill' : 'angle'}"></i>
-                                </span>
-                            </button>
-                        </div>
-                    {/if}
                 {/snippet}
                 {#snippet dataCell(col, row)}
-                    {#if col.key === 'control'}
-                        <div class="px-2 d-flex flex-row gap-1">
-                            <input
-                                type="checkbox"
-                                class="form-check-input"
-                                bind:checked={row.wjdv.selected}
-                            >
-                            <button
-                                type="button"
-                                class="btn btn-sm btn-neutral"
-                                onclick={() => row.wjdv.expanded = !row.wjdv.expanded}
-                            >
-                                <i class="bi bi-chevron-bar-{row.wjdv.expanded ? 'contract' : 'expand'}"></i>
-                            </button>
-                        </div>
-                    {:else}
-                        <div class="data px-2 text-truncate">
-                            {#if col.key === 'credit_score' || col.key === 'net_worth'}
-                                {@render Numeric(row[col.key])}
-                            {:else}
-                                {row[col.key as keyof typeof row]}
-                            {/if}
-                        </div>
-                    {/if}
+                    <div class="data px-2 text-truncate">
+                        {#if col.key === 'credit_score' || col.key === 'net_worth'}
+                            {@render Numeric(row[col.key])}
+                        {:else}
+                            {row[col.key as keyof typeof row]}
+                        {/if}
+                    </div>
                 {/snippet}
                 {#snippet rowExpansion(row)}
                     <div class="card mx-3 my-2">
@@ -223,6 +195,35 @@ import &#123; WjDataView &#125; from '@wjfe/dataview';</pre>
             font-family: monospace;
         }
     </style>
+{/snippet}
+
+{#snippet controlHeaderCell()}
+    <div class="ps-2">
+        <input
+        type="checkbox"
+        class="form-check-input"
+        indeterminate="{allSelected === null}"
+        checked={!!allSelected}
+        oninput="{ev => selectAllData(ev.currentTarget.checked)}"
+        >
+    </div>
+{/snippet}
+
+{#snippet controlDataCell(row, rowIndex)}
+    <div class="px-2 d-flex flex-row gap-1">
+        <input
+            type="checkbox"
+            class="form-check-input"
+            bind:checked={row.wjdv.selected}
+        >
+        <button
+            type="button"
+            class="btn btn-sm btn-neutral"
+            onclick={() => row.wjdv.expanded = !row.wjdv.expanded}
+        >
+            <i class="bi bi-chevron-bar-{row.wjdv.expanded ? 'contract' : 'expand'}"></i>
+        </button>
+    </div>
 {/snippet}
 
 <style lang="scss">

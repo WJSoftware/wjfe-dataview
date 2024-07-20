@@ -151,22 +151,7 @@
     import Resizer from "./Resizer.svelte";
     import { combineClasses } from "./utils.js";
 
-    let {
-        columns = $bindable(),
-        data = $bindable(),
-        get = (r, k) => r[k],
-        defaultWidth = 10,
-        rowTracking = true,
-        rowSelectionBg = true,
-        striped = true,
-        gridBorders = GridBorders.None,
-        pinnedDivider = true,
-        headerCell,
-        dataCell,
-        rowExpansion,
-        class: cssClass,
-        ...restProps
-    }: {
+    type Props = {
         /**
          * Defines the columns the data view component will create.
          */
@@ -208,6 +193,10 @@
          */
         pinnedDivider?: boolean;
         /**
+         * Additional CSS classes that are applied to the data view's viewport (the top-level element).
+         */
+        class?: string;
+        /**
          * Snippet used to render the contents of header cells.
          */
         headerCell?: Snippet<[WjDvColumn<TRow, TCol>]>;
@@ -220,40 +209,99 @@
          */
         rowExpansion?: Snippet<[WjDvRow<TRow>]>;
         /**
-         * Additional CSS classes that are applied to the data view's viewport (the top-level element).
+         * Specifies the shape of the control column, which an extra column that is always the first pinned column.
+         * 
+         * If not provided, the control column is omitted.
          */
-        class?: string;
-    } = $props();
+        controlColumn?: {
+            /**
+             * Defines the control column.
+             * 
+             * Defining the control column is done the same as regular columns, with the following differences:
+             * 
+             * + No `key` property.
+             * + No `pinned` property, as the control column is always pinned.
+             * + No `get` function.
+             * + No `hidden` property.
+             * + The `width` property is required.
+             */
+            definition: Omit<WjDvColumn<TRow, TCol>, 'key' | 'pinned' | 'get' | 'hidden'> & { width: number; };
+            /**
+             * Renders the contents of the control column's header cell.
+             */
+            headerCell?: Snippet;
+            /**
+             * Renders the contents of the control column's data cells.
+             * @param row The row being rendered.
+             * @param rowIndex The index of the row being rendered.
+             */
+            dataCell?: Snippet<[WjDvRow<TRow>, number]>;
+        }
+    };
+
+    let {
+        columns = $bindable(),
+        data = $bindable(),
+        get = (r, k) => r[k],
+        defaultWidth = 10,
+        rowTracking = true,
+        rowSelectionBg = true,
+        striped = true,
+        gridBorders = GridBorders.None,
+        pinnedDivider = true,
+        class: cssClass,
+        headerCell,
+        dataCell,
+        rowExpansion,
+        controlColumn,
+        ...restProps
+    }: Props = $props();
 
     type ColumnInfo = {
         column: WjDvColumn<TRow, TCol>;
         left?: number;
     }
 
+    const controlColKey = '__ctrl';
+    let controlCol = $state({
+        ...controlColumn?.definition,
+        key: controlColKey,
+        text: '',
+        pinned: true,
+    } as WjDvColumn<TRow, TCol>);
+
     const segregatedColumns = $derived(columns.reduce<{
-        accPinnedWidth: number;
-        accUnpinnedWidth: number;
-        pinned: ColumnInfo[];
-        unpinned: ColumnInfo[];
-    }>((p, c) => {
-        if (!c.hidden) {
-            if (c.pinned) {
-                p.pinned.push({
-                    column: c,
-                    left: p.accPinnedWidth
-                });
-                p.accPinnedWidth += columnWidth(c);
+            accPinnedWidth: number;
+            accUnpinnedWidth: number;
+            pinned: ColumnInfo[];
+            unpinned: ColumnInfo[];
+        }>((p, c) => {
+            if (!c.hidden) {
+                if (c.pinned) {
+                    p.pinned.push({
+                        column: c,
+                        left: p.accPinnedWidth
+                    });
+                    p.accPinnedWidth += columnWidth(c);
+                }
+                else {
+                    p.unpinned.push({
+                        column: c,
+                        left: p.accUnpinnedWidth
+                    });
+                    p.accUnpinnedWidth += columnWidth(c);
+                }
             }
-            else {
-                p.unpinned.push({
-                    column: c,
-                    left: p.accUnpinnedWidth
-                });
-                p.accUnpinnedWidth += columnWidth(c);
-            }
-        }
-        return p;
-    }, { accPinnedWidth: 0, accUnpinnedWidth: 0, pinned: [], unpinned: [] }));
+            return p;
+        }, {
+            accPinnedWidth: (controlColumn) ? controlCol.width! : 0,
+            accUnpinnedWidth: 0,
+            pinned: (controlColumn) ? [{
+                left: 0,
+                column: controlCol
+            }] : [],
+            unpinned: []
+        }));
 
     function columnWidth(col: WjDvColumn<TRow, TCol>) {
         return col.width ?? defaultWidth;
@@ -274,7 +322,9 @@
         style:z-index={!!ci.column.pinned ? cols.length - index : undefined}
     >
         <div>
-            {#if headerCell}
+            {#if ci.column.key === controlColKey && controlColumn?.headerCell}
+                {@render controlColumn.headerCell()}
+            {:else if headerCell && ci.column.key !== controlColKey}
                 {@render headerCell(ci.column)}
             {:else}
                 <div class="default-header-content">
@@ -291,7 +341,7 @@
     {/each}
 {/snippet}
 
-{#snippet colData(row: WjDvRow<TRow>, cols: ColumnInfo[])}
+{#snippet colData(row: WjDvRow<TRow>, rowIndex: number, cols: ColumnInfo[])}
     {#each cols as ci, index (ci.column.key)}
     {@const getFn = ci.column.get ?? (r => get(r, ci.column.key))}
     <div
@@ -311,7 +361,9 @@
                 'align-end': ci.column.alignment === 'end',
                 'no-wrap': ci.column.noTextWrap ?? false,
             })}>
-                {#if dataCell}
+                {#if ci.column.key === controlColKey && controlColumn?.dataCell}
+                    {@render controlColumn.dataCell(row, rowIndex)}
+                {:else if dataCell && ci.column.key !== controlColKey}
                     {@render dataCell(ci.column, row)}
                 {:else}
                     <div class="default-content">
@@ -336,7 +388,7 @@
             </div>
         </div>
         <div class={combineClasses('dataview-body', { striped, 'row-tracking': rowTracking })} role="rowgroup">
-            {#each data as row (row.id)}
+            {#each data as row, rowIndex (row.id)}
             <div
                 class="dataview-row-bg"
                 class:selected={rowSelectionBg && row.wjdv.selected}
@@ -347,9 +399,9 @@
                     <div class="dataview-row-h">
                         <div class="dataview-row-d">
                             {#if segregatedColumns.pinned.length}
-                                {@render colData(row, segregatedColumns.pinned)}
+                                {@render colData(row, rowIndex, segregatedColumns.pinned)}
                             {/if}
-                            {@render colData(row, segregatedColumns.unpinned)}
+                            {@render colData(row, rowIndex, segregatedColumns.unpinned)}
                             <div class="dataview-cell">&nbsp;</div>
                         </div>
                         {#if row.wjdv.expanded && rowExpansion}

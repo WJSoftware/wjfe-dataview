@@ -26,6 +26,7 @@
             <li>Grid lines for columns and rows</li>
             <li>Customizable header content</li>
             <li>Customizable data cell content</li>
+            <li>Control column (an always-pinned special column for per-row controls/actions)</li>
             <li>Customizable appearance via CSS variables (theme component available)</li>
         </ul>
         <h4>Can it be used to edit data?</h4>
