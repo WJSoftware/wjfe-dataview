@@ -134,7 +134,7 @@ import &#123; WjDataView &#125; from '@wjfe/dataview';</pre>
                 striped={demoOptions.striped}
                 rowTracking={demoOptions.rowTracking}
                 rowSelectionHighlight={demoOptions.rowSelectionHighlight}
-                gridBorders={demoOptions.gridBorders}
+                gridLines={demoOptions.gridLines}
                 defaultWidth={15}
                 class="position-absolute top-0 bottom-0"
                 controlColumn={demoOptions.showControlColumn ? ({

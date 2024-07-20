@@ -109,7 +109,7 @@ export type Theme = {
     /**
      * Defines the appearance of the grid lines.
      */
-    gridBorders?: BorderDefinition;
+    gridLines?: BorderDefinition;
 };
 
 /**
@@ -159,7 +159,7 @@ export const stockLight: Theme = {
             }
         }
     },
-    gridBorders: {
+    gridLines: {
         width: '0.01em',
         style: 'solid',
         color: 'currentColor'
@@ -213,7 +213,7 @@ export const stockDark: Theme = {
             }
         }
     },
-    gridBorders: {
+    gridLines: {
         width: '0.01em',
         style: 'solid',
         color: 'currentColor'

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { GridBorders } from "$lib/WjDataView.svelte";
+    import { GridLines } from "$lib/WjDataView.svelte";
     import { demoOptions } from "./demoOptions.svelte.js";
     import { allThemes, getStockTheme, themeOptions } from "./themeOptions.svelte.js";
 
@@ -68,12 +68,12 @@
     <div class="input-group">
         <span title="Borders:" class="input-group-text"><i class="bi bi-border-all"></i></span>
         <div class="btn-group btn-sm">
-            <input type="checkbox" id="rowBorder" class="btn-check" value={GridBorders.Row} bind:group={demoOptions.borders} />
-            <label for="rowBorder" class="btn btn-outline-primary rounded-0" title="Row borders">
+            <input type="checkbox" id="rowGridLine" class="btn-check" value={GridLines.Row} bind:group={demoOptions.grid_lines} />
+            <label for="rowGridLine" class="btn btn-outline-primary rounded-0" title="Row borders">
                 <i class="bi bi-border-bottom"></i>
             </label>
-            <input type="checkbox" id="colBorder" class="btn-check" value={GridBorders.Column} bind:group={demoOptions.borders} />
-            <label for="colBorder" class="btn btn-outline-primary" title="Column borders">
+            <input type="checkbox" id="colGridLine" class="btn-check" value={GridLines.Column} bind:group={demoOptions.grid_lines} />
+            <label for="colGridLine" class="btn btn-outline-primary" title="Column borders">
                 <i class="bi bi-border-right"></i>
             </label>
         </div>
