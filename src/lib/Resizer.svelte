@@ -1,7 +1,7 @@
 <script lang="ts">
-	import zoomRatio from './zoomRatio.js';
 	import { fade } from 'svelte/transition';
-	import { combineClasses, noop } from './utils.js';
+	import { combineClasses } from './utils.js';
+	import zoomRatio from './zoomRatio.js';
 
 	let {
 		minSize = 3,
@@ -55,7 +55,7 @@
 		e.stopPropagation();
 		dragStart = e.screenX;
 		document.body.style.cursor = 'col-resize';
-		(resizeStart ?? noop)();
+		resizeStart?.();
 	}
 
 	function handleMouseMove(e: MouseEvent) {
@@ -70,11 +70,11 @@
 		}
 		dragStart = null;
 		document.body.style.cursor = 'auto';
-		(resizeEnd ?? noop)();
+		resizeEnd?.();
 		if (delta === 0) {
 			return;
 		}
-		(resize ?? noop)(convert(itemOverlayWidth + (delta < 0 ? 0 : deltaOverlayWidth), 'px', 'em'));
+		resize?.(convert(itemOverlayWidth + (delta < 0 ? 0 : deltaOverlayWidth), 'px', 'em'));
 	}
 
 	function convert(value: number | undefined, fromUnit: string, toUnit: string) {
