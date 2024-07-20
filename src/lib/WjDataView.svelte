@@ -89,24 +89,29 @@
     /**
      * Defines the possible grid line options for the `WjDataView` component.
      */
-    export enum GridLines {
+    export const GridLines = {
         /**
          * No lines.
          */
-        None = 0x0,
+        None: 0x0,
         /**
          * Row lines.
          */
-        Row = 0x1,
+        Row: 0x1,
         /**
          * Column lines.
          */
-        Column = 0x2,
+        Column: 0x2,
         /**
          * All lines.
          */
-        All = Row | Column
-    };
+        All: 0x3
+    } as const;
+
+    /**
+     * GridLines enumeration type.
+     */
+    export type GridLinesEnum = typeof GridLines[keyof typeof GridLines];
 
     /**
      * Makes sure every data object in the provided array satisfies the data requirements imposed by the `WjDataView` 
@@ -187,7 +192,7 @@
         /**
          * Turns the grid lines on and off.
          */
-        gridLines?: GridLines;
+        gridLines?: GridLinesEnum;
         /**
          * Turns the divider between pinned and unpinned columns on and off.
          */
@@ -314,7 +319,7 @@
         class={combineClasses('col-header', {
             'sticky-header': !!ci.column.pinned,
             'sticky-divider': pinnedDivider && index + 1 === cols.length,
-            'col-grid-line': !!((gridLines ?? GridLines.None) & GridLines.Column)
+            'col-grid-line': !!(gridLines & GridLines.Column)
         })}
         role="columnheader"
         style:width={`${columnWidth(ci.column)}em`}
@@ -348,7 +353,7 @@
         class={combineClasses('dataview-cell-bg', {
             'sticky-data': !!ci.column.pinned,
             'sticky-divider': pinnedDivider && index + 1 === cols.length,
-            'col-grid-line': !!((gridLines ?? GridLines.None) & GridLines.Column)
+            'col-grid-line': !!(gridLines & GridLines.Column)
         })}
         role="cell"
         style:width={`${ci.column.width ?? defaultWidth}em`}
@@ -379,7 +384,7 @@
 <div class={combineClasses('dataview-container', cssClass)}>
     <div class="dataview" role="table" {...restProps}>
         <div class="header-group" role="rowheader">
-            <div role="row" class:row-grid-line={!!((gridLines ?? GridLines.None) & GridLines.Row)}>
+            <div role="row" class:row-grid-line={!!(gridLines & GridLines.Row)}>
                 {#if segregatedColumns.pinned.length}
                     {@render colHeaders(segregatedColumns.pinned)}
                 {/if}
@@ -392,7 +397,7 @@
             <div
                 class="dataview-row-bg"
                 class:selected={rowSelectionHighlight && row.wjdv.selected}
-                class:row-grid-line={!!((gridLines ?? GridLines.None) & GridLines.Row)}
+                class:row-grid-line={!!(gridLines & GridLines.Row)}
                 role="row"
             >
                 <div class="dataview-row-s">
