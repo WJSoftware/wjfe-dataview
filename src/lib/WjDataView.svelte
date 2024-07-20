@@ -179,7 +179,7 @@
         /**
          * Turns the row-highlighting-on-selection feature on and off.
          */
-        rowSelectionBg?: boolean;
+        rowSelectionHighlight?: boolean;
         /**
          * Turns the striping of rows on and off.
          */
@@ -245,7 +245,7 @@
         get = (r, k) => r[k],
         defaultWidth = 10,
         rowTracking = true,
-        rowSelectionBg = true,
+        rowSelectionHighlight = true,
         striped = true,
         gridBorders = GridBorders.None,
         pinnedDivider = true,
@@ -391,7 +391,7 @@
             {#each data as row, rowIndex (row.id)}
             <div
                 class="dataview-row-bg"
-                class:selected={rowSelectionBg && row.wjdv.selected}
+                class:selected={rowSelectionHighlight && row.wjdv.selected}
                 class:row-grid-line={!!((gridBorders ?? GridBorders.None) & GridBorders.Row)}
                 role="row"
             >

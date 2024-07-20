@@ -133,7 +133,7 @@ import &#123; WjDataView &#125; from '@wjfe/dataview';</pre>
                 bind:data={data.data}
                 striped={demoOptions.striped}
                 rowTracking={demoOptions.rowTracking}
-                rowSelectionBg={demoOptions.rowSelectionBg}
+                rowSelectionHighlight={demoOptions.rowSelectionHighlight}
                 gridBorders={demoOptions.gridBorders}
                 defaultWidth={15}
                 class="position-absolute top-0 bottom-0"
