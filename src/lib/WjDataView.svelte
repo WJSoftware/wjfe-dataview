@@ -87,6 +87,35 @@
     };
 
     /**
+     * Defines the control column's definition information and snippets.
+     */
+    export type ControlColumn<TRow extends Record<string, any> = Record<string, any>, TCol extends Record<string, any> = Record<string, any>> = {
+        /**
+         * Defines the control column.
+         * 
+         * Defining the control column is done the same as regular columns, with the following differences:
+         * 
+         * + No `key` property.
+         * + No `pinned` property, as the control column is always pinned.
+         * + No `get` function.
+         * + No `hidden` property.
+         * + The `width` property is required.
+         * + The `text` property is optional.
+         */
+        definition: Omit<WjDvColumn<TRow, TCol>, 'key' | 'pinned' | 'get' | 'hidden'> & { width: number; text?: string; };
+        /**
+         * Renders the contents of the control column's header cell.
+         */
+        headerCell?: Snippet;
+        /**
+         * Renders the contents of the control column's data cells.
+         * @param row The row being rendered.
+         * @param rowIndex The index of the row being rendered.
+         */
+        dataCell?: Snippet<[WjDvRow<TRow>, number]>;
+    };
+
+    /**
      * Defines the possible grid line options for the `WjDataView` component.
      */
     export const GridLines = {
@@ -218,30 +247,7 @@
          * 
          * If not provided, the control column is omitted.
          */
-        controlColumn?: {
-            /**
-             * Defines the control column.
-             * 
-             * Defining the control column is done the same as regular columns, with the following differences:
-             * 
-             * + No `key` property.
-             * + No `pinned` property, as the control column is always pinned.
-             * + No `get` function.
-             * + No `hidden` property.
-             * + The `width` property is required.
-             */
-            definition: Omit<WjDvColumn<TRow, TCol>, 'key' | 'pinned' | 'get' | 'hidden'> & { width: number; };
-            /**
-             * Renders the contents of the control column's header cell.
-             */
-            headerCell?: Snippet;
-            /**
-             * Renders the contents of the control column's data cells.
-             * @param row The row being rendered.
-             * @param rowIndex The index of the row being rendered.
-             */
-            dataCell?: Snippet<[WjDvRow<TRow>, number]>;
-        }
+        controlColumn?: ControlColumn<TRow, TCol>;
     };
 
     let {
@@ -315,69 +321,69 @@
 
 {#snippet colHeaders(cols: ColumnInfo[])}
     {#each cols as ci, index (ci.column.key)}
-    <div
-        class={combineClasses('col-header', {
-            'sticky-header': !!ci.column.pinned,
-            'sticky-divider': pinnedDivider && index + 1 === cols.length,
-            'col-grid-line': !!(gridLines & GridLines.Column)
-        })}
-        role="columnheader"
-        style:width={`${columnWidth(ci.column)}em`}
-        style:left={ci.left !== undefined && !!ci.column.pinned ? `${ci.left}em` : undefined}
-        style:z-index={!!ci.column.pinned ? cols.length - index : undefined}
-    >
-        <div>
-            {#if ci.column.key === controlColKey && controlColumn?.headerCell}
-                {@render controlColumn.headerCell()}
-            {:else if headerCell && ci.column.key !== controlColKey}
-                {@render headerCell(ci.column)}
-            {:else}
-                <div class="default-header-content">
-                    {ci.column.text}
-                </div>
-            {/if}
-            {#if ci.column.resizable ?? true}
-                <Resizer minSize={ci.column.minWidth} resize={newSize => ci.column.width = newSize} />
-            {:else}
-                <div></div>
-            {/if}
+        <div
+            class={combineClasses('col-header', {
+                'sticky-header': !!ci.column.pinned,
+                'sticky-divider': pinnedDivider && index + 1 === cols.length,
+                'col-grid-line': !!(gridLines & GridLines.Column)
+            })}
+            role="columnheader"
+            style:width={`${columnWidth(ci.column)}em`}
+            style:left={ci.left !== undefined && !!ci.column.pinned ? `${ci.left}em` : undefined}
+            style:z-index={!!ci.column.pinned ? cols.length - index : undefined}
+        >
+            <div>
+                {#if ci.column.key === controlColKey && controlColumn?.headerCell}
+                    {@render controlColumn.headerCell()}
+                {:else if headerCell && ci.column.key !== controlColKey}
+                    {@render headerCell(ci.column)}
+                {:else}
+                    <div class="default-header-content">
+                        {ci.column.text}
+                    </div>
+                {/if}
+                {#if ci.column.resizable ?? true}
+                    <Resizer minSize={ci.column.minWidth} resize={newSize => ci.column.width = newSize} />
+                {:else}
+                    <div></div>
+                {/if}
+            </div>
         </div>
-    </div>
     {/each}
 {/snippet}
 
 {#snippet colData(row: WjDvRow<TRow>, rowIndex: number, cols: ColumnInfo[])}
     {#each cols as ci, index (ci.column.key)}
-    {@const getFn = ci.column.get ?? (r => get(r, ci.column.key))}
-    <div
-        class={combineClasses('dataview-cell-bg', {
-            'sticky-data': !!ci.column.pinned,
-            'sticky-divider': pinnedDivider && index + 1 === cols.length,
-            'col-grid-line': !!(gridLines & GridLines.Column)
-        })}
-        role="cell"
-        style:width={`${ci.column.width ?? defaultWidth}em`}
-        style:left={ci.left !== undefined ? `${ci.left}em` : undefined}
-    >
-        <div class="dataview-cell-s">
-            <div class={combineClasses("dataview-cell-d", {
-                'align-start': ci.column.alignment === 'start',
-                'align-center': ci.column.alignment === 'center',
-                'align-end': ci.column.alignment === 'end',
-                'no-wrap': ci.column.noTextWrap ?? false,
-            })}>
-                {#if ci.column.key === controlColKey && controlColumn?.dataCell}
-                    {@render controlColumn.dataCell(row, rowIndex)}
-                {:else if dataCell && ci.column.key !== controlColKey}
-                    {@render dataCell(ci.column, row)}
-                {:else}
-                    <div class="default-content">
-                        {getFn(row)}
-                    </div>
-                {/if}
+        {@const getFn = ci.column.get ?? (r => get(r, ci.column.key))}
+        <div
+            class={combineClasses('dataview-cell-bg', {
+                'sticky-data': !!ci.column.pinned,
+                'sticky-divider': pinnedDivider && index + 1 === cols.length,
+                'col-grid-line': !!(gridLines & GridLines.Column)
+            })}
+            role="cell"
+            style:width={`${ci.column.width ?? defaultWidth}em`}
+            style:left={ci.left !== undefined ? `${ci.left}em` : undefined}
+        >
+            <div class="dataview-cell-s">
+                <div class={combineClasses("dataview-cell-d", {
+                    'align-start': ci.column.alignment === 'start',
+                    'align-center': ci.column.alignment === 'center',
+                    'align-end': ci.column.alignment === 'end',
+                    'no-wrap': ci.column.noTextWrap ?? false,
+                })}>
+                    {#if ci.column.key === controlColKey && controlColumn?.dataCell}
+                        {@render controlColumn.dataCell(row, rowIndex)}
+                    {:else if dataCell && ci.column.key !== controlColKey}
+                        {@render dataCell(ci.column, row)}
+                    {:else}
+                        <div class="default-content">
+                            {getFn(row)}
+                        </div>
+                    {/if}
+                </div>
             </div>
         </div>
-    </div>
     {/each}
 {/snippet}
 
