@@ -16,6 +16,12 @@
         data: { data: WjDvRow<Person>[]; }
     } = $props();
 
+    let gridData = $state([] as WjDvRow<Person>[]);
+
+    $effect.pre(() => {
+        gridData = data.data;
+    });
+
     let columns = $state<WjDvColumn<Person>[]>([
         {
             key: 'id',
@@ -130,7 +136,7 @@ import &#123; WjDataView &#125; from '@wjfe/dataview';</pre>
         <WjDataViewTheme theme={themeOptions.currentTheme}>
             <WjDataView
                 bind:columns
-                bind:data={data.data}
+                bind:data={gridData}
                 striped={demoOptions.striped}
                 rowTracking={demoOptions.rowTracking}
                 rowSelectionHighlight={demoOptions.rowSelectionHighlight}
