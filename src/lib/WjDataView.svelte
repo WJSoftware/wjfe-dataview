@@ -232,16 +232,24 @@
         class?: string;
         /**
          * Snippet used to render the contents of header cells.
+         * @param col The column being rendered.
+         * @param colIndex The index of the column being rendered.
          */
-        headerCell?: Snippet<[WjDvColumn<TRow, TCol>]>;
+        headerCell?: Snippet<[WjDvColumn<TRow, TCol>, number]>;
         /**
          * Snippet used to render the contents of data cells.
+         * @param col The column being rendered.
+         * @param colIndex The index of the column being rendered.
+         * @param row The data row being rendered.
+         * @param rowIndex The index of the row being rendered.
          */
-        dataCell?: Snippet<[WjDvColumn<TRow, TCol>, WjDvRow<TRow>]>;
+        dataCell?: Snippet<[WjDvColumn<TRow, TCol>, number, WjDvRow<TRow>, number]>;
         /**
-         * Snipped used to render the extra row contents of rows with the `wjdv.expanded` property set to `true`.
+         * Snippet used to render the extra row contents of rows with the `wjdv.expanded` property set to `true`.
+         * @param row The data row being rendered.
+         * @param rowIndex The index of the row being rendered.
          */
-        rowExpansion?: Snippet<[WjDvRow<TRow>]>;
+        rowExpansion?: Snippet<[WjDvRow<TRow>, number]>;
         /**
          * Specifies the shape of the control column, which an extra column that is always the first pinned column.
          * 
@@ -336,7 +344,7 @@
                 {#if ci.column.key === controlColKey && controlColumn?.headerCell}
                     {@render controlColumn.headerCell()}
                 {:else if headerCell && ci.column.key !== controlColKey}
-                    {@render headerCell(ci.column)}
+                    {@render headerCell(ci.column, index)}
                 {:else}
                     <div class="default-header-content">
                         {ci.column.text}
@@ -375,7 +383,7 @@
                     {#if ci.column.key === controlColKey && controlColumn?.dataCell}
                         {@render controlColumn.dataCell(row, rowIndex)}
                     {:else if dataCell && ci.column.key !== controlColKey}
-                        {@render dataCell(ci.column, row)}
+                        {@render dataCell(ci.column, index, row, rowIndex)}
                     {:else}
                         <div class="default-content">
                             {getFn(row)}
@@ -417,7 +425,7 @@
                         </div>
                         {#if row.wjdv.expanded && rowExpansion}
                             <div class="dataview-row-expansion">
-                                {@render rowExpansion(row)}
+                                {@render rowExpansion(row, rowIndex)}
                             </div>
                         {/if}
                     </div>
