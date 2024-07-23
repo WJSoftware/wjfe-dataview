@@ -87,33 +87,21 @@
     };
 
     /**
-     * Defines the control column's definition information and snippets.
+     * Defines the control column.
+     * 
+     * Defining the control column is done the same as regular columns, with the following differences:
+     * 
+     * + No `key` property.
+     * + No `pinned` property, as the control column is always pinned.
+     * + No `get` function.
+     * + The `width` property is required.
+     * + The `text` property is optional.
      */
-    export type ControlColumn<TRow extends Record<string, any> = Record<string, any>, TCol extends Record<string, any> = Record<string, any>> = {
-        /**
-         * Defines the control column.
-         * 
-         * Defining the control column is done the same as regular columns, with the following differences:
-         * 
-         * + No `key` property.
-         * + No `pinned` property, as the control column is always pinned.
-         * + No `get` function.
-         * + No `hidden` property.
-         * + The `width` property is required.
-         * + The `text` property is optional.
-         */
-        definition: Omit<WjDvColumn<TRow, TCol>, 'key' | 'pinned' | 'get' | 'hidden'> & { width: number; text?: string; };
-        /**
-         * Renders the contents of the control column's header cell.
-         */
-        headerCell?: Snippet;
-        /**
-         * Renders the contents of the control column's data cells.
-         * @param row The row being rendered.
-         * @param rowIndex The index of the row being rendered.
-         */
-        dataCell?: Snippet<[WjDvRow<TRow>, number]>;
-    };
+    export type ControlColumn<TRow extends Record<string, any> = Record<string, any>, TCol extends Record<string, any> = Record<string, any>> =
+        Omit<WjDvColumn<TRow, TCol>, 'key' | 'pinned' | 'get'> & {
+            width: number;
+            text?: string;
+        };
 
     /**
      * Defines the possible grid line options for the `WjDataView` component.
@@ -180,7 +168,6 @@
 </script>
 
 <script lang="ts" generics="TCol extends Record<string, any> = Record<string, any>, TRow extends Record<string, any> = Record<string, any>">
-    
     import { type Snippet } from "svelte";
     import Resizer from "./Resizer.svelte";
     import { combineClasses } from "./utils.js";
@@ -227,6 +214,12 @@
          */
         pinnedDivider?: boolean;
         /**
+         * Specifies the shape of the control column, which an extra column that is always the first pinned column.
+         * 
+         * If not provided, the control column is omitted.
+         */
+        controlColumn?: ControlColumn<TRow, TCol>;
+        /**
          * Additional CSS classes that are applied to the data view's viewport (the top-level element).
          */
         class?: string;
@@ -251,11 +244,16 @@
          */
         rowExpansion?: Snippet<[WjDvRow<TRow>, number]>;
         /**
-         * Specifies the shape of the control column, which an extra column that is always the first pinned column.
-         * 
-         * If not provided, the control column is omitted.
+         * Renders the contents of the control column's header cell.
          */
-        controlColumn?: ControlColumn<TRow, TCol>;
+        controlHeaderCell?: Snippet;
+        /**
+         * Renders the contents of the control column's data cells.
+         * @param row The row being rendered.
+         * @param rowIndex The index of the row being rendered.
+         */
+        controlDataCell?: Snippet<[WjDvRow<TRow>, number]>;
+        [x: string]: any;
     };
 
     let {
@@ -268,11 +266,13 @@
         striped = true,
         gridLines = GridLines.None,
         pinnedDivider = true,
+        controlColumn,
         class: cssClass,
         headerCell,
         dataCell,
         rowExpansion,
-        controlColumn,
+        controlHeaderCell,
+        controlDataCell,
         ...restProps
     }: Props = $props();
 
@@ -282,12 +282,6 @@
     }
 
     const controlColKey = '__ctrl';
-    let controlCol = $state({
-        ...controlColumn?.definition,
-        key: controlColKey,
-        text: '',
-        pinned: true,
-    } as WjDvColumn<TRow, TCol>);
 
     const segregatedColumns = $derived(columns.reduce<{
             accPinnedWidth: number;
@@ -313,11 +307,15 @@
             }
             return p;
         }, {
-            accPinnedWidth: (controlColumn) ? controlCol.width! : 0,
+            accPinnedWidth: (controlColumn && !controlColumn.hidden) ? controlColumn.width : 0,
             accUnpinnedWidth: 0,
-            pinned: (controlColumn) ? [{
+            pinned: (controlColumn && !controlColumn.hidden) ? [{
                 left: 0,
-                column: controlCol
+                column: {
+                    ...controlColumn,
+                    key: controlColKey,
+                    pinned: true,
+                } as WjDvColumn<TRow, TCol>,
             }] : [],
             unpinned: []
         }));
@@ -341,9 +339,9 @@
             style:z-index={!!ci.column.pinned ? cols.length - index : undefined}
         >
             <div>
-                {#if ci.column.key === controlColKey && controlColumn?.headerCell}
-                    {@render controlColumn.headerCell()}
-                {:else if headerCell && ci.column.key !== controlColKey}
+                {#if ci.column.key === controlColKey}
+                    {@render controlHeaderCell?.()}
+                {:else if headerCell}
                     {@render headerCell(ci.column, index)}
                 {:else}
                     <div class="default-header-content">
@@ -380,9 +378,9 @@
                     'align-end': ci.column.alignment === 'end',
                     'no-wrap': ci.column.noTextWrap ?? false,
                 })}>
-                    {#if ci.column.key === controlColKey && controlColumn?.dataCell}
-                        {@render controlColumn.dataCell(row, rowIndex)}
-                    {:else if dataCell && ci.column.key !== controlColKey}
+                    {#if ci.column.key === controlColKey}
+                        {@render controlDataCell?.(row, rowIndex)}
+                    {:else if dataCell}
                         {@render dataCell(ci.column, index, row, rowIndex)}
                     {:else}
                         <div class="default-content">
