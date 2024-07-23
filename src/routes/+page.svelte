@@ -137,16 +137,40 @@ import &#123; WjDataView &#125; from '@wjfe/dataview';</pre>
                 gridLines={demoOptions.gridLines}
                 defaultWidth={15}
                 class="position-absolute top-0 bottom-0"
-                controlColumn={demoOptions.showControlColumn ? ({
-                    definition: {
-                        width: 4,
-                        minWidth: 4
-                    },
-                    headerCell: controlHeaderCell,
-                    dataCell: controlDataCell
-                }) : undefined}
+                controlColumn={{
+                    width: 4,
+                    minWidth: 4,
+                    hidden: !demoOptions.showControlColumn
+                }}
             >
-                {#snippet headerCell(col)}
+                {#snippet controlHeaderCell()}
+                    <div class="ps-2">
+                        <input
+                            type="checkbox"
+                            class="form-check-input"
+                            indeterminate="{allSelected === null}"
+                            checked={!!allSelected}
+                            oninput="{ev => selectAllData(ev.currentTarget.checked)}"
+                        >
+                    </div>
+                {/snippet}
+                {#snippet controlDataCell(row, _rowIndex)}
+                    <div class="px-2 d-flex flex-row gap-1">
+                        <input
+                            type="checkbox"
+                            class="form-check-input"
+                            bind:checked={row.wjdv.selected}
+                        >
+                        <button
+                            type="button"
+                            class="btn btn-sm btn-neutral"
+                            onclick={() => row.wjdv.expanded = !row.wjdv.expanded}
+                        >
+                            <i class="bi bi-chevron-bar-{row.wjdv.expanded ? 'contract' : 'expand'}"></i>
+                        </button>
+                    </div>
+                {/snippet}
+                {#snippet headerCell(col, _colIndex)}
                     <div class="d-flex flex-row ps-2">
                         <span class="fw-semibold text-nowrap text-truncate">{col.text}</span>
                         <button class="btn btn-sm ms-auto" onclick={() => col.pinned = !col.pinned}>
@@ -156,7 +180,7 @@ import &#123; WjDataView &#125; from '@wjfe/dataview';</pre>
                         </button>
                     </div>
                 {/snippet}
-                {#snippet dataCell(col, row)}
+                {#snippet dataCell(col, _colIndex, row, _rowIndex)}
                     <div class="data px-2 text-truncate">
                         {#if col.key === 'credit_score' || col.key === 'net_worth'}
                             {@render Numeric(row[col.key])}
@@ -165,7 +189,7 @@ import &#123; WjDataView &#125; from '@wjfe/dataview';</pre>
                         {/if}
                     </div>
                 {/snippet}
-                {#snippet rowExpansion(row)}
+                {#snippet rowExpansion(_row, _rowIndex)}
                     <div class="card mx-3 my-2">
                         <h4 class="card-header">Data Drilldown</h4>
                         <div class="card-body">
@@ -195,35 +219,6 @@ import &#123; WjDataView &#125; from '@wjfe/dataview';</pre>
             font-family: monospace;
         }
     </style>
-{/snippet}
-
-{#snippet controlHeaderCell()}
-    <div class="ps-2">
-        <input
-        type="checkbox"
-        class="form-check-input"
-        indeterminate="{allSelected === null}"
-        checked={!!allSelected}
-        oninput="{ev => selectAllData(ev.currentTarget.checked)}"
-        >
-    </div>
-{/snippet}
-
-{#snippet controlDataCell(row, rowIndex)}
-    <div class="px-2 d-flex flex-row gap-1">
-        <input
-            type="checkbox"
-            class="form-check-input"
-            bind:checked={row.wjdv.selected}
-        >
-        <button
-            type="button"
-            class="btn btn-sm btn-neutral"
-            onclick={() => row.wjdv.expanded = !row.wjdv.expanded}
-        >
-            <i class="bi bi-chevron-bar-{row.wjdv.expanded ? 'contract' : 'expand'}"></i>
-        </button>
-    </div>
 {/snippet}
 
 <style lang="scss">
