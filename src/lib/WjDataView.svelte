@@ -396,7 +396,7 @@
                 'col-grid-line': !!(gridLines & GridLines.Column)
             })}
             role="cell"
-            style:width={`${ci.column.width ?? defaultWidth}em`}
+            style:width={`${columnWidth(ci.column)}em`}
             style:left={ci.left !== undefined ? `${ci.left}em` : undefined}
         >
             <div class="dataview-cell-s">
