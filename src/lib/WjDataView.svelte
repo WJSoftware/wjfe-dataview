@@ -174,11 +174,11 @@
 
     type Props = {
         /**
-         * Defines the columns the data view component will create.
+         * Bindable.  Defines the columns the data view component will create.
          */
         columns: WjDvColumn<TRow, TCol>[];
         /**
-         * The data that is shown by the data view component.
+         * Bindable.  The data that is shown by the data view component.
          */
         data: WjDvRow<TRow>[];
         /**
@@ -214,7 +214,8 @@
          */
         pinnedDivider?: boolean;
         /**
-         * Specifies the shape of the control column, which an extra column that is always the first pinned column.
+         * Bindable.  Specifies the shape of the control column, which an extra column that is always the first pinned 
+         * column.
          * 
          * If not provided, the control column is omitted.
          */
@@ -266,7 +267,7 @@
         striped = true,
         gridLines = GridLines.None,
         pinnedDivider = true,
-        controlColumn,
+        controlColumn = $bindable(),
         class: cssClass,
         headerCell,
         dataCell,
