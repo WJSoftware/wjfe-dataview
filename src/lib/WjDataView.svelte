@@ -69,6 +69,12 @@
          */
         minWidth?: number;
         /**
+         * Boolean value that tells the component to use `minWidth` as column width if `width` hasn't been set.
+         * 
+         * This is a useful alternative to the component's `defaultWidth` property for individual columns.
+         */
+        useMinWidthAsWidth?: boolean;
+        /**
          * Boolean value that indicates if the column can be resized.  The default value is `true`.
          */
         resizable?: boolean;
@@ -333,7 +339,7 @@
         }));
 
     function columnWidth(col: WjDvColumn<TRow, TCol>) {
-        return col.width ?? defaultWidth;
+        return col.width ?? (col.useMinWidthAsWidth ? col.minWidth : null) ?? defaultWidth;
     }
 </script>
 
