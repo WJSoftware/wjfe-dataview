@@ -42,24 +42,7 @@
      */
     export type GetterFn<TRow extends Record<string, any> = Record<string, any>> = (row: WjDvRow<TRow>) => any;
 
-    /**
-     * Type that defines the necessary and optional properties of column definition objects.
-     */
-    export type WjDvColumn<TRow extends Record<string, any> = Record<string, any>, TCol extends Record<string, any> = Record<string, any>> = TCol & {
-        /**
-         * Column's key.  A string value that is meant to be unique amongst the list of columns.
-         * 
-         * It is used to key the rendered column elements, and if no `get` property is defined, it also serves as 
-         * property name to obtain data row data values.
-         * 
-         * **HINT**: If you're interested in using the `dot-prop` package to retrieve property values, it is a good 
-         * idea for keys to be the dot-prop path of properties.
-         */
-        key: string;
-        /**
-         * Column's caption.
-         */
-        text: string;
+    export type ColumnShape = {
         /**
          * Column's width, in *em*'s.  The default value is 10 em's.
          */
@@ -78,29 +61,50 @@
          * Boolean value that indicates if the column can be resized.  The default value is `true`.
          */
         resizable?: boolean;
-        /**
-         * Boolean value that indicates if the column is pinned.  The default value is `false`.
-         */
-        pinned?: boolean;
-        /**
-         * Boolean value that indicates if the column is hidden.  The default value is `false`.
-        */
-        hidden?: boolean;
-        /**
-         * Column alignment.  The default value is to be unset, so no explicit alignment takes place.
-         */
-        alignment?: ColAlignment;
-        /**
-         * Prevents data to wrap to a new line.  The default value is `false`.
-         */
-        noTextWrap?: boolean;
-        /**
-         * A function that returns the data that is to be rendered in the column.
-         * @param row The data row object that is about to be rendered.
-         * @returns The data meant to be rendered for this column.
-         */
-        get?: GetterFn<TRow>;
     };
+
+    /**
+     * Type that defines the necessary and optional properties of column definition objects.
+     */
+    export type WjDvColumn<TRow extends Record<string, any> = Record<string, any>, TCol extends Record<string, any> = Record<string, any>> = 
+        TCol & ColumnShape & {
+            /**
+             * Column's key.  A string value that is meant to be unique amongst the list of columns.
+             * 
+             * It is used to key the rendered column elements, and if no `get` property is defined, it also serves as 
+             * property name to obtain data row data values.
+             * 
+             * **HINT**: If you're interested in using the `dot-prop` package to retrieve property values, it is a good 
+             * idea for keys to be the dot-prop path of properties.
+             */
+            key: string;
+            /**
+             * Column's caption.
+             */
+            text: string;
+            /**
+             * Boolean value that indicates if the column is pinned.  The default value is `false`.
+             */
+            pinned?: boolean;
+            /**
+             * Boolean value that indicates if the column is hidden.  The default value is `false`.
+            */
+            hidden?: boolean;
+            /**
+             * Column alignment.  The default value is to be unset, so no explicit alignment takes place.
+             */
+            alignment?: ColAlignment;
+            /**
+             * Prevents data to wrap to a new line.  The default value is `false`.
+             */
+            noTextWrap?: boolean;
+            /**
+             * A function that returns the data that is to be rendered in the column.
+             * @param row The data row object that is about to be rendered.
+             * @returns The data meant to be rendered for this column.
+             */
+            get?: GetterFn<TRow>;
+        };
 
     /**
      * Defines the control column.
@@ -110,12 +114,10 @@
      * + No `key` property.
      * + No `pinned` property, as the control column is always pinned.
      * + No `get` function.
-     * + The `width` property is required.
      * + The `text` property is optional.
      */
     export type ControlColumn<TRow extends Record<string, any> = Record<string, any>, TCol extends Record<string, any> = Record<string, any>> =
         Omit<WjDvColumn<TRow, TCol>, 'key' | 'pinned' | 'get'> & {
-            width: number;
             text?: string;
         };
 
@@ -325,7 +327,7 @@
             }
             return p;
         }, {
-            accPinnedWidth: (controlColumn && !controlColumn.hidden) ? controlColumn.width : 0,
+            accPinnedWidth: (controlColumn && !controlColumn.hidden) ? columnWidth(controlColumn) : 0,
             accUnpinnedWidth: 0,
             pinned: (controlColumn && !controlColumn.hidden) ? [{
                 left: 0,
@@ -337,8 +339,16 @@
             }] : [],
             unpinned: []
         }));
-
-    function columnWidth(col: WjDvColumn<TRow, TCol>) {
+    
+    /**
+     * Returns the column's width according to the following logic:
+     * 
+     * + If the column specifies a `width` value, then it is returned.
+     * + If `useMinWidthAsWidth` is `true` and there is a `minWidth` value, then use this one.
+     * + In all other cases, return the value of the `defaultWidth` component's property.
+     * @param col Column of interest.
+     */
+    function columnWidth(col: ColumnShape) {
         return col.width ?? (col.useMinWidthAsWidth ? col.minWidth : null) ?? defaultWidth;
     }
 </script>
