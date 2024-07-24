@@ -37,6 +37,12 @@
     };
 
     /**
+     * Defines the signature of property-getter functions.
+     * @param row The data row object from where to extract the property value.
+     */
+    export type GetterFn<TRow extends Record<string, any> = Record<string, any>> = (row: WjDvRow<TRow>) => any;
+
+    /**
      * Type that defines the necessary and optional properties of column definition objects.
      */
     export type WjDvColumn<TRow extends Record<string, any> = Record<string, any>, TCol extends Record<string, any> = Record<string, any>> = TCol & {
@@ -83,7 +89,7 @@
          * @param row The data row object that is about to be rendered.
          * @returns The data meant to be rendered for this column.
          */
-        get?: (row: WjDvRow<TRow>) => any;
+        get?: GetterFn<TRow>;
     };
 
     /**
@@ -236,8 +242,9 @@
          * @param colIndex The index of the column being rendered.
          * @param row The data row being rendered.
          * @param rowIndex The index of the row being rendered.
+         * @param getFn The property-getter function to use for this particular column.
          */
-        dataCell?: Snippet<[WjDvColumn<TRow, TCol>, number, WjDvRow<TRow>, number]>;
+        dataCell?: Snippet<[WjDvColumn<TRow, TCol>, number, WjDvRow<TRow>, number, getFn: GetterFn<TRow>]>;
         /**
          * Snippet used to render the extra row contents of rows with the `wjdv.expanded` property set to `true`.
          * @param row The data row being rendered.
@@ -382,7 +389,7 @@
                     {#if ci.column.key === controlColKey}
                         {@render controlDataCell?.(row, rowIndex)}
                     {:else if dataCell}
-                        {@render dataCell(ci.column, index, row, rowIndex)}
+                        {@render dataCell(ci.column, index, row, rowIndex, getFn)}
                     {:else}
                         <div class="default-content">
                             {getFn(row)}
