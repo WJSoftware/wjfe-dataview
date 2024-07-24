@@ -47,9 +47,13 @@
      */
     export type WjDvColumn<TRow extends Record<string, any> = Record<string, any>, TCol extends Record<string, any> = Record<string, any>> = TCol & {
         /**
-         * Column's key.  A string value that is meant to be unique amongst the list of columns.  It is used to key 
-         * the rendered column elements, and if no `get` property is defined, it also serves as property name to 
-         * obtain data row data values.
+         * Column's key.  A string value that is meant to be unique amongst the list of columns.
+         * 
+         * It is used to key the rendered column elements, and if no `get` property is defined, it also serves as 
+         * property name to obtain data row data values.
+         * 
+         * **HINT**: If you're interested in using the `dot-prop` package to retrieve property values, it is a good 
+         * idea for keys to be the dot-prop path of properties.
          */
         key: string;
         /**
@@ -57,35 +61,35 @@
          */
         text: string;
         /**
-         * Optional.  Column's width, in *em*'s.  The default value is 10 em's.
+         * Column's width, in *em*'s.  The default value is 10 em's.
          */
         width?: number;
         /**
-         * Optional.  Minimum column's width, in *em*'s.  The default value is 3 em's.
+         * Minimum column's width, in *em*'s.  The default value is 3 em's.
          */
         minWidth?: number;
         /**
-         * Optional.  Boolean value that indicates if the column can be resized.  The default value is `true`.
+         * Boolean value that indicates if the column can be resized.  The default value is `true`.
          */
         resizable?: boolean;
         /**
-         * Optional.  Boolean value that indicates if the column is pinned.  The default value is `false`.
+         * Boolean value that indicates if the column is pinned.  The default value is `false`.
          */
         pinned?: boolean;
         /**
-         * Optional.  Boolean value that indicates if the column is hidden.  The default value is `false`.
+         * Boolean value that indicates if the column is hidden.  The default value is `false`.
         */
         hidden?: boolean;
         /**
-         * Optional.  Column alignment.  The default value is to be unset, so no explicit alignment takes place.
+         * Column alignment.  The default value is to be unset, so no explicit alignment takes place.
          */
         alignment?: ColAlignment;
         /**
-         * Optional.  Prevents data to wrap to a new line.  The default value is `false`.
+         * Prevents data to wrap to a new line.  The default value is `false`.
          */
         noTextWrap?: boolean;
         /**
-         * Optional.  A function that returns the data that is to be rendered in the column.
+         * A function that returns the data that is to be rendered in the column.
          * @param row The data row object that is about to be rendered.
          * @returns The data meant to be rendered for this column.
          */
