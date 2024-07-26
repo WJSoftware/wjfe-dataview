@@ -239,6 +239,13 @@
          */
         controlColumn?: ControlColumn<TRow, TCol>;
         /**
+         * Allows the exclusion of the component's viewport.
+         * 
+         * The typical use case is for child `WjDataView` components.  Eliminating its own viewport makes its header 
+         * row stick to the parent `WjDataView`'s viewport.
+         */
+        noViewport?: boolean;
+        /**
          * Additional CSS classes that are applied to the data view's viewport (the top-level element).
          */
         class?: string;
@@ -287,6 +294,7 @@
         gridLines = GridLines.None,
         pinnedDivider = true,
         controlColumn = $bindable(),
+        noViewport = false,
         class: cssClass,
         headerCell,
         dataCell,
@@ -421,46 +429,54 @@
     {/each}
 {/snippet}
 
-<div class={combineClasses('dataview-container', cssClass)}>
-    <div class="dataview" role="table" {...restProps}>
-        <div class="header-group" role="rowheader">
-            <div role="row" class:row-grid-line={!!(gridLines & GridLines.Row)}>
-                {#if segregatedColumns.pinned.length}
-                    {@render colHeaders(segregatedColumns.pinned)}
-                {/if}
-                {@render colHeaders(segregatedColumns.unpinned)}
-                <div class="col-header extra-header">&nbsp;</div>
-            </div>
-        </div>
-        <div class={combineClasses('dataview-body', { striped, 'row-tracking': rowTracking })} role="rowgroup">
-            {#each data as row, rowIndex (row.id)}
-            <div
-                class="dataview-row-bg"
-                class:selected={rowSelectionHighlight && row.wjdv.selected}
-                class:row-grid-line={!!(gridLines & GridLines.Row)}
-                role="row"
-            >
-                <div class="dataview-row-s">
-                    <div class="dataview-row-h">
-                        <div class="dataview-row-d">
-                            {#if segregatedColumns.pinned.length}
-                                {@render colData(row, rowIndex, segregatedColumns.pinned)}
-                            {/if}
-                            {@render colData(row, rowIndex, segregatedColumns.unpinned)}
-                            <div class="dataview-cell">&nbsp;</div>
-                        </div>
-                        {#if row.wjdv.expanded && rowExpansion}
-                            <div class="dataview-row-expansion">
-                                {@render rowExpansion(row, rowIndex)}
-                            </div>
-                        {/if}
-                    </div>
-                </div>
-            </div>
-            {/each}
+{#snippet table()}
+<div class={combineClasses("dataview", noViewport ? cssClass : undefined)} role="table" {...restProps}>
+    <div class="header-group" role="rowheader">
+        <div role="row" class:row-grid-line={!!(gridLines & GridLines.Row)}>
+            {#if segregatedColumns.pinned.length}
+                {@render colHeaders(segregatedColumns.pinned)}
+            {/if}
+            {@render colHeaders(segregatedColumns.unpinned)}
+            <div class="col-header extra-header">&nbsp;</div>
         </div>
     </div>
+    <div class={combineClasses('dataview-body', { striped, 'row-tracking': rowTracking })} role="rowgroup">
+        {#each data as row, rowIndex (row.id)}
+        <div
+            class="dataview-row-bg"
+            class:selected={rowSelectionHighlight && row.wjdv.selected}
+            class:row-grid-line={!!(gridLines & GridLines.Row)}
+            role="row"
+        >
+            <div class="dataview-row-s">
+                <div class="dataview-row-h">
+                    <div class="dataview-row-d">
+                        {#if segregatedColumns.pinned.length}
+                            {@render colData(row, rowIndex, segregatedColumns.pinned)}
+                        {/if}
+                        {@render colData(row, rowIndex, segregatedColumns.unpinned)}
+                        <div class="dataview-cell">&nbsp;</div>
+                    </div>
+                    {#if row.wjdv.expanded && rowExpansion}
+                        <div class="dataview-row-expansion">
+                            {@render rowExpansion(row, rowIndex)}
+                        </div>
+                    {/if}
+                </div>
+            </div>
+        </div>
+        {/each}
+    </div>
 </div>
+{/snippet}
+
+{#if noViewport}
+    {@render table()}
+{:else}
+    <div class={combineClasses('dataview-container', cssClass)}>
+        {@render table()}
+    </div>
+{/if}
 
 <style lang="scss">
     // Content classes.
