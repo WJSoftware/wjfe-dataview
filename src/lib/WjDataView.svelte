@@ -607,7 +607,7 @@
             }
         }
 
-        &.row-tracking div.dataview-row-h {
+        &.row-tracking > div.dataview-row-bg > div.dataview-row-s > div.dataview-row-h {
             &:hover {
                 background-color: var(--wjdv-rowtracking-bg-color);
 
