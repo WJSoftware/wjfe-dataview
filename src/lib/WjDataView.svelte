@@ -626,7 +626,7 @@
         background-color: var(--wjdv-striping-bg-color);
         color: var(--wjdv-striping-color);
     }
-    :global(div.dataview-body.row-tracking div.dataview-row-h:hover > div.dataview-row-d > div.sticky-data div.dataview-cell-d) {
+    :global(div.dataview-body.row-tracking > div.dataview-row-bg > div.dataview-row-s > div.dataview-row-h:hover > div.dataview-row-d > div.sticky-data div.dataview-cell-d) {
         background-color: var(--wjdv-rowtracking-bg-color);
     }
 
