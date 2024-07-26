@@ -606,12 +606,12 @@
     }
 
     // WORKAROUNDS:  :global() isn't needed, but Svelte keeps on filtering it out alleging it is unused.
-    :global(div.dataview-body.striped) > div.dataview-row-bg:nth-of-type(2n) div.sticky-data :global(div.dataview-cell-s) {
+    :global(div.dataview-body.striped > div.dataview-row-bg:nth-of-type(2n) > div.dataview-row-s > div.dataview-row-h > div.dataview-row-d div.sticky-data div.dataview-cell-s) {
         background-color: var(--wjdv-striping-bg-color);
         color: var(--wjdv-striping-color);
     }
-    :global(div.dataview-body.row-tracking) div.dataview-row-h:hover div.sticky-data :global(div.dataview-cell-d) {
-        background-color: var(--wjdv-rowtracking-bg-color) !important;
+    :global(div.dataview-body.row-tracking div.dataview-row-h:hover > div.dataview-row-d > div.sticky-data div.dataview-cell-d) {
+        background-color: var(--wjdv-rowtracking-bg-color);
     }
 
     div.dataview-row-s {
