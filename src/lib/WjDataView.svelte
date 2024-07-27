@@ -471,7 +471,7 @@
 {/snippet}
 
 {#snippet table()}
-<div class={combineClasses("dataview", noViewport ? cssClass : undefined)} role="table" {...restProps}>
+<div class={combineClasses("dataview", noViewport ? cssClass : undefined, { 'no-vp': noViewport})} role="table" {...restProps}>
     <div class="header-group" role="rowheader">
         <div role="row" class:row-grid-line={!!(gridLines & GridLines.Row)}>
             {#if segregatedColumns.pinned.length}
@@ -715,6 +715,10 @@
         &.sticky-data, &.sticky-header {
             border-right: var(--wjdv-sticky-divider);
         }
+    }
+
+    :global(div.dataview-body div.dataview:not(.no-vp) .header-group) {
+        z-index: auto;
     }
 </style>
 
