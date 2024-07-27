@@ -1,7 +1,8 @@
 <script lang="ts">
+    import { base } from "$app/paths";
     import type { Snippet } from "svelte";
-    import ThemeSwitch from "./ThemeSwitch.svelte";
     import "../app.scss";
+    import ThemeSwitch from "./ThemeSwitch.svelte";
 
     let { children }: {
         children: Snippet
@@ -9,8 +10,18 @@
 </script>
 
 <div class="d-flex flex-column doc-container">
-    <nav class="navbar bg-primary-subtle px-3">
+    <nav class="navbar navbar-expand-md bg-primary-subtle px-3">
         <span class="navbar-brand">WjDataView Demo</span>
+        <div class="navbar-collapse">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a href={base} class="nav-link">Overview (Home)</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{base}/sales" class="nav-link">Data Drilldown Demo</a>
+                </li>
+            </ul>
+        </div>
         <a
             href="https://github.com/WJSoftware/wjfe-dataview"
             title="Repository"
@@ -22,7 +33,7 @@
         <ThemeSwitch />
     </nav>
     <div class="flex-fill overflow-auto">
-        <div class="container-fluid overflow-auto h-100">
+        <div class="container-fluid overflow-auto h-100 theme-def d-flex flex-column">
             {@render children()}
         </div>
     </div>
@@ -71,5 +82,17 @@
 
     .footer-logo {
         height: 1em;
+    }
+
+    .theme-def {
+        --wjdv-sky-bg-rgb: 200, 240, 250;
+        --wjdv-sky-color: var(--bs-black);
+        --bs-row-selection-bg-color-rgb: 221, 235, 255;
+        
+        :global([data-bs-theme="dark"]) & {
+            --wjdv-sky-bg-rgb: 30, 90, 120;
+            --wjdv-sky-color: var(--bs-white);
+            --bs-row-selection-bg-color-rgb: 21, 35, 55;
+        }
     }
 </style>

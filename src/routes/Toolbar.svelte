@@ -1,7 +1,7 @@
 <script lang="ts">
     import { GridLines } from "$lib/WjDataView.svelte";
-    import { demoOptions } from "./demoOptions.svelte.js";
-    import { allThemes, getStockTheme, themeOptions } from "./themeOptions.svelte.js";
+    import { demoOptions } from "../demolib/demoOptions.svelte.js";
+    import { allThemes, getStockTheme, themeOptions } from "../demolib/themeOptions.svelte.js";
 
     const numRecordsOptions = [100, 200, 300, 400];
     const stockThemeKey = 'Stock';
@@ -20,9 +20,9 @@
     >
         <i class="bi bi-info-circle"></i>
     </button>
-    <div class="input-group">
+    <div class="input-group input-group-sm">
         <span class="input-group-text" title="Row Options:"><i class="bi bi-list-check"></i></span>
-        <div class="btn-group btn-sm">
+        <div class="btn-group btn-group-sm">
             <input type="checkbox" id="striped" bind:checked={demoOptions.striped} class="btn-check" />
             <label for="striped" class="btn btn-outline-primary rounded-0">Striped</label>
             <input type="checkbox" id="rowTracking" bind:checked={demoOptions.rowTracking} class="btn-check" />
@@ -32,10 +32,10 @@
         </div>
     </div>
     <input type="checkbox" id="controlColumn" bind:checked={demoOptions.showControlColumn} class="btn-check" />
-    <label for="controlColumn" class="btn btn-outline-primary">Control Column</label>
-    <div class="input-group">
+    <label for="controlColumn" class="btn btn-sm btn-outline-primary">Control Column</label>
+    <div class="input-group input-group-sm">
         <span class="input-group-text" title="Row Count:"><i class="bi bi-person-lines-fill"></i></span>
-        <div class="btn-group btn-sm">
+        <div class="btn-group btn-group-sm">
             {#each numRecordsOptions as nro, index (nro)}
                 <input
                     type="radio"
@@ -54,7 +54,7 @@
             {/each}
         </div>
     </div>
-    <div class="input-group">
+    <div class="input-group input-group-sm">
         <div class="input-group-text">
             <span title="Theme:"><i class="bi bi-palette"></i></span>
         </div>
@@ -65,9 +65,9 @@
             {/each}
         </select>
     </div>
-    <div class="input-group">
+    <div class="input-group input-group-sm">
         <span title="Borders:" class="input-group-text"><i class="bi bi-border-all"></i></span>
-        <div class="btn-group btn-sm">
+        <div class="btn-group btn-group-sm">
             <input type="checkbox" id="rowGridLine" class="btn-check" value={GridLines.Row} bind:group={demoOptions.grid_lines} />
             <label for="rowGridLine" class="btn btn-outline-primary rounded-0" title="Row borders">
                 <i class="bi bi-border-bottom"></i>
