@@ -117,7 +117,7 @@
      * + The `text` property is optional.
      */
     export type ControlColumn<TRow extends Record<string, any> = Record<string, any>, TCol extends Record<string, any> = Record<string, any>> =
-        Omit<WjDvColumn<TRow, TCol>, 'key' | 'pinned' | 'get'> & {
+        Omit<WjDvColumn<TRow, TCol>, 'key' | 'pinned' | 'get' | 'text'> & {
             text?: string;
         };
 
