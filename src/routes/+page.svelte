@@ -1,14 +1,16 @@
 <script lang="ts">
-    import { browser } from "$app/environment";
     import { goto } from "$app/navigation";
+    import { base } from "$app/paths";
     import { page } from "$app/stores";
     import WjDataView, { type WjDvColumn, type WjDvRow } from "$lib/WjDataView.svelte";
     import WjDataViewTheme from "$lib/WjDataViewTheme.svelte";
     import type { Person } from "../data-models.js";
+    import { demoOptions } from "../demolib/demoOptions.svelte.js";
+    import EditInGitHub from "../demolib/EditInGitHub.svelte";
+    import Numeric from "../demolib/Numeric.svelte";
+    import { themeOptions } from "../demolib/themeOptions.svelte.js";
     import MoreInfo from "./MoreInfo.svelte";
     import Toolbar from "./Toolbar.svelte";
-    import { demoOptions } from "./demoOptions.svelte.js";
-    import { themeOptions } from "./themeOptions.svelte.js";
 
     let {
         data,
@@ -160,90 +162,52 @@ import &#123; WjDataView &#125; from '@wjfe/dataview';</pre>
                         >
                     </div>
                 {/snippet}
-                {#snippet controlDataCell(row, _rowIndex)}
+                {#snippet controlDataCell(ctx)}
                     <div class="px-2 d-flex flex-row gap-1">
                         <input
                             type="checkbox"
                             class="form-check-input"
-                            bind:checked={row.wjdv.selected}
+                            bind:checked={ctx.row.wjdv.selected}
                         >
                         <button
                             type="button"
                             class="btn btn-sm btn-neutral"
-                            onclick={() => row.wjdv.expanded = !row.wjdv.expanded}
+                            onclick={() => ctx.row.wjdv.expanded = !ctx.row.wjdv.expanded}
                         >
-                            <i class="bi bi-chevron-bar-{row.wjdv.expanded ? 'contract' : 'expand'}"></i>
+                            <i class="bi bi-chevron-bar-{ctx.row.wjdv.expanded ? 'contract' : 'expand'}"></i>
                         </button>
                     </div>
                 {/snippet}
-                {#snippet headerCell(col, _colIndex)}
+                {#snippet headerCell(ctx)}
                     <div class="d-flex flex-row ps-2">
-                        <span class="fw-semibold text-nowrap text-truncate">{col.text}</span>
-                        <button class="btn btn-sm ms-auto" onclick={() => col.pinned = !col.pinned}>
-                            <span title="Click to {col.pinned ? 'un' : ''}pin">
-                                <i class="bi bi-pin-{col.pinned ? 'fill' : 'angle'}"></i>
+                        <span class="fw-semibold text-nowrap text-truncate">{ctx.col.text}</span>
+                        <button class="btn btn-sm ms-auto" onclick={() => ctx.col.pinned = !ctx.col.pinned}>
+                            <span title="Click to {ctx.col.pinned ? 'un' : ''}pin">
+                                <i class="bi bi-pin-{ctx.col.pinned ? 'fill' : 'angle'}"></i>
                             </span>
                         </button>
                     </div>
                 {/snippet}
-                {#snippet dataCell(col, _colIndex, row, _rowIndex)}
+                {#snippet dataCell(ctx)}
                     <div class="data px-2 text-truncate">
-                        {#if col.key === 'credit_score' || col.key === 'net_worth'}
-                            {@render Numeric(row[col.key])}
+                        {#if ctx.col.key === 'credit_score' || ctx.col.key === 'net_worth'}
+                            <Numeric value={ctx.row[ctx.col.key]} />
                         {:else}
-                            {row[col.key as keyof typeof row]}
+                            {ctx.row[ctx.col.key as keyof typeof ctx.row]}
                         {/if}
                     </div>
                 {/snippet}
-                {#snippet rowExpansion(_row, _rowIndex)}
+                {#snippet rowExpansion(ctx)}
                     <div class="card mx-3 my-2">
                         <h4 class="card-header">Data Drilldown</h4>
                         <div class="card-body">
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Tenetur vero voluptatibus libero laboriosam nisi explicabo quia ab nam mollitia, rem beatae soluta inventore doloribus. Iure omnis saepe blanditiis, fugit voluptates, sit eaque perferendis minima doloremque ea quia dolores hic ipsam! Odit esse voluptatibus minus corrupti harum, mollitia, temporibus corporis quam enim velit vitae eaque? Dolor sunt laudantium possimus ea iusto quam suscipit exercitationem dicta? Id reiciendis iusto magni vitae animi corrupti illum quaerat nisi repudiandae enim, saepe officiis ab cupiditate in, aliquid totam incidunt dolores nam recusandae at sequi ipsa? Ipsa, placeat! Debitis maiores quos eum nihil ducimus eligendi eaque.
+                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Tenetur vero voluptatibus libero laboriosam nisi explicabo quia ab nam mollitia, rem beatae soluta inventore doloribus. Iure omnis saepe blanditiis, fugit voluptates, sit eaque perferendis minima doloremque ea quia dolores hic ipsam! Odit esse voluptatibus minus corrupti harum, mollitia, temporibus corporis quam enim velit vitae eaque? Dolor sunt laudantium possimus ea iusto quam suscipit exercitationem dicta? Id reiciendis iusto magni vitae animi corrupti illum quaerat nisi repudiandae enim, saepe officiis ab cupiditate in, aliquid totam incidunt dolores nam recusandae at sequi ipsa? Ipsa, placeat! Debitis maiores quos eum nihil ducimus eligendi eaque.</p>
+                            <p>To see an actual data drill-down scenario, visit the <a href="{base}/sales">sales demo page</a>.</p>
                         </div>
                     </div>
                 {/snippet}
             </WjDataView>
         </WjDataViewTheme>
-        <a
-            class="position-absolute bottom-0 end-0 rounded-circle btn btn-sm btn-secondary mb-3 me-3 semi-transparent"
-            title="See an error?  Want to improve the demo?  Curious about the source code?  View/edit this page in GitHub."
-            href="https://github.com/WJSoftware/wjfe-dataview/blob/main/src/routes/%2Bpage.svelte"
-            target="_blank"
-        >
-            <i class="bi bi-pencil"></i>
-        </a>
+        <EditInGitHub editUrl="https://github.com/WJSoftware/wjfe-dataview/blob/main/src/routes/%2Bpage.svelte" />
     </div>
 </div>
-
-{#snippet Numeric(value: number)}
-    {@const formatter = new Intl.NumberFormat(browser ? navigator?.language : undefined, { maximumFractionDigits: 4 })}
-    <span class="numeric">{formatter.format(value)}</span>
-
-    <style>
-        span.numeric {
-            font-family: monospace;
-        }
-    </style>
-{/snippet}
-
-<style lang="scss">
-    .theme-def {
-        --wjdv-sky-bg-rgb: 200, 240, 250;
-        --wjdv-sky-color: var(--bs-black);
-        --bs-row-selection-bg-color-rgb: 221, 235, 255;
-        
-        :global([data-bs-theme="dark"]) & {
-            --wjdv-sky-bg-rgb: 30, 90, 120;
-            --wjdv-sky-color: var(--bs-white);
-            --bs-row-selection-bg-color-rgb: 21, 35, 55;
-        }
-    }
-
-    .semi-transparent {
-        opacity: 0.4;
-        &:hover {
-            opacity: 1;
-        }
-    }
-</style>

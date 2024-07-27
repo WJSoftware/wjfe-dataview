@@ -1,7 +1,7 @@
+import { defineData } from "$lib/WjDataView.svelte";
 import type { LoadEvent } from "@sveltejs/kit";
 import type { Person } from "../data-models.js";
-import { defineData } from "$lib/WjDataView.svelte";
-import { demoOptions } from "./demoOptions.svelte.js";
+import { demoOptions } from "../demolib/demoOptions.svelte.js";
 
 export async function load(ev: LoadEvent): Promise<{ total: number; data: Person[] }> {
     const numRecords = +(ev.url.searchParams.get('records') ?? '200');
