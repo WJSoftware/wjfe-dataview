@@ -260,11 +260,11 @@ The complete list of CSS variables that can be set for the data view component a
 
 | Name | Parameters | Description |
 | - | - | - |
-| `headerCell` | `col: WjDvColumn<TCol, TRow>, colIndex: number` | Renders header cells' content.  The snippet is passed the column definition. |
-| `dataCell` | `col: WjDvColumn<TCol, TRow>, colIndex: number, row: WjDvRow<TRow>, rowIndex: number, getFn: GetterFn<TRow>` | Renders data cells' content.  The snippet is passed the column definition and the data object for the row being rendered. |
-| `rowExpansion` | `row: WjDvRow<TRow>, rowIndex: number` | Renders arbitrary content immediately below the data cells of the row.  It is only rendered when `WjDvRow<TRow>.wjdv.expanded` is `true`. |
+| `headerCell` | `ColumnContext<TRow, TCol>` | Renders header cells' content.  The snippet is passed the column definition. |
+| `dataCell` | `DataCellContext<TRow, TCol>` | Renders data cells' content.  The snippet is passed the column definition and the data object for the row being rendered. |
+| `rowExpansion` | `RowContext<TRow>` | Renders arbitrary content immediately below the data cells of the row.  It is only rendered when `WjDvRow<TRow>.wjdv.expanded` is `true`. |
 | `controlHeaderCell` | (none) | Renders the contents of the control column's header cell. |
-| `controlDataCell` | `row: WjDvRow<TRow>, rowIndex: number` | Renders the contents of the control column's data cells. |
+| `controlDataCell` | `RowContext<TRow>` | Renders the contents of the control column's data cells. |
 
 ### Events
 

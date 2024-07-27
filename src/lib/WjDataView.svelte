@@ -122,6 +122,53 @@
         };
 
     /**
+     * Defines the row context, which is an object that carries information about the row being rendered.
+     */
+    export type RowContext<TRow extends Record<string, any> = Record<string, any>> = {
+        /**
+         * The row data object being rendered.
+         */
+        row: WjDvRow<TRow>;
+        /**
+         * The index of the row being rendered.
+         */
+        rowIndex: number;
+    };
+
+    /**
+     * Defines the column context, which is an object that carries information about the column being rendered.
+     */
+    export type ColumnContext<TRow extends Record<string, any> = Record<string, any>, TCol extends Record<string, any> = Record<string, any>> = {
+        /**
+         * The column object being rendered.
+         */
+        col: WjDvColumn<TRow, TCol>;
+        /**
+         * The index of the column being rendered.
+         */
+        colIndex: number;
+    };
+
+    /**
+     * Defines the cell context, which is an object that carries information about the row and column being rendered.
+     */
+    export type DataCellContext<TRow extends Record<string, any> = Record<string, any>, TCol extends Record<string, any> = Record<string, any>> = 
+        RowContext<TRow> & ColumnContext<TRow, TCol> & {
+            /**
+             * Getter function that will return the value meant to be rendered at the current cell.
+             * 
+             * This function is already accounting for any getter functions that may have been set along the way, 
+             * namely:
+             * 
+             * + The possible `get` function in the column's definition.
+             * + The default `get` function passed as property to the component.
+             * + The ultimate default getter function if nothing else has been defined.
+             * @param row The row object from where to extract the cell value.
+             */
+            getFn: GetterFn<TRow>;
+        };
+
+    /**
      * Defines the possible grid line options for the `WjDataView` component.
      */
     export const GridLines = {
@@ -251,35 +298,29 @@
         class?: string;
         /**
          * Snippet used to render the contents of header cells.
-         * @param col The column being rendered.
-         * @param colIndex The index of the column being rendered.
+         * @param ctx Column context object containg the column and column index of the column being rendered.
          */
-        headerCell?: Snippet<[WjDvColumn<TRow, TCol>, number]>;
+        headerCell?: Snippet<[ColumnContext<TRow, TCol>]>;
         /**
          * Snippet used to render the contents of data cells.
-         * @param col The column being rendered.
-         * @param colIndex The index of the column being rendered.
-         * @param row The data row being rendered.
-         * @param rowIndex The index of the row being rendered.
-         * @param getFn The property-getter function to use for this particular column.
+         * @param ctx Data cell context object containg the row and column context as well as the get function to 
+         * obtain the cell's value.
          */
-        dataCell?: Snippet<[WjDvColumn<TRow, TCol>, number, WjDvRow<TRow>, number, getFn: GetterFn<TRow>]>;
+        dataCell?: Snippet<[DataCellContext<TRow, TCol>]>;
         /**
          * Snippet used to render the extra row contents of rows with the `wjdv.expanded` property set to `true`.
-         * @param row The data row being rendered.
-         * @param rowIndex The index of the row being rendered.
+         * @param ctx Row context object containing the row and row index of the row being rendered.
          */
-        rowExpansion?: Snippet<[WjDvRow<TRow>, number]>;
+        rowExpansion?: Snippet<[RowContext<TRow>]>;
         /**
          * Renders the contents of the control column's header cell.
          */
         controlHeaderCell?: Snippet;
         /**
          * Renders the contents of the control column's data cells.
-         * @param row The row being rendered.
-         * @param rowIndex The index of the row being rendered.
+         * @param ctx Row context object containing the row and row index of the row being rendered.
          */
-        controlDataCell?: Snippet<[WjDvRow<TRow>, number]>;
+        controlDataCell?: Snippet<[RowContext<TRow>]>;
         [x: string]: any;
     };
 
@@ -378,7 +419,7 @@
                 {#if ci.column.key === controlColKey}
                     {@render controlHeaderCell?.()}
                 {:else if headerCell}
-                    {@render headerCell(ci.column, index)}
+                    {@render headerCell({ col: ci.column, colIndex: index})}
                 {:else}
                     <div class="default-header-content">
                         {ci.column.text}
@@ -415,9 +456,9 @@
                     'no-wrap': ci.column.noTextWrap ?? false,
                 })}>
                     {#if ci.column.key === controlColKey}
-                        {@render controlDataCell?.(row, rowIndex)}
+                        {@render controlDataCell?.({ row, rowIndex })}
                     {:else if dataCell}
-                        {@render dataCell(ci.column, index, row, rowIndex, getFn)}
+                        {@render dataCell({ col: ci.column, colIndex: index, row, rowIndex, getFn })}
                     {:else}
                         <div class="default-content">
                             {getFn(row)}
@@ -459,7 +500,7 @@
                     </div>
                     {#if row.wjdv.expanded && rowExpansion}
                         <div class="dataview-row-expansion">
-                            {@render rowExpansion(row, rowIndex)}
+                            {@render rowExpansion({ row, rowIndex })}
                         </div>
                     {/if}
                 </div>
