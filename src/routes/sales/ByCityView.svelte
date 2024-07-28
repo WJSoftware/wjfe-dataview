@@ -78,6 +78,7 @@
     rowSelectionHighlight={dvOptions.rowSelectionHighlight}
     striped={dvOptions.striping}
     gridLines={dvOptions.gridLines}
+    defaultWidth={12}
     controlColumn={{
         width: 3,
         alignment: 'center'
@@ -104,3 +105,4 @@
         <DetailedView {sourceData} {countryCode} city={ctx.row.city} />
     {/snippet}
 </WjDataView>
+<hr class="border-3" />
