@@ -1,5 +1,6 @@
 <script lang="ts">
     import { base } from "$app/paths";
+    import pkgJson from 'packagejson';
     import type { Snippet } from "svelte";
     import "../app.scss";
     import ThemeSwitch from "./ThemeSwitch.svelte";
@@ -61,6 +62,12 @@
                 </div>
                 <div class="col">
                     WjDataView only works with Svelte v5 - <span class="fw-bold">EXPERIMENTAL</span>
+                </div>
+                <div class="col-auto">
+                    {pkgJson.name} <strong>v{pkgJson.version}</strong>
+                </div>
+                <div class="col-auto">
+                    svelte <strong>v{(pkgJson.peerDependencies.svelte as string).substring(1)}</strong>
                 </div>
             </div>
         </div>
