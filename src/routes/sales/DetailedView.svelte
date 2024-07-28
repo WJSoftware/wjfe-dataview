@@ -112,6 +112,7 @@
     rowSelectionHighlight={dvOptions.rowSelectionHighlight}
     striped={dvOptions.striping}
     gridLines={dvOptions.gridLines}
+    defaultWidth={12}
     class="mb-5"
 >
     {#snippet headerCell(ctx)}
@@ -127,3 +128,4 @@
         </Cell>
     {/snippet}
 </WjDataView>
+<hr class="border-3" />
