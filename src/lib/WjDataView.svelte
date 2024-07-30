@@ -234,6 +234,7 @@
 
 <script lang="ts" generics="TCol extends Record<string, any> = Record<string, any>, TRow extends Record<string, any> = Record<string, any>">
     import { type Snippet } from "svelte";
+    import { nextControlId } from "../demolib/nextControlId.js";
     import Resizer from "./Resizer.svelte";
     import { combineClasses } from "./utils.js";
 
@@ -321,6 +322,13 @@
          * @param ctx Row context object containing the row and row index of the row being rendered.
          */
         controlDataCell?: Snippet<[RowContext<TRow>]>;
+        /**
+         * Renders the content of the data view's caption.
+         * 
+         * The caption is placed on top of the headers and fixes to the viewport along with the header row.  The 
+         * contents placed here are flagged as the data view's caption to accessibility tools like screen readers.
+         */
+        caption?: Snippet;
         [x: string]: any;
     };
 
@@ -342,6 +350,7 @@
         rowExpansion,
         controlHeaderCell,
         controlDataCell,
+        caption,
         ...restProps
     }: Props = $props();
 
@@ -350,6 +359,7 @@
         left?: number;
     }
 
+    const thisId = nextControlId('wjdv');
     const controlColKey = '__ctrl';
 
     const segregatedColumns = $derived(columns.reduce<{
@@ -471,8 +481,18 @@
 {/snippet}
 
 {#snippet table()}
-<div class={combineClasses("dataview", noViewport ? cssClass : undefined, { 'no-vp': noViewport})} role="table" {...restProps}>
+<div
+    class={combineClasses("dataview", noViewport ? cssClass : undefined, { 'no-vp': noViewport})}
+    role="table"
+    aria-labelledby={caption ? `${thisId}_caption` : undefined}
+    {...restProps}
+>
     <div class="header-group" role="rowheader">
+        {#if caption}
+            <div role="caption" id="{thisId}_caption">
+                {@render caption()}
+            </div>
+        {/if}
         <div role="row" class:row-grid-line={!!(gridLines & GridLines.Row)}>
             {#if segregatedColumns.pinned.length}
                 {@render colHeaders(segregatedColumns.pinned)}
