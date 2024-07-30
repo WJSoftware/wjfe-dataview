@@ -265,6 +265,7 @@ The complete list of CSS variables that can be set for the data view component a
 | `rowExpansion` | `RowContext<TRow>` | Renders arbitrary content immediately below the data cells of the row.  It is only rendered when `WjDvRow<TRow>.wjdv.expanded` is `true`. |
 | `controlHeaderCell` | (none) | Renders the contents of the control column's header cell. |
 | `controlDataCell` | `RowContext<TRow>` | Renders the contents of the control column's data cells. |
+| `caption` | (none) | Renders the content of the data view's caption. |
 
 ### Events
 
