@@ -5,6 +5,7 @@
     import { amountFormatterFactory, currencyFormatter } from "../../demolib/numberFormatters.js";
     import Numeric from "../../demolib/Numeric.svelte";
     import Cell from "./Cell.svelte";
+    import DataViewCaption from "./DataViewCaption.svelte";
     import DetailedView from "./DetailedView.svelte";
     import DrilldownButton from "./DrilldownButton.svelte";
     import HeaderCell from "./HeaderCell.svelte";
@@ -69,7 +70,7 @@
     });
 </script>
 
-<Toolbar title="Per-City Summary: {countryName}" bind:options={dvOptions} moreInfoTarget="secondLevelCanvas" />
+<Toolbar bind:options={dvOptions} moreInfoTarget="secondLevelCanvas" />
 <WjDataView
     bind:columns
     bind:data
@@ -86,6 +87,9 @@
     class="mb-5"
     style="z-index: 5"
 >
+    {#snippet caption()}
+        <DataViewCaption title="Per-City Summary: {countryName}" />
+    {/snippet}
     {#snippet headerCell(ctx)}
         <HeaderCell bind:col={ctx.col} />
     {/snippet}

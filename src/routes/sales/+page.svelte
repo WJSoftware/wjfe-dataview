@@ -10,6 +10,7 @@
     import type { PageData } from './$types.js';
     import ByCityView from './ByCityView.svelte';
     import Cell from './Cell.svelte';
+    import DataViewCaption from './DataViewCaption.svelte';
     import { dataViewOptions } from './dataViewOptions.js';
     import DrilldownButton from './DrilldownButton.svelte';
     import FirstLevelInfo from './FirstLevelInfo.svelte';
@@ -74,7 +75,7 @@
     <h4>Worldwide Sales Data Rollup</h4>
 </hgroup>
 <div class="d-flex flex-column flex-fill">
-    <Toolbar bind:options={dvOptions} title="Global Overview" moreInfoTarget="firstLevelCanvas">
+    <Toolbar bind:options={dvOptions} moreInfoTarget="firstLevelCanvas">
         <div class="input-group input-group-sm">
             <span class="input-group-text" title="Drilldown:"><i class="bi bi-bar-chart-steps"></i></span>
             <input type="checkbox" id="noViewportInChildren" class="btn-check" bind:checked={globalOptions.noViewportInChildren}>
@@ -106,6 +107,9 @@
                 }}
                 style="z-index: 5"
             >
+                {#snippet caption()}
+                    <DataViewCaption title="Global Overview" />
+                {/snippet}
                 {#snippet controlDataCell(ctx)}
                     <DrilldownButton bind:row={ctx.row} />
                 {/snippet}
