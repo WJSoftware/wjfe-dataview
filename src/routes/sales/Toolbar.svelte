@@ -14,14 +14,12 @@
 
     type Props = {
         options: WjDataViewOptions;
-        title: string;
         moreInfoTarget?: string;
         children?: Snippet;
     };
 
     let {
         options = $bindable(),
-        title,
         moreInfoTarget,
         children,
     }: Props = $props();
@@ -35,9 +33,6 @@
 </script>
 
 <div class="btn-toolbar my-2 py-1 px-1 gap-2 border border-1 rounded">
-    <span class="toolbar-name fw-bold px-2 py-1 rounded-start">
-        {title}
-    </span>
     {#if moreInfoTarget}
         <button
             type="button"
@@ -75,12 +70,3 @@
     </div>
     {@render children?.()}
 </div>
-
-<style lang="scss">
-    .toolbar-name {
-        background: linear-gradient(to right top, rgb(246, 121, 102), var(--bs-body-bg));
-        :global([data-bs-theme="dark"]) & {
-            background: linear-gradient(to right top, rgb(102, 30, 2), var(--bs-body-bg));
-        }
-    }
-</style>
