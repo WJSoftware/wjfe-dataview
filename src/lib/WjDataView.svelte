@@ -229,14 +229,13 @@
             }
         }
         return data as WjDvRow<TData>[];
-    }
+    };
 </script>
 
 <script lang="ts" generics="TCol extends Record<string, any> = Record<string, any>, TRow extends Record<string, any> = Record<string, any>">
     import { type Snippet } from "svelte";
-    import { nextControlId } from "../demolib/nextControlId.js";
     import Resizer from "./Resizer.svelte";
-    import { combineClasses } from "./utils.js";
+    import { combineClasses, nextControlId } from "./utils.js";
 
     type Props = {
         /**
@@ -357,10 +356,9 @@
     type ColumnInfo = {
         column: WjDvColumn<TRow, TCol>;
         left?: number;
-    }
-
-    const thisId = nextControlId('wjdv');
+    };
     const controlColKey = '__ctrl';
+    const thisId = nextControlId('wjdv');
 
     const segregatedColumns = $derived(columns.reduce<{
             accPinnedWidth: number;
