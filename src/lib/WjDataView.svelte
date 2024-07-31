@@ -230,14 +230,11 @@
         }
         return data as WjDvRow<TData>[];
     };
-</script>
 
-<script lang="ts" generics="TCol extends Record<string, any> = Record<string, any>, TRow extends Record<string, any> = Record<string, any>">
-    import { type Snippet } from "svelte";
-    import Resizer from "./Resizer.svelte";
-    import { combineClasses, nextControlId } from "./utils.js";
-
-    type Props = {
+    /**
+     * Defines the properties of the `WjDataView` component.
+     */
+    export type WjDataViewProps<TRow extends Record<string, any> = Record<string, any>, TCol extends Record<string, any> = Record<string, any>> = {
         /**
          * Bindable.  Defines the columns the data view component will create.
          */
@@ -330,6 +327,12 @@
         caption?: Snippet;
         [x: string]: any;
     };
+</script>
+
+<script lang="ts" generics="TCol extends Record<string, any> = Record<string, any>, TRow extends Record<string, any> = Record<string, any>">
+    import { type Snippet } from "svelte";
+    import Resizer from "./Resizer.svelte";
+    import { combineClasses, nextControlId } from "./utils.js";
 
     let {
         columns = $bindable(),
@@ -351,12 +354,13 @@
         controlDataCell,
         caption,
         ...restProps
-    }: Props = $props();
+    }: WjDataViewProps<TRow, TCol> = $props();
 
     type ColumnInfo = {
         column: WjDvColumn<TRow, TCol>;
         left?: number;
     };
+    
     const controlColKey = '__ctrl';
     const thisId = nextControlId('wjdv');
 
