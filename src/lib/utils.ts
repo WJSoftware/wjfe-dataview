@@ -21,3 +21,9 @@ export function combineClasses(...classes: (string | Record<string, boolean> | n
     }
     return result.join(' ');
 }
+
+let nextId = 0;
+
+export function nextControlId(prefix?: string) {
+    return `${prefix ?? 'control'}${++nextId}`;
+};
