@@ -1,4 +1,4 @@
-import { GridLines, type GridLinesEnum } from "$lib/WjDataView.svelte";
+import { GridLines, type GridLinesEnum } from "$lib/WjDataView/WjDataView.svelte";
 
 export const demoOptions = $state({
     striped: true,

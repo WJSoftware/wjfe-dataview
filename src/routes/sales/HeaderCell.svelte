@@ -13,7 +13,7 @@
 </script>
 
 <script lang="ts" generics="TCol extends Record<string, any> = Record<string, any>, TRow extends Record<string, any> = Record<string, any>">
-    import type { ColAlignment, WjDvColumn } from '$lib/WjDataView.svelte';
+    import type { ColAlignment, WjDvColumn } from '$lib/WjDataView/WjDataView.svelte';
     import keyStateStore from '../../demolib/keyStateStore.svelte.js';
 
     type Props = {

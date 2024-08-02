@@ -331,8 +331,8 @@
 
 <script lang="ts" generics="TCol extends Record<string, any> = Record<string, any>, TRow extends Record<string, any> = Record<string, any>">
     import { type Snippet } from "svelte";
-    import Resizer from "./Resizer.svelte";
-    import { combineClasses, nextControlId } from "./utils.js";
+    import Resizer from "../Resizer/Resizer.svelte";
+    import { combineClasses, nextControlId } from "../utils.js";
 
     let {
         columns = $bindable(),

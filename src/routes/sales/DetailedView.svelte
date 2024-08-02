@@ -1,5 +1,5 @@
 <script lang="ts">
-    import WjDataView, { defineData, GridLines, type WjDvColumn } from "$lib/WjDataView.svelte";
+    import WjDataView, { defineData, GridLines, type WjDvColumn } from "$lib/WjDataView/WjDataView.svelte";
     import type { GeoSale, GeoSaleColumn, GeoSalesResult } from "../../data-models.js";
     import { globalOptions } from "../../demolib/GlobalOptions.svelte.js";
     import { amountFormatterFactory, currencyFormatter, fractionFormatter } from "../../demolib/numberFormatters.js";

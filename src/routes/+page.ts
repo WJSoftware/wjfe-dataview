@@ -1,4 +1,4 @@
-import { defineData } from "$lib/WjDataView.svelte";
+import { defineData } from "$lib/WjDataView/WjDataView.svelte";
 import type { LoadEvent } from "@sveltejs/kit";
 import type { Person } from "../data-models.js";
 import { demoOptions } from "../demolib/demoOptions.svelte.js";
