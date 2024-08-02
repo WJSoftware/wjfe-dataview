@@ -13,7 +13,18 @@
 <div class="d-flex flex-column doc-container">
     <nav class="navbar navbar-expand-md bg-primary-subtle px-3">
         <span class="navbar-brand">WjDataView Demo</span>
-        <div class="navbar-collapse">
+        <button
+            type="button"
+            class="navbar-toggler"
+            data-bs-toggle="collapse"
+            data-bs-target="#nbCollapsible"
+            aria-controls="nbCollapsible"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+        >
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="nbCollapsible">
             <ul class="navbar-nav">
                 <li class="nav-item">
                     <a href={base} class="nav-link">Overview (Home)</a>
@@ -22,16 +33,18 @@
                     <a href="{base}/sales" class="nav-link">Data Drilldown Demo</a>
                 </li>
             </ul>
+            <div class="d-flex flex-row flex-nowrap gap-1 ms-auto align-items-baseline">
+                <a
+                    href="https://github.com/WJSoftware/wjfe-dataview"
+                    title="Repository"
+                    class="nav-link"
+                    target="_blank"
+                    >
+                    <i class="bi bi-github"></i>
+                </a>
+                <ThemeSwitch />
+            </div>
         </div>
-        <a
-            href="https://github.com/WJSoftware/wjfe-dataview"
-            title="Repository"
-            class="nav-link ms-auto me-3"
-            target="_blank"
-        >
-            <i class="bi bi-github"></i>
-        </a>
-        <ThemeSwitch />
     </nav>
     <div class="flex-fill overflow-auto">
         <div class="container-fluid overflow-auto h-100 theme-def d-flex flex-column">
@@ -60,8 +73,11 @@
                         <img src="https://svelte.dev/favicon.png" alt="" class="footer-logo" />
                     </a>
                 </div>
-                <div class="col">
+                <div class="col d-none d-lg-block">
                     WjDataView only works with Svelte v5 - <span class="fw-bold">EXPERIMENTAL</span>
+                </div>
+                <div class="col d-lg-none">
+                    Svelve v5 <strong>only!</strong>
                 </div>
                 <div class="col-auto">
                     {pkgJson.name} <strong>v{pkgJson.version}</strong>
