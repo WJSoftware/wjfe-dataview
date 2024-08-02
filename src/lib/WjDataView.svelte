@@ -489,7 +489,7 @@
     aria-labelledby={caption ? `${thisId}_caption` : undefined}
     {...restProps}
 >
-    <div class="header-group" role="rowheader">
+    <div class="header-group">
         {#if caption}
             <div role="caption" id="{thisId}_caption">
                 {@render caption()}
