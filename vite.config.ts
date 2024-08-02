@@ -1,4 +1,5 @@
 import { sveltekit } from '@sveltejs/kit/vite';
+import { svelteTesting } from '@testing-library/svelte/vite';
 import { readFile } from 'fs/promises';
 import { defineConfig, type Plugin } from 'vitest/config';
 
@@ -25,8 +26,10 @@ const packageJson: Plugin = {
 };
 
 export default defineConfig({
-	plugins: [sveltekit(), packageJson],
+	plugins: [sveltekit(), packageJson, svelteTesting()],
 	test: {
-		include: ['src/**/*.{test,spec}.{js,ts}']
+		include: ['src/**/*.{test,spec}.{js,ts}', 'src/**/*.{test,spec}.svelte.{js,ts}'],
+		environment: 'jsdom',
+		globals: true
 	}
 });
