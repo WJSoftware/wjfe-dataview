@@ -196,6 +196,28 @@
     export type GridLinesEnum = typeof GridLines[keyof typeof GridLines];
 
     /**
+     * Validates pre-existing wjdv properties for data objects passed to `defineData`.
+     * @param wjdv The pre-existing value of the wjdv property.
+     * returns True if it is a valid value; false otherwise.
+     */
+    function validateWjdvContents(wjdv: any): wjdv is WjDvRowProps {
+        switch (typeof wjdv) {
+            case 'bigint':
+            case 'boolean':
+            case 'function':
+            case 'number':
+            case 'string':
+            case 'symbol':
+            case 'undefined':
+                return false;
+        }
+        if (wjdv instanceof Date || wjdv instanceof Set || Array.isArray(wjdv)) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * Makes sure every data object in the provided array satisfies the data requirements imposed by the `WjDataView` 
      * component.  The optional function parameter can accept a function that returns the value of the `id` property 
      * for the data object, just in case the data doesn't already have an `id` property.
@@ -220,7 +242,11 @@
         idGenFn?: (model: TData) => WjDvRow<TData>['id']
     ) {
         for (let item of data) {
-            (item as WjDvRow<TData>).wjdv = {};
+            const existingWjdv = (item as WjDvRow<TData>).wjdv;
+            if (existingWjdv !== undefined && !validateWjdvContents(existingWjdv)) {
+                throw new Error('Detected data object with a pre-defined "wjdv" property with an incompatible value.');
+            }
+            (item as WjDvRow<TData>).wjdv = existingWjdv ?? {};
             if (idGenFn && !item.id) {
                 (item as WjDvRow<TData>).id = idGenFn(item);
             }
