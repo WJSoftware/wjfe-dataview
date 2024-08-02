@@ -9,7 +9,7 @@
 
 <script lang="ts">
     import { nextControlId } from '$lib/utils.js';
-    import { GridLines, type GridLinesEnum } from "$lib/WjDataView.svelte";
+    import { GridLines, type GridLinesEnum } from "$lib/WjDataView/WjDataView.svelte";
     import type { Snippet } from "svelte";
 
     type Props = {

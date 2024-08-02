@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { GridLines } from "$lib/WjDataView.svelte";
+    import { GridLines } from "$lib/WjDataView/WjDataView.svelte";
     import { demoOptions } from "../demolib/demoOptions.svelte.js";
     import { allThemes, getStockTheme, themeOptions } from "../demolib/themeOptions.svelte.js";
 

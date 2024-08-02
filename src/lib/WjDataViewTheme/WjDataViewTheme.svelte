@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { Snippet } from "svelte";
-    import type { Theme } from "./stockTheme.js";
+    import type { Theme } from "../stockTheme.js";
 
     type Props = {
         /**

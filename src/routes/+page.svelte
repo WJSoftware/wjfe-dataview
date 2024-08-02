@@ -2,8 +2,8 @@
     import { goto } from "$app/navigation";
     import { base } from "$app/paths";
     import { page } from "$app/stores";
-    import WjDataView, { type WjDvColumn, type WjDvRow } from "$lib/WjDataView.svelte";
-    import WjDataViewTheme from "$lib/WjDataViewTheme.svelte";
+    import WjDataView, { type WjDvColumn, type WjDvRow } from "$lib/WjDataView/WjDataView.svelte";
+    import WjDataViewTheme from "$lib/WjDataViewTheme/WjDataViewTheme.svelte";
     import type { Person } from "../data-models.js";
     import { demoOptions } from "../demolib/demoOptions.svelte.js";
     import EditInGitHub from "../demolib/EditInGitHub.svelte";

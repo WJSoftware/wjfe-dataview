@@ -1,6 +1,6 @@
 <script lang="ts">
-    import WjDataView, { defineData, type WjDvColumn } from '$lib/WjDataView.svelte';
-    import WjDataViewTheme from '$lib/WjDataViewTheme.svelte';
+    import WjDataView, { defineData, type WjDvColumn } from '$lib/WjDataView/WjDataView.svelte';
+    import WjDataViewTheme from '$lib/WjDataViewTheme/WjDataViewTheme.svelte';
     import type { GeoSaleByCountry, GeoSaleColumn } from '../../data-models.js';
     import EditInGitHub from '../../demolib/EditInGitHub.svelte';
     import { globalOptions } from '../../demolib/GlobalOptions.svelte.js';

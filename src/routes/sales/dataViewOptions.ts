@@ -1,4 +1,4 @@
-import { GridLines } from "$lib/WjDataView.svelte";
+import { GridLines } from "$lib/WjDataView/WjDataView.svelte";
 import type { WjDataViewOptions } from "./Toolbar.svelte";
 
 export function dataViewOptions() {
