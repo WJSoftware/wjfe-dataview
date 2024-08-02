@@ -491,7 +491,7 @@
 >
     <div class="header-group">
         {#if caption}
-            <div role="caption" id="{thisId}_caption">
+            <div class="dataview-caption" role="caption" id="{thisId}_caption">
                 {@render caption()}
             </div>
         {/if}
@@ -567,6 +567,12 @@
         padding: 0.1em 0.3em;
         overflow: hidden;
         text-overflow: ellipsis;
+    }
+
+    div.dataview-caption {
+        position: sticky;
+        left: 0;
+        width: fit-content;
     }
 
     // Core styles.
