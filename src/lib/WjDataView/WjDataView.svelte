@@ -426,7 +426,7 @@
             }] : [],
             unpinned: []
         }));
-    
+
     /**
      * Returns the column's width according to the following logic:
      * 
@@ -487,10 +487,7 @@
             style:left={ci.left !== undefined ? `${ci.left}em` : undefined}
         >
             <div class="dataview-cell-s">
-                <div class={combineClasses("dataview-cell-d", {
-                    'align-start': ci.column.alignment === 'start',
-                    'align-center': ci.column.alignment === 'center',
-                    'align-end': ci.column.alignment === 'end',
+                <div class={combineClasses("dataview-cell-d", `align-${ci.column.alignment ?? 'start'}`, {
                     'no-wrap': ci.column.noTextWrap ?? false,
                 })}>
                     {#if ci.column.key === controlColKey}
