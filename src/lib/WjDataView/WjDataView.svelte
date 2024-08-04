@@ -533,6 +533,7 @@
             class:selected={rowSelectionHighlight && row.wjdv.selected}
             class:row-grid-line={!!(gridLines & GridLines.Row)}
             role="row"
+            aria-selected={row.wjdv.selected ?? false}
             aria-expanded={rowExpansion ? (row.wjdv.expanded ?? false) : undefined}
             aria-owns={rowExpansion && row.wjdv.expanded ? `${thisId}_rowExpansion_${row.id}` : undefined}
         >
