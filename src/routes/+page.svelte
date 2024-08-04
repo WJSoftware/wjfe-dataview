@@ -76,7 +76,7 @@
     const allSelected = $derived.by(() => {
         let oneSelected: boolean | null = null;
         let oneUnselected: boolean | null = null;
-        for (let person of data.data) {
+        for (let person of gridData) {
             if (person.wjdv.selected) {
                 oneSelected = true;
             }
@@ -103,7 +103,7 @@
     }
 
     function selectAllData(selected: boolean) {
-        for (let person of data.data) {
+        for (let person of gridData) {
             person.wjdv.selected = selected;
         }
     }
