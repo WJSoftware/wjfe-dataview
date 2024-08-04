@@ -533,6 +533,8 @@
             class:selected={rowSelectionHighlight && row.wjdv.selected}
             class:row-grid-line={!!(gridLines & GridLines.Row)}
             role="row"
+            aria-expanded={rowExpansion ? (row.wjdv.expanded ?? false) : undefined}
+            aria-owns={rowExpansion && row.wjdv.expanded ? `${thisId}_rowExpansion_${row.id}` : undefined}
         >
             <div class="dataview-row-s">
                 <div class="dataview-row-h">
@@ -544,7 +546,7 @@
                         <div class="dataview-cell">&nbsp;</div>
                     </div>
                     {#if row.wjdv.expanded && rowExpansion}
-                        <div class="dataview-row-expansion">
+                        <div class="dataview-row-expansion" id="{thisId}_rowExpansion_{row.id}">
                             {@render rowExpansion({ row, rowIndex })}
                         </div>
                     {/if}
