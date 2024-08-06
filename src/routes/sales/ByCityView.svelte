@@ -91,6 +91,7 @@
         <DataViewCaption title="Per-City Summary: {countryName}" />
     {/snippet}
     {#snippet headerCell(ctx)}
+        <!-- svelte-ignore binding_property_non_reactive -->
         <HeaderCell bind:col={ctx.col} />
     {/snippet}
     {#snippet dataCell(ctx)}
@@ -103,6 +104,7 @@
         </Cell>
     {/snippet}
     {#snippet controlDataCell(ctx)}
+        <!-- svelte-ignore binding_property_non_reactive -->
         <DrilldownButton bind:row={ctx.row} />
     {/snippet}
     {#snippet rowExpansion(ctx)}

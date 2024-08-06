@@ -120,6 +120,7 @@
         <DataViewCaption title="Raw Data: {city}" />
     {/snippet}
     {#snippet headerCell(ctx)}
+        <!-- svelte-ignore binding_property_non_reactive -->
         <HeaderCell bind:col={ctx.col} />
     {/snippet}
     {#snippet dataCell(ctx)}
