@@ -111,6 +111,7 @@
                     <DataViewCaption title="Global Overview" />
                 {/snippet}
                 {#snippet controlDataCell(ctx)}
+                    <!-- svelte-ignore binding_property_non_reactive -->
                     <DrilldownButton bind:row={ctx.row} />
                 {/snippet}
                 {#snippet rowExpansion(ctx)}
@@ -121,7 +122,8 @@
                         />
                 {/snippet}
                 {#snippet headerCell(ctx)}
-                        <HeaderCell bind:col={ctx.col} />
+                    <!-- svelte-ignore binding_property_non_reactive -->
+                    <HeaderCell bind:col={ctx.col} />
                 {/snippet}
                 {#snippet dataCell(ctx)}
                     <Cell>
