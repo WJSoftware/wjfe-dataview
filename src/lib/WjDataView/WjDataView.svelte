@@ -122,6 +122,16 @@
         };
 
     /**
+     * Defines the target for unknown property spreading.
+     * 
+     * + `'table'`:  Spreads any unknown properties on the table element.
+     * + `'viewport'`:  Spreads any unknown properties on the viewport element.
+     * + `'root'`:  Spreads any unknown poroperties on the root element, which depends on the value of the 
+     * `noViewport` property.
+     */
+    export type PropSpreadingTarget = 'root' | 'table' | 'viewport';
+
+    /**
      * Defines the row context, which is an object that carries information about the row being rendered.
      */
     export type RowContext<TRow extends Record<string, any> = Record<string, any>> = {
@@ -316,6 +326,12 @@
          */
         noViewport?: boolean;
         /**
+         * Establishes the target for property spreading.
+         * 
+         * Any unknown properties passed to the component as spreaded as attributes on the specified target element.
+         */
+        propSpreadingTarget?: PropSpreadingTarget;
+        /**
          * Additional CSS classes that are applied to the data view's viewport (the top-level element).
          */
         class?: string;
@@ -372,6 +388,7 @@
         pinnedDivider = true,
         controlColumn = $bindable(),
         noViewport = false,
+        propSpreadingTarget = 'root',
         class: cssClass,
         headerCell,
         dataCell,
@@ -437,6 +454,13 @@
      */
     function columnWidth(col: ColumnShape) {
         return col.width ?? (col.useMinWidthAsWidth ? col.minWidth : null) ?? defaultWidth;
+    }
+
+    function effectiveSpreadingTarget(): Exclude<PropSpreadingTarget, 'root'> {
+        if ((propSpreadingTarget === 'root' && noViewport) || propSpreadingTarget === 'table') {
+            return 'table';
+        }
+        return 'viewport';
     }
 </script>
 
@@ -510,7 +534,7 @@
     class={combineClasses("dataview", noViewport ? cssClass : undefined, { 'no-vp': noViewport})}
     role="table"
     aria-labelledby={caption ? `${thisId}_caption` : undefined}
-    {...restProps}
+    {...(effectiveSpreadingTarget() === 'table' ? restProps : {})}
 >
     <div class="header-group">
         {#if caption}
@@ -562,7 +586,10 @@
 {#if noViewport}
     {@render table()}
 {:else}
-    <div class={combineClasses('dataview-container', cssClass)}>
+    <div
+        class={combineClasses('dataview-container', cssClass)}
+        {...(effectiveSpreadingTarget() === 'viewport' ? restProps : {})}
+    >
         {@render table()}
     </div>
 {/if}
