@@ -813,17 +813,16 @@ visualization more enjoyable
 
 ## Main Features
 
-1. **Pinnable colums**.  Columns can be pinned to the left so tables with multiple columns (that produce a horizontal 
-scrollbar) do not drag columns that may be important for the user as the table is examinated.
-2. **Row mouse tracking**.  Rows get highlighted as the mouse cursor is hovered over them.
-3. **Row selection highlighting**.  The grid supports the concept of row selection.  It doesn't provide a user 
-interface to actually select rows, but can highlight rows in color when the associated data item is flagged as 
-selected.
-4. **Row striping**.  Odd and even rows are given different backgrounds so reading tabular data is easier.
+1. **Pinnable colums**.  Set a column's `pinned` property to `true` to pin it to the left.
+2. **Row mouse tracking**.  Turn it on and off with the `rowTracking` component property.
+3. **Row selection highlighting**.  Turn it on and off with the `rowSelectionHighlight` component property.  The grid 
+supports the concept of row selection but doesn't provide a user interface to actually select rows.  Set a row's 
+`wjdv.selected` property to `true` and the component will highlight its row.
+4. **Row striping**.  Turn it on and off with the `striped` component property.
 5. **Row expansion**.  Again, no user interface is actually provided for row expansion, but supports the notion by 
-allocating a physical space below the row of cells for content related to this row.  Normally used for data drilldown.
-6. **Control column**.  An extra column that is always pinned where user interface controls can be added to perform 
-actions on the data represented by the row.
+allocating a physical space below the row of cells for content related to this row.  Expand a row by setting the row's 
+`wjdv.expanded` property to `true`.
+6. **Control column**.  Define it through the `controlColumn` component property.
 7. **Themeable**.  Almost every aspect of the visual appearance can be customized.  Use the `WjDataViewTheme` 
 component for easier themeing.
 
@@ -839,6 +838,7 @@ the `defineData` function.
 
 ```typescript
 import { defineData, WjDataView, type WjDvColumn } from "@wjfe/dataview";
+import { myTheme } from './my/theme.js'; // Optional.  Build themese as per the documentation.
 
 const columns: WjDvColumn[] = [
     {
@@ -871,8 +871,10 @@ const data = defineData<MyData>([
 ```
 
 ```html
-<WjDataView bind:columns bind:data>
-</WjDataView>
+<WjDataViewTheme theme={myTheme}>
+    <WjDataView bind:columns bind:data>
+    </WjDataView>
+</WjDataViewTheme>
 ```
 
 ### Custom Content
@@ -881,8 +883,14 @@ Custom content is achieved by using the `headerCell` and `dataCell` snippets.
 
 ```typescript
 import { defineData, WjDataView, type WjDvColumn } from "@wjfe/dataview";
+import { myTheme } from './my/theme.js'; // Optional.  Build themese as per the documentation.
 
-const columns: WjDvColumn[] = [
+type MyData = {
+    colA: string;
+    colB: number;
+};
+
+const columns: WjDvColumn<MyData>[] = [
     {
         key: 'colA',
         text: 'Column A'
@@ -892,11 +900,6 @@ const columns: WjDvColumn[] = [
         text: 'Column B'
     },
 ];
-
-type MyData = {
-    colA: string;
-    colB: number;
-}
 
 const data = defineData<MyData>([
     {
@@ -913,15 +916,19 @@ const data = defineData<MyData>([
 ```
 
 ```html
-<WjDataView bind:columns bind:data>
-    {#snippet headerCell(column)}
-        <strong>{column.text}</strong>
-    {/snippet}
-    {#snippet dataCell(column, row)}
-        {#if column.key === 'colB'}
-            {row.colB} letters
-        {/if}
-    {/snippet}
-</WjDataView>
+<WjDataViewTheme theme={myTheme}>
+    <WjDataView bind:columns bind:data>
+        {#snippet headerCell(ctx)}
+            <strong>{ctx.col.text}</strong>
+        {/snippet}
+        {#snippet dataCell(ctx)}
+            {#if ctx.col.key === 'colB'}
+                {ctx.row.colB} letters
+            {:else}
+                {ctx.getFn(ctx.row)}
+            {/if}
+        {/snippet}
+    </WjDataView>
+</WjDataViewTheme>
 ```
 -->
