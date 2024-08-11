@@ -255,6 +255,7 @@ The complete list of CSS variables that can be set for the data view component a
 | `class` | `string` | `undefined` | | Additional CSS classes that are applied to the data view's viewport (the top-level element). |
 | `controlColumn` | `ControlColumn<TRow, TCol>` | `undefined` | Yes | Specifies the shape of the control column, which an extra column that is always the first pinned column. |
 | `noViewport` | `boolean` | `false` | | Allows the exclusion of the component's viewport. |
+ `propSpreadingTarget` | `PropSpreadingTarget` | `root` | | Establishes the target for property spreading. |
 
 ### Snippets
 
