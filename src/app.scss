@@ -1,13 +1,19 @@
 .btn-neutral {
     --bs-neutral-btn-hover-color: 0, 0, 0;
-    --bs-neutral-btn-hover-opacity: 0.07;
+    --bs-neutral-btn-hover-opacity: 0.11;
+    --bs-neutral-btn-active-opacity: 0.07;
+    border: none;
     
     [data-bs-theme="dark"] & {
         --bs-neutral-btn-hover-color: 255, 255, 255;
-        --bs-neutral-btn-hover-opacity: 0.07;
+        --bs-neutral-btn-hover-opacity: 0.14;
+        --bs-neutral-btn-active-opacity: 0.07;
     }
 
-    &:hover, &.hover {
+    &.active, .btn-check:checked+& {
+        background-color: rgba(var(--bs-neutral-btn-hover-color), var(--bs-neutral-btn-active-opacity));
+    }
+    &:hover, .btn-check+&:hover, &.hover, .btn-check+&.hover, &:focus, &.focus, .btn-check:focus+& {
         background-color: rgba(var(--bs-neutral-btn-hover-color), var(--bs-neutral-btn-hover-opacity));
     }
 }
