@@ -1,12 +1,13 @@
 <script lang="ts">
-    import WjDataView, { defineData, GridLines, type WjDvColumn } from "$lib/WjDataView/WjDataView.svelte";
+    import WjDataView, { defineData, GridLines } from "$lib/WjDataView/WjDataView.svelte";
     import type { GeoSale, GeoSaleColumn, GeoSalesResult } from "../../data-models.js";
+    import AllColumnsDropdown from "../../demolib/AllColumnsDropdown.svelte";
     import { globalOptions } from "../../demolib/GlobalOptions.svelte.js";
+    import HeaderCell, { type HeaderColumn } from "../../demolib/HeaderCell.svelte";
     import { amountFormatterFactory, currencyFormatter, fractionFormatter } from "../../demolib/numberFormatters.js";
     import Numeric from "../../demolib/Numeric.svelte";
     import Cell from "./Cell.svelte";
     import DataViewCaption from "./DataViewCaption.svelte";
-    import HeaderCell from "./HeaderCell.svelte";
     import type { WjDataViewOptions } from "./Toolbar.svelte";
     import Toolbar from "./Toolbar.svelte";
 
@@ -22,30 +23,42 @@
         city,
     }: Props = $props();
 
-    let columns = $state<WjDvColumn<GeoSale, GeoSaleColumn>[]>([
+    let columns = $state<HeaderColumn<GeoSale, GeoSaleColumn>[]>([
         {
             key: 'id',
             text: 'ID',
+            alignment: 'start',
+            pinnedFunctions: {},
         },
         {
             key: 'country_code',
             text: 'Country Code',
+            alignment: 'start',
+            pinnedFunctions: {},
         },
         {
             key: 'country_name',
             text: 'Country',
+            alignment: 'start',
+            pinnedFunctions: {},
         },
         {
             key: 'city',
             text: 'City',
+            alignment: 'start',
+            pinnedFunctions: {},
         },
         {
             key: 'month',
             text: 'Month',
+            alignment: 'start',
+            pinnedFunctions: {},
         },
         {
             key: 'year',
             text: 'Year',
+            alignment: 'start',
+            pinnedFunctions: {},
         },
         {
             key: 'sales_amount',
@@ -53,11 +66,14 @@
             dataType: 'real-amount',
             numberFormatter: amountFormatterFactory(2),
             alignment: 'end',
+            pinnedFunctions: {},
         },
         {
             key: 'product_category',
             text: 'Product Category',
             width: 12,
+            alignment: 'start',
+            pinnedFunctions: {},
         },
         {
             key: 'quantity_sold',
@@ -65,6 +81,7 @@
             dataType: 'int-amount',
             numberFormatter: amountFormatterFactory(0),
             alignment: 'end',
+            pinnedFunctions: {},
         },
         {
             key: 'total_sales',
@@ -72,6 +89,7 @@
             dataType: 'currency',
             numberFormatter: currencyFormatter,
             alignment: 'end',
+            pinnedFunctions: {},
         },
         {
             key: 'total_costs',
@@ -79,10 +97,13 @@
             dataType: 'currency',
             numberFormatter: currencyFormatter,
             alignment: 'end',
+            pinnedFunctions: {},
         },
         {
             key: 'top_client',
             text: 'Top Client',
+            alignment: 'start',
+            pinnedFunctions: {},
         },
         {
             key: 'top_client_fraction',
@@ -90,7 +111,8 @@
             width: 13,
             dataType: 'real-amount',
             numberFormatter: fractionFormatter,
-            alignment: 'center'
+            alignment: 'center',
+            pinnedFunctions: {},
         },
     ]);
     let data = $state(defineData(
@@ -114,6 +136,12 @@
     striped={dvOptions.striping}
     gridLines={dvOptions.gridLines}
     defaultWidth={12}
+    controlColumn={{
+        pinnedFunctions: {},
+        alignment: 'start',
+        width: 3,
+        resizable: false,
+    }}
     class="mb-5"
 >
     {#snippet caption()}
@@ -122,6 +150,9 @@
     {#snippet headerCell(ctx)}
         <!-- svelte-ignore binding_property_non_reactive -->
         <HeaderCell bind:col={ctx.col} />
+    {/snippet}
+    {#snippet controlHeaderCell()}
+        <AllColumnsDropdown bind:columns />
     {/snippet}
     {#snippet dataCell(ctx)}
         <Cell>

@@ -1,14 +1,15 @@
 <script lang="ts">
-    import WjDataView, { defineData, GridLines, type WjDvColumn } from "$lib/WjDataView/WjDataView.svelte";
+    import WjDataView, { defineData, GridLines } from "$lib/WjDataView/WjDataView.svelte";
     import type { GeoSaleByCity, GeoSaleColumn, GeoSalesResult } from "../../data-models.js";
+    import AllColumnsDropdown from "../../demolib/AllColumnsDropdown.svelte";
     import { globalOptions } from "../../demolib/GlobalOptions.svelte.js";
+    import HeaderCell, { type HeaderColumn } from "../../demolib/HeaderCell.svelte";
     import { amountFormatterFactory, currencyFormatter } from "../../demolib/numberFormatters.js";
     import Numeric from "../../demolib/Numeric.svelte";
     import Cell from "./Cell.svelte";
     import DataViewCaption from "./DataViewCaption.svelte";
     import DetailedView from "./DetailedView.svelte";
     import DrilldownButton from "./DrilldownButton.svelte";
-    import HeaderCell from "./HeaderCell.svelte";
     import Toolbar, { type WjDataViewOptions } from "./Toolbar.svelte";
 
     type Props = {
@@ -23,11 +24,13 @@
         countryName,
     }: Props = $props();
 
-    let columns = $state<WjDvColumn<GeoSaleByCity, GeoSaleColumn>[]>([
+    let columns = $state<HeaderColumn<GeoSaleByCity, GeoSaleColumn>[]>([
         {
             key: 'city',
             text: 'City',
+            alignment: 'start',
             dataType: 'string',
+            pinnedFunctions: {},
         },
         {
             key: 'sales_amount',
@@ -35,6 +38,7 @@
             alignment: 'end',
             dataType: 'real-amount',
             numberFormatter: amountFormatterFactory(2),
+            pinnedFunctions: {},
         },
         {
             key: 'quantity_sold',
@@ -42,6 +46,7 @@
             alignment: 'end',
             dataType: 'int-amount',
             numberFormatter: amountFormatterFactory(0),
+            pinnedFunctions: {},
         },
         {
             key: 'total_sales',
@@ -49,6 +54,7 @@
             alignment: 'end',
             dataType: 'currency',
             numberFormatter: currencyFormatter,
+            pinnedFunctions: {},
         },
         {
             key: 'total_costs',
@@ -56,6 +62,7 @@
             alignment: 'end',
             dataType: 'currency',
             numberFormatter: currencyFormatter,
+            pinnedFunctions: {},
         },
     ]);
     let data = $state(defineData(
@@ -82,7 +89,9 @@
     defaultWidth={12}
     controlColumn={{
         width: 3,
-        alignment: 'center'
+        alignment: 'center',
+        resizable: false,
+        pinnedFunctions: {},
     }}
     class="mb-5"
     style="z-index: 5"
@@ -102,6 +111,9 @@
                 {ctx.getFn(ctx.row)}
             {/if}
         </Cell>
+    {/snippet}
+    {#snippet controlHeaderCell()}
+        <AllColumnsDropdown bind:columns />
     {/snippet}
     {#snippet controlDataCell(ctx)}
         <!-- svelte-ignore binding_property_non_reactive -->
