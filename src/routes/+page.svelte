@@ -2,11 +2,13 @@
     import { goto } from "$app/navigation";
     import { base } from "$app/paths";
     import { page } from "$app/stores";
-    import WjDataView, { type WjDvColumn, type WjDvRow } from "$lib/WjDataView/WjDataView.svelte";
+    import WjDataView, { type WjDvRow } from "$lib/WjDataView/WjDataView.svelte";
     import WjDataViewTheme from "$lib/WjDataViewTheme/WjDataViewTheme.svelte";
     import type { Person } from "../data-models.js";
+    import AllColumnsDropdown from "../demolib/AllColumnsDropdown.svelte";
     import { demoOptions } from "../demolib/demoOptions.svelte.js";
     import EditInGitHub from "../demolib/EditInGitHub.svelte";
+    import HeaderCell, { type HeaderColumn } from "../demolib/HeaderCell.svelte";
     import Numeric from "../demolib/Numeric.svelte";
     import { themeOptions } from "../demolib/themeOptions.svelte.js";
     import MoreInfo from "./MoreInfo.svelte";
@@ -24,52 +26,75 @@
         gridData = data.data;
     });
 
-    let columns = $state<WjDvColumn<Person>[]>([
+    let columns = $state<HeaderColumn<Person>[]>([
         {
             key: 'id',
             text: 'ID',
             width: 5,
             resizable: false,
-            pinned: true
+            pinned: true,
+            alignment: 'start',
+            pinnedFunctions: {},
         },
         {
             key: 'first_name',
             text: 'First Name',
             minWidth: 5,
-            hidden: false
+            hidden: false,
+            alignment: 'start',
+            pinnedFunctions: {},
         },
         {
             key: 'last_name',
             text: 'Last Name',
+            alignment: 'start',
+            pinnedFunctions: {},
+        },
+        {
+            key: 'full_name',
+            text: 'Full Name',
+            width: 9,
+            get: (r) => `${r.gender === 'Female' ? 'Mrs.' : 'Mr.' } ${r.last_name}, ${r.first_name}`,
+            alignment: 'start',
+            pinnedFunctions: {},
         },
         {
             key: 'email',
             text: 'E-Mail',
-            pinned: true
+            pinned: true,
+            alignment: 'start',
+            pinnedFunctions: {},
         },
         {
             key: 'gender',
             text: 'Gender',
-            alignment: 'center'
+            alignment: 'center',
+            pinnedFunctions: {},
         },
         {
             key: 'birth_date',
             text: 'Birth Date',
             noTextWrap: true,
+            alignment: 'start',
+            pinnedFunctions: {},
         },
         {
             key: 'country_code',
             text: 'Country Code',
+            alignment: 'start',
+            pinnedFunctions: {},
         },
         {
             key: 'credit_score',
             text: 'Credit Score',
-            alignment: 'end'
+            alignment: 'end',
+            pinnedFunctions: {},
         },
         {
             key: 'net_worth',
             text: 'Net Worth',
-            alignment: 'end'
+            alignment: 'end',
+            pinnedFunctions: {},
         },
     ]);
 
@@ -152,7 +177,7 @@ import &#123; WjDataView &#125; from '@wjfe/dataview';</pre>
                 }}
             >
                 {#snippet controlHeaderCell()}
-                    <div class="ps-2">
+                    <div class="ps-2 d-flex flex-row flex-nowrap gap-1">
                         <input
                             type="checkbox"
                             class="form-check-input"
@@ -160,15 +185,13 @@ import &#123; WjDataView &#125; from '@wjfe/dataview';</pre>
                             checked={!!allSelected}
                             oninput="{ev => selectAllData(ev.currentTarget.checked)}"
                         >
+                        <AllColumnsDropdown bind:columns />
                     </div>
                 {/snippet}
                 {#snippet controlDataCell(ctx)}
                     <div class="px-2 d-flex flex-row gap-1">
-                        <input
-                            type="checkbox"
-                            class="form-check-input"
-                            bind:checked={ctx.row.wjdv.selected}
-                        >
+                        <!-- svelte-ignore binding_property_non_reactive -->
+                        <input type="checkbox" class="form-check-input" bind:checked={ctx.row.wjdv.selected}>
                         <button
                             type="button"
                             class="btn btn-sm btn-neutral"
@@ -179,21 +202,15 @@ import &#123; WjDataView &#125; from '@wjfe/dataview';</pre>
                     </div>
                 {/snippet}
                 {#snippet headerCell(ctx)}
-                    <div class="d-flex flex-row ps-2">
-                        <span class="fw-semibold text-nowrap text-truncate">{ctx.col.text}</span>
-                        <button class="btn btn-sm ms-auto" onclick={() => ctx.col.pinned = !ctx.col.pinned}>
-                            <span title="Click to {ctx.col.pinned ? 'un' : ''}pin">
-                                <i class="bi bi-pin-{ctx.col.pinned ? 'fill' : 'angle'}"></i>
-                            </span>
-                        </button>
-                    </div>
+                    <!-- svelte-ignore binding_property_non_reactive -->
+                    <HeaderCell bind:col={ctx.col} maxWidth="20em" />
                 {/snippet}
                 {#snippet dataCell(ctx)}
-                    <div class="data px-2 text-truncate">
+                    <div class="data px-2" class:text-truncate={ctx.col.noTextWrap}>
                         {#if ctx.col.key === 'credit_score' || ctx.col.key === 'net_worth'}
                             <Numeric value={ctx.row[ctx.col.key]} />
                         {:else}
-                            {ctx.row[ctx.col.key as keyof typeof ctx.row]}
+                            {ctx.getFn(ctx.row)}
                         {/if}
                     </div>
                 {/snippet}

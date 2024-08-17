@@ -1,9 +1,11 @@
 <script lang="ts">
-    import WjDataView, { defineData, type WjDvColumn } from '$lib/WjDataView/WjDataView.svelte';
+    import WjDataView, { defineData } from '$lib/WjDataView/WjDataView.svelte';
     import WjDataViewTheme from '$lib/WjDataViewTheme/WjDataViewTheme.svelte';
     import type { GeoSaleByCountry, GeoSaleColumn } from '../../data-models.js';
+    import AllColumnsDropdown from '../../demolib/AllColumnsDropdown.svelte';
     import EditInGitHub from '../../demolib/EditInGitHub.svelte';
     import { globalOptions } from '../../demolib/GlobalOptions.svelte.js';
+    import HeaderCell, { type HeaderColumn } from '../../demolib/HeaderCell.svelte';
     import { amountFormatterFactory, currencyFormatter } from '../../demolib/numberFormatters.js';
     import Numeric from '../../demolib/Numeric.svelte';
     import { themeOptions } from '../../demolib/themeOptions.svelte.js';
@@ -14,7 +16,6 @@
     import { dataViewOptions } from './dataViewOptions.js';
     import DrilldownButton from './DrilldownButton.svelte';
     import FirstLevelInfo from './FirstLevelInfo.svelte';
-    import HeaderCell from './HeaderCell.svelte';
     import SecondLevelInfo from './SecondLevelInfo.svelte';
     import ThirdLevelInfo from './ThirdLevelInfo.svelte';
     import Toolbar from './Toolbar.svelte';
@@ -28,11 +29,13 @@
     }: Props = $props();
 
     let dvOptions = $state(dataViewOptions());
-    let columns1 = $state<WjDvColumn<GeoSaleByCountry, GeoSaleColumn>[]>([
+    let columns = $state<HeaderColumn<GeoSaleByCountry, GeoSaleColumn>[]>([
         {
             key: 'country',
             text: 'Country',
+            alignment: 'start',
             get: getCountry,
+            pinnedFunctions: {},
         },
         {
             key: 'sales_amount',
@@ -40,6 +43,7 @@
             alignment: 'end',
             dataType: 'real-amount',
             numberFormatter: amountFormatterFactory(2),
+            pinnedFunctions: {},
         },
         {
             key: 'quantity_sold',
@@ -47,6 +51,7 @@
             alignment: 'end',
             dataType: 'int-amount',
             numberFormatter: amountFormatterFactory(0),
+            pinnedFunctions: {},
         },
         {
             key: 'total_sales',
@@ -54,6 +59,7 @@
             alignment: 'end',
             dataType: 'currency',
             numberFormatter: currencyFormatter,
+            pinnedFunctions: {},
         },
         {
             key: 'total_costs',
@@ -61,6 +67,7 @@
             alignment: 'end',
             dataType: 'currency',
             numberFormatter: currencyFormatter,
+            pinnedFunctions: {},
         },
     ]);
     let data1 = $state(defineData(data.byCountry, m => m.country_code));
@@ -93,7 +100,7 @@
     >
         <WjDataViewTheme theme={themeOptions.currentTheme}>
             <WjDataView
-                bind:columns={columns1}
+                bind:columns
                 bind:data={data1}
                 striped={dvOptions.striping}
                 rowTracking={dvOptions.rowTracking}
@@ -103,12 +110,17 @@
                 class="position-absolute top-0 bottom-0"
                 controlColumn={{
                     width: 3,
+                    resizable: false,
                     alignment: 'center',
+                    pinnedFunctions: {},
                 }}
                 style="z-index: 5"
             >
                 {#snippet caption()}
                     <DataViewCaption title="Global Overview" />
+                {/snippet}
+                {#snippet controlHeaderCell()}
+                    <AllColumnsDropdown bind:columns />
                 {/snippet}
                 {#snippet controlDataCell(ctx)}
                     <!-- svelte-ignore binding_property_non_reactive -->

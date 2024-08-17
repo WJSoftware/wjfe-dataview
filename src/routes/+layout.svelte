@@ -1,13 +1,17 @@
 <script lang="ts">
     import { base } from "$app/paths";
     import pkgJson from 'packagejson';
-    import type { Snippet } from "svelte";
+    import { onMount, type Snippet } from "svelte";
     import "../app.scss";
     import ThemeSwitch from "./ThemeSwitch.svelte";
 
     let { children }: {
         children: Snippet
     } = $props();
+
+    onMount(() => {
+        (globalThis as any).bootstrap.Dropdown.Default.popperConfig = { strategy: "fixed" };
+    });
 </script>
 
 <div class="d-flex flex-column doc-container">
