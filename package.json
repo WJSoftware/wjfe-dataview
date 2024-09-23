@@ -35,7 +35,7 @@
 		"@testing-library/svelte": "^5.2.1",
 		"@types/node": "^20.14.12",
 		"gh-pages": "^6.1.1",
-		"jsdom": "^25.0.0",
+		"jsdom": "^25.0.1",
 		"publint": "^0.2.10",
 		"sass": "^1.78.0",
 		"svelte-check": "^4.0.1",
