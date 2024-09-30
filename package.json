@@ -38,7 +38,7 @@
 		"jsdom": "^25.0.1",
 		"publint": "^0.2.10",
 		"sass": "^1.78.0",
-		"svelte-check": "^4.0.2",
+		"svelte-check": "^4.0.4",
 		"tslib": "^2.7.0",
 		"typescript": "^5.6.2",
 		"vite": "^5.4.6",
