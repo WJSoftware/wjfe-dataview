@@ -10,6 +10,11 @@
     }: Props = $props();
 </script>
 
-<button type="button" class="btn btn-neutral btn-sm" onclick={() => row.wjdv.expanded = !row.wjdv.expanded}>
+<button
+    type="button"
+    class="btn btn-neutral btn-sm"
+    onclick={() => row.wjdv.expanded = !row.wjdv.expanded}
+    aria-label={row.wjdv.expanded ? 'contract' : 'expand'}
+>
     <i class="bi bi-chevron-bar-{row.wjdv.expanded ? 'contract' : 'expand'}"></i>
 </button>

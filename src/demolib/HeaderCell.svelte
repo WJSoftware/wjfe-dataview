@@ -1,4 +1,4 @@
-<script context="module">
+<script module>
     export type HeaderColumn<TRow extends Record<string, any> = Record<string, any>, TCol extends Record<string, any> = Record<string, any>> = 
         WjDvColumn<TRow, TCol> & {
             alignment: ColAlignment;
@@ -147,6 +147,7 @@
                 type="button"
                 class="btn btn-neutral btn-sm ms-auto"
                 title="Click: Next alignment; Ctrl + Click: Previous alignment"
+                aria-label="Column alignment"
                 onclick={changeAlignment}
             >
                 <i class="bi bi-{alignmentIcon}"></i>
@@ -159,14 +160,24 @@
             </label>
         {/if}
         {#if col.pinnedFunctions.hide}
-            <button type="button" class="btn btn-sm btn-neutral" onclick={() => col.hidden = true}>
-                <span title="Click to {col.pinned ? 'un' : ''}pin">
+            <button
+                type="button"
+                class="btn btn-sm btn-neutral"
+                onclick={() => col.hidden = true}
+                aria-label="{col.hidden ? 'Show' : 'Hide'} column"
+            >
+                <span title="Click to {col.hidden ? 'show' : 'hide'}">
                     <i class="bi bi-eye-slash"></i>
                 </span>
             </button>
         {/if}
         {#if col.pinnedFunctions.pin}
-            <button type="button" class="btn btn-sm btn-neutral" onclick={() => col.pinned = !col.pinned}>
+            <button
+                type="button"
+                class="btn btn-sm btn-neutral"
+                onclick={() => col.pinned = !col.pinned}
+                aria-label="{col.pinned ? 'Unp' : 'P'}in column"
+            >
                 <span title="Click to {col.pinned ? 'un' : ''}pin">
                     <i class="bi {pinIcon}"></i>
                 </span>

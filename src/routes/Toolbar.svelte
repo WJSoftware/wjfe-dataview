@@ -15,6 +15,7 @@
     <button
         class="btn btn-sm btn-info"
         title="Click to show additional information"
+        aria-label="Click to show additional information"
         data-bs-toggle="offcanvas"
         data-bs-target="#helpCanvas"
     >

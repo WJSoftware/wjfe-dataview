@@ -41,6 +41,7 @@
                 <a
                     href="https://github.com/WJSoftware/wjfe-dataview"
                     title="Repository"
+                    aria-label="Repository"
                     class="nav-link"
                     target="_blank"
                     >
@@ -65,6 +66,7 @@
                         href="https://getbootstrap.com"
                         target="_blank"
                         title="Bootstrap"
+                        aria-label="Bootstrap"
                     >
                         <i class="bi bi-bootstrap"></i>
                     </a>
