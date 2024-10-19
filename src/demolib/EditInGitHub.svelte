@@ -12,6 +12,7 @@
     title="See an error?  Want to improve the demo?  Curious about the source code?  View/edit this page in GitHub."
     href={editUrl}
     target="_blank"
+    aria-label="Edit this page in GitHub"
 >
     <i class="bi bi-pencil"></i>
 </a>

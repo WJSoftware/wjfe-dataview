@@ -1,4 +1,4 @@
-<script context="module" lang="ts">
+<script module lang="ts">
     /**
      * All possible theme options.
      */

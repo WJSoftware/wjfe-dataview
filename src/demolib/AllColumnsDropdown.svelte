@@ -23,6 +23,7 @@
         data-bs-toggle="dropdown"
         title="Columns"
         aria-expanded="false"
+        aria-label="Select visible columns"
         data-bs-auto-close="false"
         bind:this={btn}
     >

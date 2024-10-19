@@ -196,6 +196,7 @@ import &#123; WjDataView &#125; from '@wjfe/dataview';</pre>
                             type="button"
                             class="btn btn-sm btn-neutral"
                             onclick={() => ctx.row.wjdv.expanded = !ctx.row.wjdv.expanded}
+                            aria-label={ctx.row.wjdv.expanded ? 'contract' : 'expand'}
                         >
                             <i class="bi bi-chevron-bar-{ctx.row.wjdv.expanded ? 'contract' : 'expand'}"></i>
                         </button>

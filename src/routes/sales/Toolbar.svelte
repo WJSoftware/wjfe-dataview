@@ -1,4 +1,4 @@
-<script context="module" lang="ts">
+<script module lang="ts">
     export type WjDataViewOptions = {
         rowTracking: boolean;
         rowSelectionHighlight: boolean;
@@ -38,6 +38,7 @@
             type="button"
             class="btn btn-sm btn-info"
             title="Click to show additional information"
+            aria-label="Click to show additional information"
             data-bs-toggle="offcanvas"
             data-bs-target="#{moreInfoTarget}"
         >
