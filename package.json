@@ -33,7 +33,7 @@
 		"@sveltejs/package": "^2.3.7",
 		"@sveltejs/vite-plugin-svelte": "^4.0.0",
 		"@testing-library/svelte": "^5.2.3",
-		"@types/node": "^20.14.12",
+		"@types/node": "^22.9.0",
 		"gh-pages": "^6.1.1",
 		"jsdom": "^25.0.1",
 		"publint": "^0.2.11",
