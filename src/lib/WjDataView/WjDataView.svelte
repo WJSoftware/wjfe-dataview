@@ -581,7 +581,7 @@
                 {@render colHeaders(segregatedColumns.pinned)}
             {/if}
             {@render colHeaders(segregatedColumns.unpinned)}
-            <div class={combineClasses("col-header extra-header", headerClass)}>&nbsp;</div>
+            <div class={combineClasses("col-header extra-header", headerClass)} role="columnheader">&nbsp;</div>
         </div>
     </div>
     <div class={combineClasses('dataview-body', { striped, 'row-tracking': rowTracking })} role="rowgroup">
