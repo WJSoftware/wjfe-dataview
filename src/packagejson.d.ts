@@ -1,4 +1,4 @@
-declare module 'packagejson' {
+declare module 'packageJson' {
     declare const pkgJson: {
         name: string;
         version: string;

@@ -1,6 +1,7 @@
 <script lang="ts">
     import { base } from "$app/paths";
-    import pkgJson from 'packagejson';
+    import pkgJson from 'packageJson';
+    import pkgLockJson from 'packageLockJson';
     import { onMount, type Snippet } from "svelte";
     import "../app.scss";
     import ThemeSwitch from "./ThemeSwitch.svelte";
@@ -89,7 +90,7 @@
                     {pkgJson.name} <strong>v{pkgJson.version}</strong>
                 </div>
                 <div class="col-auto">
-                    svelte <strong>v{(pkgJson.peerDependencies.svelte as string).substring(1)}</strong>
+                    svelte <strong>v{pkgLockJson.packages['node_modules/svelte'].version}</strong>
                 </div>
             </div>
         </div>
