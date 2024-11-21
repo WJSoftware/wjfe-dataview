@@ -210,7 +210,7 @@ describe('WjDataView', () => {
             // Assert.
             const rows = getAllByRole('row');
             rows.forEach(r => expect(r.classList.contains('row-grid-line')).toEqual(false));
-            let cell = getByRole('columnheader');
+            let cell = getAllByRole('columnheader')[0];
             expect(cell.classList.contains('col-grid-line')).toEqual(false);
             cell = getByRole('cell');
             expect(cell.classList.contains('col-grid-line')).toEqual(false);
@@ -257,7 +257,7 @@ describe('WjDataView', () => {
             // Assert.
             const rows = getAllByRole('row');
             rows.forEach(r => expect(r.classList.contains('row-grid-line')).toEqual(rowExpectation));
-            let cell = getByRole('columnheader');
+            let cell = getAllByRole('columnheader')[0];
             expect(cell.classList.contains('col-grid-line')).toEqual(colExpectation);
             cell = getByRole('cell');
             expect(cell.classList.contains('col-grid-line')).toEqual(colExpectation);
@@ -490,6 +490,36 @@ describe('WjDataView', () => {
                 expect(viewport.getAttribute(customAtt)).toEqual(customAttValue);
             }
         });
+        test("Should set the class provided via the 'headerClass' property on every header cell.", () => {
+            // Arrange.
+            const columns = $state<WjDvColumn[]>([
+                {
+                    key: 'id',
+                    text: 'ID',
+                    resizable: false,
+                },
+                {
+                    key: 'name',
+                    text: 'Name',
+                    resizable: false,
+                },
+            ]);
+            const data = $state(defineData([{ id: 1 }]));
+
+            // Act.
+            const { getAllByRole } = render(WjDataView, {
+                columns,
+                data,
+                controlColumn: {
+                    text: 'x',
+                    resizable: false,
+                }
+            });
+
+            // Assert.
+            const headerCells = getAllByRole('columnheader');
+            expect(headerCells.length).toEqual(columns.length + 2);
+        });
         describe('Control Column', () => {
             test.each<{ text1: string; text2: string; controlColumn?: ControlColumn; }>([
                 {
@@ -520,7 +550,7 @@ describe('WjDataView', () => {
 
                 // Assert.
                 let cells = getAllByRole('columnheader');
-                expect(cells.length).toEqual(columns.length + (controlColumn ? 1 : 0));
+                expect(cells.length).toEqual(columns.length + 1 + (controlColumn ? 1 : 0));
                 cells = getAllByRole('cell');
                 expect(cells.length).toEqual(columns.length + (controlColumn ? 1 : 0));
             });
@@ -662,7 +692,7 @@ describe('WjDataView', () => {
 
                 // Assert.
                 const headerCells = getAllByRole('columnheader');
-                expect(headerCells.length).toEqual(hidden ? 1 : 2);
+                expect(headerCells.length).toEqual(hidden ? 2 : 3);
             });
             test.each<{ alignment: ColAlignment; expectedClass: string; }>([
                 {
@@ -976,7 +1006,11 @@ describe('WjDataView', () => {
             for (let cls of Object.keys(expectedClasses)) {
                 for (let role of expectedClasses[cls].targets) {
                     const elems = getAllByRole(role);
-                    for (let elem of elems) {
+                    for (let i = 0; i < elems.length; ++i) {
+                        const elem = elems[i];
+                        if (role === 'columnheader' && i + 1 === elems.length) {
+                            continue;
+                        }
                         expect(elem.classList.contains(cls)).toEqual(expectedClasses[cls].present);
                     }
                 }
@@ -1001,7 +1035,7 @@ describe('WjDataView', () => {
                 },
             ]);
             const data = $state(defineData([{ id: 1 }]));
-            const { getByRole, rerender } = render(WjDataView, { columns, data, pinnedDivider: !pinnedDivider });
+            const { getByRole, getAllByRole, rerender } = render(WjDataView, { columns, data, pinnedDivider: !pinnedDivider });
 
             // Act.
             await rerender({ columns, data, pinnedDivider });
@@ -1010,7 +1044,7 @@ describe('WjDataView', () => {
             // Assert.
             let cell = getByRole('cell');
             expect(cell.classList.contains('sticky-divider')).toEqual(pinnedDivider);
-            cell = getByRole('columnheader');
+            cell = getAllByRole('columnheader')[0];
             expect(cell.classList.contains('sticky-divider')).toEqual(pinnedDivider);
         });
         test.each([
@@ -1196,6 +1230,31 @@ describe('WjDataView', () => {
                 expect(viewport.getAttribute(customAtt)).toBeFalsy();
             }
         });
+        test("Should update the class list on every header cell whenever 'headerCell' changes.", async () => {
+            // Arrange.
+            const columns = $state<WjDvColumn[]>([
+                {
+                    key: 'id',
+                    text: 'ID',
+                    resizable: false,
+                },
+            ]);
+            const data = $state(defineData([{ id: 1 }]));
+            const newHeaderClass = 'new-class';
+            const { getAllByRole, rerender } = render(WjDataView, {
+                columns,
+                data,
+                headerClass: 'orig-class'
+            });
+
+            // Act.
+            await rerender({ headerClass: newHeaderClass });
+            flushSync();
+
+            // Assert.
+            const headerCells = getAllByRole('columnheader');
+            headerCells.forEach(c => expect(c.classList.contains(newHeaderClass)).toEqual(true));
+        });
         describe('Control Column', () => {
             test.each<{
                 controlColumn?: ControlColumn;
@@ -1233,7 +1292,7 @@ describe('WjDataView', () => {
 
                 // Assert.
                 let cells = getAllByRole('columnheader');
-                expect(cells.length).toEqual(controlColumn ? 2 : 1);
+                expect(cells.length).toEqual(controlColumn ? 3 : 2);
                 cells = getAllByRole('cell');
                 expect(cells.length).toEqual(controlColumn ? 2 : 1);
             });
@@ -1337,7 +1396,7 @@ describe('WjDataView', () => {
 
                 // Assert.
                 let cells = getAllByRole('columnheader');
-                expect(cells.length).toEqual(hidden ? 1 : 2);
+                expect(cells.length).toEqual(hidden ? 2 : 3);
                 cells = getAllByRole('cell');
                 expect(cells.length).toEqual(hidden ? 1 : 2);
             });
@@ -1441,11 +1500,11 @@ describe('WjDataView', () => {
                 ]));
 
                 // Act.
-                const { getByRole } = render(WjDataView, { columns, data });
+                const { getAllByRole } = render(WjDataView, { columns, data });
 
                 // Assert.
-                const headerCell = getByRole('columnheader');
-                const dataCell = getByRole('cell');
+                const headerCell = getAllByRole('columnheader')[0];
+                const dataCell = getAllByRole('cell')[0];
                 expect(headerCell.style.width).toEqual(`${colWidth}em`);
                 expect(dataCell.style.width).toEqual(`${colWidth}em`);
             });
@@ -1475,11 +1534,11 @@ describe('WjDataView', () => {
                 ]));
 
                 // Act.
-                const { getByRole } = render(WjDataView, { columns, data, defaultWidth });
+                const { getAllByRole } = render(WjDataView, { columns, data, defaultWidth });
 
                 // Assert.
-                const headerCell = getByRole('columnheader');
-                const dataCell = getByRole('cell');
+                const headerCell = getAllByRole('columnheader')[0];
+                const dataCell = getAllByRole('cell')[0];
                 expect(headerCell.style.width).toEqual(`${defaultWidth ?? 10}em`);
                 expect(dataCell.style.width).toEqual(`${defaultWidth ?? 10}em`);
             });
@@ -1519,11 +1578,11 @@ describe('WjDataView', () => {
                 ]));
 
                 // Act.
-                const { getByRole } = render(WjDataView, { columns, data });
+                const { getAllByRole } = render(WjDataView, { columns, data });
 
                 // Assert.
-                const headerCell = getByRole('columnheader');
-                const dataCell = getByRole('cell');
+                const headerCell = getAllByRole('columnheader')[0];
+                const dataCell = getAllByRole('cell')[0];
                 expect(headerCell.style.width).toEqual(`${expectedWidth}em`);
                 expect(dataCell.style.width).toEqual(`${expectedWidth}em`);
             });
@@ -1544,10 +1603,10 @@ describe('WjDataView', () => {
                 ]));
 
                 // Act.
-                const { getByRole } = render(WjDataView, { columns, data });
+                const { getAllByRole } = render(WjDataView, { columns, data });
 
                 // Assert.
-                const headerCell = getByRole('columnheader');
+                const headerCell = getAllByRole('columnheader')[0];
                 expect(headerCell.textContent?.trim()).toEqual(columns[0].text);
             });
             test.each([
@@ -1577,11 +1636,11 @@ describe('WjDataView', () => {
                 ]));
 
                 // Act.
-                const { getByRole } = render(WjDataView, { columns, data });
+                const { getAllByRole } = render(WjDataView, { columns, data });
 
                 // Assert.
-                const headerCell = getByRole('columnheader');
-                const dataCell = getByRole('cell');
+                const headerCell = getAllByRole('columnheader')[0];
+                const dataCell = getAllByRole('cell')[0];
                 expect(headerCell.classList.contains('sticky-header')).toEqual(pinned);
                 expect(dataCell.classList.contains('sticky-data')).toEqual(pinned);
             });
@@ -1653,14 +1712,14 @@ describe('WjDataView', () => {
                 ]));
 
                 // Act.
-                const { getByRole, getAllByRole } = render(WjDataView, { columns, data });
+                const { getAllByRole } = render(WjDataView, { columns, data });
 
                 // Assert.
                 const headerCells = getAllByRole('columnheader');
                 const dataCells = getAllByRole('cell');
-                expect(headerCells.length).toEqual(column.hidden ? 1 : 2);
+                expect(headerCells.length).toEqual(column.hidden ? 2 : 3);
                 expect(dataCells.length).toEqual(column.hidden ? 1 : 2);
-                expect(headerCells[1]?.textContent?.trim()).toEqual(column.hidden ? undefined : column.text);
+                expect(headerCells[1]?.textContent?.trim()).toEqual(column.hidden ? '' : column.text);
                 expect(dataCells[1]?.textContent?.trim()).toEqual(column.hidden ? undefined : data[0][column.key]);
             });
             test.each<{ alignment: ColAlignment; text: string; }>([
@@ -1793,8 +1852,8 @@ describe('WjDataView', () => {
                         a: 'Hi'
                     }
                 ]));
-                const { getByRole } = render(WjDataView, { columns, data });
-                const headerCell = getByRole('columnheader');
+                const { getAllByRole } = render(WjDataView, { columns, data });
+                const headerCell = getAllByRole('columnheader')[0];
                 expect(headerCell.style.width).toEqual("5em");
 
                 // Act.
@@ -1843,7 +1902,7 @@ describe('WjDataView', () => {
                         a: 'Hi'
                     }
                 ]));
-                const { getByRole } = render(WjDataView, { columns, data });
+                const { getAllByRole } = render(WjDataView, { columns, data });
 
                 // Act.
                 columns[0] = {
@@ -1853,7 +1912,7 @@ describe('WjDataView', () => {
                 flushSync();
 
                 // Assert.
-                const headerCell = getByRole('columnheader');
+                const headerCell = getAllByRole('columnheader')[0];
                 expect(headerCell.style.width).toEqual(`${expectedWidth}em`);
             });
             test("Should update the column's title whenever the 'text' property changes.", () => {
@@ -1871,14 +1930,14 @@ describe('WjDataView', () => {
                         a: 'Hi'
                     }
                 ]));
-                const { getByRole } = render(WjDataView, { columns, data });
+                const { getAllByRole } = render(WjDataView, { columns, data });
 
                 // Act.
                 columns[0].text = 'B';
                 flushSync();
 
                 // Assert.
-                const dataCell = getByRole('columnheader');
+                const dataCell = getAllByRole('columnheader')[0];
                 expect(dataCell.textContent?.trim()).toEqual('B');
             });
             test.each([
@@ -1906,8 +1965,8 @@ describe('WjDataView', () => {
                         a: 'Hi'
                     }
                 ]));
-                const { getByRole } = render(WjDataView, { columns, data });
-                let headerCell = getByRole('columnheader');
+                const { getAllByRole } = render(WjDataView, { columns, data });
+                let headerCell = getAllByRole('columnheader')[0];
                 expect(headerCell.classList.contains('sticky-header')).toEqual(!pinned);
 
                 // Act.
@@ -1915,7 +1974,7 @@ describe('WjDataView', () => {
                 flushSync();
 
                 // Assert.
-                headerCell = getByRole('columnheader');
+                headerCell = getAllByRole('columnheader')[0];
                 expect(headerCell.classList.contains('sticky-header')).toEqual(pinned);
             });
             test.each([
@@ -1951,7 +2010,7 @@ describe('WjDataView', () => {
                 ]));
                 const { getAllByRole } = render(WjDataView, { columns, data });
                 let headerCells = getAllByRole('columnheader');
-                expect(headerCells.length).toEqual(columns.length - (hidden ? 0 : 1));
+                expect(headerCells.length).toEqual(columns.length + 1 - (hidden ? 0 : 1));
 
                 // Act.
                 columns[0].hidden = hidden;
@@ -1959,7 +2018,7 @@ describe('WjDataView', () => {
 
                 // Assert.
                 headerCells = getAllByRole('columnheader');
-                expect(headerCells.length).toEqual(columns.length - (!hidden ? 0 : 1));
+                expect(headerCells.length).toEqual(columns.length + 1 - (!hidden ? 0 : 1));
             });
             test.each<{ initial?: ColAlignment; alignment?: ColAlignment; text: string; }>([
                 {
