@@ -46,7 +46,7 @@ fulfill these 2 requirements.  The `id` values are meant to be unique amongst th
 > **IMPORTANT**:  Always bind `columns` and `data`.  The data view control will mutate properties inside this data, 
 > so the best practice is to bind.
 
-```html
+```svelte
 <script lang="ts">
     import { WjDataView, defineData } from '@wjfe/dataview';
     import { type MyDataModel } from 'path/to/my-model-types.js';
@@ -195,7 +195,7 @@ With this technique, we can create fully responsive themes for the data view com
 Use the `WjDataViewTheme` component as a wrapper for any `WjDataView` components that you may have.  This wrapper 
 doesn't have to be the immediate parent, so put it wherever is best according to your needs.
 
-```html
+```svelte
 <script lang="ts">
     import { bootstrapTheme } from '../dataViewThemes.js';
 </script>
@@ -238,6 +238,52 @@ The complete list of CSS variables that can be set for the data view component a
 | `--wjdv-grid-line-style` | `solid` | `solid` | Style used in the table's border lines. |
 | `--wjdv-grid-line-color` | `currentColor` | `currentColor` | Color used in the table's border lines. |
 
+### Styling the Header Row
+
+The header row, as row, cannot be styled.  What can be styled is the individual header cells.  This is due to the 
+nature of the structure around the pinnable columns feature.
+
+The most common thing to do here is to add some background coloring to the header cells, so they appear different to the 
+data cells.  This in itself is complicated because pinned cells must be guaranteed a fully opaque background color or 
+else the non-pinned columns will be seen through them when scrolling horizontally.
+
+But when there's will there's a way:  I learned from the Bootstrap team that one can simulate a background color using 
+`box-shadow` (this technique is revealed in Intellisense on the `headerClass` property of the component):
+
+```svelte
+<script lang="ts">
+    import { bootstrapTheme } from '../dataViewThemes.js';
+</script>
+
+<WjDataViewTheme theme={bootstrapTheme} headerClass="header-background">
+    <WjDataView ...>
+        <!-- Snippets go here -->
+    </WjDataView>
+</WjDataViewTheme>
+
+<style>
+    :global(.header-background) {
+        box-shadow: 0 9999px 9999px rgba(0, 0, 0, 0.07) inset;
+    }
+</style>
+```
+
+This will shade the header cells darker.  On a white background, this will make the cells look gray; on a black 
+background the color selection must be a light one (not black as in the example) so the cells are shaded lighter and 
+can stand out.
+
+If you **must** set `background-color`, you'll have to fight the component using `!important`:
+
+```svelte
+<style>
+    :global(.header-background) {
+        background-color: #ddd !important;
+    }
+</style>
+```
+
+Remember:  If you set the background color, it must be opaque so pinned columns work as expected.
+
 ## Reference
 
 ### Props
@@ -253,6 +299,7 @@ The complete list of CSS variables that can be set for the data view component a
 | `striped` | `boolean` | `true` | | Turns the striping of rows on and off. |
 | `pinnedDivider` | `boolean` | `true` | | Turns the divider between pinned and unpinned columns on and off. |
 | `class` | `string` | `undefined` | | Additional CSS classes that are applied to the data view's viewport (the top-level element). |
+| `headerClass` | `string` | `undefined` | | Adds additional CSS classes to the individual header cells. |
 | `controlColumn` | `ControlColumn<TRow, TCol>` | `undefined` | Yes | Specifies the shape of the control column, which an extra column that is always the first pinned column. |
 | `noViewport` | `boolean` | `false` | | Allows the exclusion of the component's viewport. |
  `propSpreadingTarget` | `PropSpreadingTarget` | `root` | | Establishes the target for property spreading. |
@@ -289,5 +336,6 @@ None.
 - [x] Expansible rows
 - [x] Row selection
 - [x] Control column
+- [x] Header styling
 - [ ] Make cell/row/column padding themeable
 - [ ] dataRow snippet (complex)

@@ -104,6 +104,16 @@
              * @returns The data meant to be rendered for this column.
              */
             get?: GetterFn<TRow>;
+            /**
+             * Adds additional CSS classes to the column's header cell.
+             */
+            headerClass?: string;
+            /**
+             * Adds additional CSS classes to the column's data cells.
+             * 
+             * **NOTE**:  This is applied to every data cell in the column.
+             */
+            dataClass?: string;
         };
 
     /**
@@ -336,6 +346,29 @@
          */
         class?: string;
         /**
+         * Adds additional CSS classes to the individual header cells.
+         * 
+         * Use this to style the header cells.  If what you want is set a background color, the recommended way is to 
+         * fake it using `box-shadow`.  If you set `background-color`, however, remember to use fully opaque colors or 
+         * the headers of pinned columns won't hide the scrolled columns behind them.
+         * 
+         * @example
+         * ```html
+         * <style>
+         *     .header-background {
+         *         box-shadow: 0 9999px 9999px rgba(0, 0, 0, 0.08) inset;
+         *     }
+         * </style>
+         * ```
+         * 
+         * **IMPORTANT**:  This property exists for individual column definitions (of type `WjDvColumn`).  When said 
+         * property is present, this component-level property is not applied and instead the column-specific one is.
+         * 
+         * Therefore, use this one for the "base" look of headers, then use the one in column definitions to do fancy 
+         * variations, probably depending on the business data's state.
+         */
+        headerClass?: string;
+        /**
          * Snippet used to render the contents of header cells.
          * @param ctx Column context object containg the column and column index of the column being rendered.
          */
@@ -390,6 +423,7 @@
         noViewport = false,
         propSpreadingTarget = 'root',
         class: cssClass,
+        headerClass,
         headerCell,
         dataCell,
         rowExpansion,
@@ -467,7 +501,7 @@
 {#snippet colHeaders(cols: ColumnInfo[])}
     {#each cols as ci, index (ci.column.key)}
         <div
-            class={combineClasses('col-header', {
+            class={combineClasses('col-header', ci.column.headerClass ?? headerClass, {
                 'sticky-header': !!ci.column.pinned,
                 'sticky-divider': pinnedDivider && index + 1 === cols.length,
                 'col-grid-line': !!(gridLines & GridLines.Column)
@@ -501,7 +535,7 @@
     {#each cols as ci, index (ci.column.key)}
         {@const getFn = ci.column.get ?? (r => get(r, ci.column.key))}
         <div
-            class={combineClasses('dataview-cell-bg', {
+            class={combineClasses('dataview-cell-bg', ci.column.dataClass, {
                 'sticky-data': !!ci.column.pinned,
                 'sticky-divider': pinnedDivider && index + 1 === cols.length,
                 'col-grid-line': !!(gridLines & GridLines.Column)
@@ -547,7 +581,7 @@
                 {@render colHeaders(segregatedColumns.pinned)}
             {/if}
             {@render colHeaders(segregatedColumns.unpinned)}
-            <div class="col-header extra-header">&nbsp;</div>
+            <div class={combineClasses("col-header extra-header", headerClass)}>&nbsp;</div>
         </div>
     </div>
     <div class={combineClasses('dataview-body', { striped, 'row-tracking': rowTracking })} role="rowgroup">
@@ -870,7 +904,7 @@ const data = defineData<MyData>([
 ]);
 ```
 
-```html
+```svelte
 <WjDataViewTheme theme={myTheme}>
     <WjDataView bind:columns bind:data>
     </WjDataView>
@@ -915,7 +949,7 @@ const data = defineData<MyData>([
 ]);
 ```
 
-```html
+```svelte
 <WjDataViewTheme theme={myTheme}>
     <WjDataView bind:columns bind:data>
         {#snippet headerCell(ctx)}
