@@ -26,6 +26,7 @@
             <li>Grid lines for columns and rows</li>
             <li>Customizable header content</li>
             <li>Customizable data cell content</li>
+            <li>Customizable header cell appearance (the one that includes the resizer handle)</li>
             <li>Control column (an always-pinned special column for per-row controls/actions)</li>
             <li>Customizable appearance via CSS variables (theme component available)</li>
         </ul>

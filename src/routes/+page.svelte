@@ -170,10 +170,13 @@ import &#123; WjDataView &#125; from '@wjfe/dataview';</pre>
                 gridLines={demoOptions.gridLines}
                 defaultWidth={15}
                 class="position-absolute top-0 bottom-0"
+                headerClass="header-background"
                 controlColumn={{
                     width: 4,
                     minWidth: 4,
-                    hidden: !demoOptions.showControlColumn
+                    hidden: !demoOptions.showControlColumn,
+                    headerClass: 'pinned-header',
+                    dataClass: 'pinned-cell',
                 }}
             >
                 {#snippet controlHeaderCell()}
@@ -229,3 +232,15 @@ import &#123; WjDataView &#125; from '@wjfe/dataview';</pre>
         <EditInGitHub editUrl="https://github.com/WJSoftware/wjfe-dataview/blob/main/src/routes/%2Bpage.svelte" />
     </div>
 </div>
+
+<style lang="scss">
+    :global(.header-background) {
+        box-shadow: 0 9999px 9999px rgba(0, 0, 0, 0.1) inset;
+    }
+    :global(.pinned-header) {
+        box-shadow: 0 9999px 9999px rgba(5, 128, 102, 0.25) inset;
+    }
+    :global(.pinned-cell) {
+        box-shadow: 0 9999px 9999px rgba(13, 174, 139, 0.05) inset;
+    }
+</style>
