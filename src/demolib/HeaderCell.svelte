@@ -54,6 +54,10 @@
             col.width = col.minWidth
         }
     });
+    $effect.pre(() => {
+        col.headerClass = col.pinned ? 'pinned-header' : undefined;
+        col.dataClass = col.pinned ? 'pinned-cell' : undefined;
+    })
 
     function nextAlignmentIndex() {
         return (colAlignmentIndex + 1) % allAlignments.length;
