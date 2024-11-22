@@ -55,7 +55,7 @@
         }
     });
     $effect.pre(() => {
-        col.headerClass = col.pinned ? 'pinned-header' : undefined;
+        col.headerClass = col.pinned ? 'header-background pinned-header' : undefined;
         col.dataClass = col.pinned ? 'pinned-cell' : undefined;
     })
 

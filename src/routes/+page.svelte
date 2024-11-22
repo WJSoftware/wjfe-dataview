@@ -175,7 +175,7 @@ import &#123; WjDataView &#125; from '@wjfe/dataview';</pre>
                     width: 4,
                     minWidth: 4,
                     hidden: !demoOptions.showControlColumn,
-                    headerClass: 'pinned-header',
+                    headerClass: 'header-background pinned-header',
                     dataClass: 'pinned-cell',
                 }}
             >
@@ -235,12 +235,25 @@ import &#123; WjDataView &#125; from '@wjfe/dataview';</pre>
 
 <style lang="scss">
     :global(.header-background) {
-        box-shadow: 0 9999px 9999px rgba(0, 0, 0, 0.1) inset;
+        --header-bg-color: rgba(0, 0, 0, 0.1);
+        box-shadow: 0 9999px 9999px var(--header-bg-color) inset;
+
+        :global(*[data-bs-theme="dark"]) & {
+            --header-bg-color: rgba(255, 255, 255, 0.15);
+        }
     }
     :global(.pinned-header) {
-        box-shadow: 0 9999px 9999px rgba(5, 128, 102, 0.25) inset;
+        --header-bg-color: rgba(5, 128, 102, 0.15);
+        
+        :global(*[data-bs-theme="dark"]) & {
+            --header-bg-color: rgba(72, 250, 212, 0.332);
+        }
     }
     :global(.pinned-cell) {
-        box-shadow: 0 9999px 9999px rgba(13, 174, 139, 0.05) inset;
+        --pinned-cell-bg-color: rgba(13, 174, 139, 0.05);
+        box-shadow: 0 9999px 9999px var(--pinned-cell-bg-color) inset;
+        :global(*[data-bs-theme="dark"]) & {
+            --pinned-cell-bg-color: rgba(72, 250, 211, 0.086);
+        }
     }
 </style>
