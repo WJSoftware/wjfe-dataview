@@ -288,7 +288,7 @@ Remember:  If you set the background color, it must be opaque so pinned columns 
 
 ## Cross Column Synchronization
 
-> Since **v0.12.0**
+> Since **v0.13.0**
 
 It is possible to synchronize any property of a column with the same property in the column object of another dataview 
 instance, up to the point where they can be visually aligned.  This is a desirable feature in master-child scenarios 

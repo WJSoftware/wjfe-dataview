@@ -1,6 +1,6 @@
 # Column Synchronization
 
-> Since **v0.12.0**
+> Since **v0.13.0**
 
 It is now possible to synchronize any column property between two columns of different dataview instances, and its 
 primary purpose is to make a column in a master dataview component visually align with an equivalent column in child 
