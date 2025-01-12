@@ -115,11 +115,19 @@
              */
             dataClass?: string;
             /**
-             * TODO
+             * Collects the names of all synchronizable properties.
+             * 
+             * **NOTE**:  This property is not meant to be set externally.  It is used internally by the component to
+             * determine which properties are to be synchronized across columns.
              */
             syncProps?: Exclude<keyof WjDvColumn<TRow, TCol>, 'syncProps' | 'sync'>[];
             /**
-             * TODO
+             * Provides reactive synchronization of column properties.
+             * 
+             * **NOTE**:  This property is not meant to be set externally.  It is used internally by the component to
+             * synchronize column properties.
+             * 
+             * One may, however, check for its existence to determine if a column is synchronized with another column.
              */
             sync?: {
                 expectedLeft: number;
