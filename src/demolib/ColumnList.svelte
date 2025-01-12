@@ -22,10 +22,6 @@
         ),
     );
     let numRows = $derived(Math.floor(columns.length / numColumns) + (columns.length % numColumns !== 0 ? 1 : 0));
-
-    function onInputHandler(col: Column, checked: boolean) {
-        col.hidden = !checked;
-    }
 </script>
 
 <div class="d-flex flex-row flex-nowrap px-4 pt-2 align-items-baseline">
@@ -33,9 +29,9 @@
     <button
         type="button"
         class="btn btn-sm btn-secondary ms-auto me-2"
-        onclick="{() => columns.forEach((c) => (c.hidden = false))}">Select all</button
+        onclick={() => columns.forEach((c) => (c.hidden = false))}>Select all</button
     >
-    <button type="button" class="btn-close align-self-center" aria-label="Close" onclick="{() => onClose?.()}"></button>
+    <button type="button" class="btn-close align-self-center" aria-label="Close" onclick={() => onClose?.()}></button>
 </div>
 <div class="px-4 py-2">
     <table class="table table-sm table-borderless">
@@ -60,8 +56,7 @@
                                     type="checkbox"
                                     class="form-check-input"
                                     id="{thisId}_{col.key}"
-                                    checked="{!col.hidden}"
-                                    oninput="{(ev) => onInputHandler(col, ev.currentTarget.checked)}"
+                                    bind:checked={() => !col.hidden, (v) => (col.hidden = !v)}
                                 />
                                 <label for="{thisId}_{col.key}" class="me-3">{col.text}</label>
                             {/if}
