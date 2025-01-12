@@ -1,17 +1,16 @@
 <script lang="ts">
     import WjDataView, { defineData, GridLines } from "$lib/WjDataView/WjDataView.svelte";
-    import type { GeoSaleByCity, GeoSaleColumn, GeoSalesResult } from "../../data-models.js";
+    import type { GeoSalesResult } from "../../data-models.js";
     import AllColumnsDropdown from "../../demolib/AllColumnsDropdown.svelte";
     import { globalOptions } from "../../demolib/GlobalOptions.svelte.js";
-    import HeaderCell, { type HeaderColumn } from "../../demolib/HeaderCell.svelte";
-    import { amountFormatterFactory, currencyFormatter } from "../../demolib/numberFormatters.js";
+    import HeaderCell from "../../demolib/HeaderCell.svelte";
     import Numeric from "../../demolib/Numeric.svelte";
     import Cell from "./Cell.svelte";
     import { salesColumns } from "./columnHierarchy.svelte.js";
     import DataViewCaption from "./DataViewCaption.svelte";
     import DetailedView from "./DetailedView.svelte";
     import DrilldownButton from "./DrilldownButton.svelte";
-    import Toolbar, { type WjDataViewOptions } from "./Toolbar.svelte";
+    import { type WjDataViewOptions } from "./Toolbar.svelte";
 
     type Props = {
         sourceData: GeoSalesResult;
@@ -38,7 +37,6 @@
     });
 </script>
 
-<Toolbar bind:options={dvOptions} moreInfoTarget="secondLevelCanvas" />
 <WjDataView
     bind:columns={salesColumns.byCity}
     bind:data
@@ -59,7 +57,7 @@
     style="z-index: 5"
 >
     {#snippet caption()}
-        <DataViewCaption title="Per-City Summary: {countryName}" />
+        <DataViewCaption title="Per-City Summary: {countryName}" bind:dvOptions moreInfoTarget="secondLevelCanvas" />
     {/snippet}
     {#snippet headerCell(ctx)}
         <!-- svelte-ignore binding_property_non_reactive -->
