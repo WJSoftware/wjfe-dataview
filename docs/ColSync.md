@@ -6,7 +6,7 @@ It is now possible to synchronize any column property between two columns of dif
 primary purpose is to make a column in a master dataview component visually align with an equivalent column in child 
 dataview components that show up when users "drill-down" data rows.
 
-A picture is worth a thousand words, so here's a screenshot of the [sales demo]():
+A picture is worth a thousand words, so here's a screenshot of the [sales demo](https://wjsoftware.github.io/wjfe-dataview/sales):
 
 ![Column Synchronization Sample](./Col%20Sync%20Sample.png)
 
