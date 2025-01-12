@@ -1,33 +1,35 @@
 <script module>
-    export type HeaderColumn<TRow extends Record<string, any> = Record<string, any>, TCol extends Record<string, any> = Record<string, any>> = 
-        WjDvColumn<TRow, TCol> & {
-            alignment: ColAlignment;
-            pinnedFunctions: {
-                pin?: boolean;
-                hide?: boolean;
-                align?: boolean;
-                textWrap?: boolean;
-            };
+    export type HeaderColumn<
+        TRow extends Record<string, any> = {},
+        TCol extends Record<string, any> = {},
+    > = WjDvColumn<TRow, TCol & {
+        alignment: ColAlignment;
+        pinnedFunctions: {
+            pin?: boolean;
+            hide?: boolean;
+            align?: boolean;
+            textWrap?: boolean;
         };
+    }>;
 
-    const allAlignments: ColAlignment[] = [
-        'start',
-        'center',
-        'end'
-    ];
+    const allAlignments: ColAlignment[] = ['start', 'center', 'end'];
 
     const alignmentIcons: Record<ColAlignment, string> = {
-        'center': 'text-center',
-        'end': 'text-right',
-        'start': 'text-left'
+        center: 'text-center',
+        end: 'text-right',
+        start: 'text-left',
     };
 </script>
-<script lang="ts" generics="TRow extends Record<string, any> = Record<string, any>, TCol extends Record<string, any> = Record<string, any>">
-    import { nextControlId } from "$lib/utils.js";
-    import type { ColAlignment, WjDvColumn } from "$lib/WjDataView/WjDataView.svelte";
-    import FavButtonMenuItem from "./FavButtonMenuItem.svelte";
-    import FavMenuItem from "./FavMenuItem.svelte";
-    import GlassyDropdownMenu from "./GlassyDropdownMenu.svelte";
+
+<script
+    lang="ts"
+    generics="TRow extends Record<string, any> = {}, TCol extends Record<string, any> = {}"
+>
+    import { combineClasses, nextControlId } from '$lib/utils.js';
+    import type { ColAlignment, WjDvColumn } from '$lib/WjDataView/WjDataView.svelte';
+    import FavButtonMenuItem from './FavButtonMenuItem.svelte';
+    import FavMenuItem from './FavMenuItem.svelte';
+    import GlassyDropdownMenu from './GlassyDropdownMenu.svelte';
     import keyStateStore from './keyStateStore.svelte.js';
 
     type Props = {
@@ -35,29 +37,31 @@
         maxWidth?: string;
     };
 
-    let {
-        col = $bindable(),
-        maxWidth,
-    }: Props = $props();
+    let { col = $bindable(), maxWidth }: Props = $props();
 
     let id = nextControlId();
     let pinIcon = $derived(`bi-pin-${col.pinned ? 'fill' : 'angle'}`);
     let textWrap = $state(!col.noTextWrap);
-    let colAlignmentIndex = $derived(allAlignments.findIndex(a => a === (col.alignment ?? 'start')));
-    let alignmentIcon = $derived(alignmentIcons[allAlignments[keyStateStore.ctrl ? previousAlignmentIndex() : nextAlignmentIndex()]]);
+    let colAlignmentIndex = $derived(allAlignments.findIndex((a) => a === (col.alignment ?? 'start')));
+    let alignmentIcon = $derived(
+        alignmentIcons[allAlignments[keyStateStore.ctrl ? previousAlignmentIndex() : nextAlignmentIndex()]],
+    );
 
     $effect.pre(() => {
         col.noTextWrap = !textWrap;
     });
     $effect.pre(() => {
         if (typeof col.minWidth === 'number' && col.minWidth > (col.width ?? Number.MAX_VALUE)) {
-            col.width = col.minWidth
+            col.width = col.minWidth;
         }
     });
     $effect.pre(() => {
-        col.headerClass = col.pinned ? 'header-background pinned-header' : undefined;
+        col.headerClass = combineClasses({
+            'header-background pinned-header': !!col.pinned,
+            'header-sync': !!col.sync,
+        });
         col.dataClass = col.pinned ? 'pinned-cell' : undefined;
-    })
+    });
 
     function nextAlignmentIndex() {
         return (colAlignmentIndex + 1) % allAlignments.length;
@@ -95,7 +99,7 @@
                     max="15"
                     step="0.1"
                     bind:value={col.minWidth}
-                >
+                />
                 <datalist id="{id}_{col.key}_minwidth_dl">
                     <option value="3">3</option>
                     <option value="5">5</option>
@@ -110,15 +114,36 @@
             <FavMenuItem noMenuItem bind:pinPreference={col.pinnedFunctions.align}>
                 <div class="btn-toolbar px-3 flex-fill align-self-center">
                     <div class="btn-group btn-group-sm me-1">
-                        <input type="radio" name="{id}_{col.key}_alignment" bind:group={col.alignment} value='start' class="btn-check" id="{id}_{col.key}_align_left">
+                        <input
+                            type="radio"
+                            name="{id}_{col.key}_alignment"
+                            bind:group={col.alignment}
+                            value="start"
+                            class="btn-check"
+                            id="{id}_{col.key}_align_left"
+                        />
                         <label for="{id}_{col.key}_align_left" title="Align left" class="btn btn-outline-primary">
                             <i class="bi bi-text-left"></i>
                         </label>
-                        <input type="radio" name="{id}_{col.key}_alignment" bind:group={col.alignment} value='center' class="btn-check" id="{id}_{col.key}_align_center">
+                        <input
+                            type="radio"
+                            name="{id}_{col.key}_alignment"
+                            bind:group={col.alignment}
+                            value="center"
+                            class="btn-check"
+                            id="{id}_{col.key}_align_center"
+                        />
                         <label for="{id}_{col.key}_align_center" title="Align center" class="btn btn-outline-primary">
                             <i class="bi bi-text-center"></i>
                         </label>
-                        <input type="radio" name="{id}_{col.key}_alignment" bind:group={col.alignment} value='end' class="btn-check" id="{id}_{col.key}_align_right">
+                        <input
+                            type="radio"
+                            name="{id}_{col.key}_alignment"
+                            bind:group={col.alignment}
+                            value="end"
+                            class="btn-check"
+                            id="{id}_{col.key}_align_right"
+                        />
                         <label for="{id}_{col.key}_align_right" title="Align right" class="btn btn-outline-primary">
                             <i class="bi bi-text-right"></i>
                         </label>
@@ -129,17 +154,17 @@
             <FavButtonMenuItem
                 class={textWrap ? 'active' : undefined}
                 bind:pinPreference={col.pinnedFunctions.textWrap}
-                onClick={() => textWrap = !textWrap}
+                onClick={() => (textWrap = !textWrap)}
             >
                 <i class="bi bi-text-wrap"></i>
                 Text wrap
             </FavButtonMenuItem>
             <div class="dropdown-divider"></div>
-            <FavButtonMenuItem bind:pinPreference={col.pinnedFunctions.hide} onClick={() => col.hidden = true}>
+            <FavButtonMenuItem bind:pinPreference={col.pinnedFunctions.hide} onClick={() => (col.hidden = true)}>
                 <i class="bi bi-eye-slash me-2"></i>
                 Hide column
             </FavButtonMenuItem>
-            <FavButtonMenuItem bind:pinPreference={col.pinnedFunctions.pin} onClick={() => col.pinned = !col.pinned}>
+            <FavButtonMenuItem bind:pinPreference={col.pinnedFunctions.pin} onClick={() => (col.pinned = !col.pinned)}>
                 <i class="bi {pinIcon} me-2"></i>
                 {col.pinned ? 'Unpin' : 'Pin'} column
             </FavButtonMenuItem>
@@ -158,7 +183,7 @@
             </button>
         {/if}
         {#if col.pinnedFunctions.textWrap}
-            <input type="checkbox" class="btn-check" id="{id}_textwrap" bind:checked={textWrap}>
+            <input type="checkbox" class="btn-check" id="{id}_textwrap" bind:checked={textWrap} />
             <label for="{id}_textwrap" class="btn btn-neutral btn-sm">
                 <i class="bi bi-text-wrap"></i>
             </label>
@@ -167,7 +192,7 @@
             <button
                 type="button"
                 class="btn btn-sm btn-neutral"
-                onclick={() => col.hidden = true}
+                onclick={() => (col.hidden = true)}
                 aria-label="{col.hidden ? 'Show' : 'Hide'} column"
             >
                 <span title="Click to {col.hidden ? 'show' : 'hide'}">
@@ -179,7 +204,7 @@
             <button
                 type="button"
                 class="btn btn-sm btn-neutral"
-                onclick={() => col.pinned = !col.pinned}
+                onclick={() => (col.pinned = !col.pinned)}
                 aria-label="{col.pinned ? 'Unp' : 'P'}in column"
             >
                 <span title="Click to {col.pinned ? 'un' : ''}pin">
@@ -193,5 +218,10 @@
 <style>
     .force-max-content {
         min-width: max-content;
+    }
+    :global {
+        .header-sync {
+            box-shadow: inset 0 -0.3em 0 rgb(179, 51, 0);
+        }
     }
 </style>

@@ -7,6 +7,7 @@
     import { amountFormatterFactory, currencyFormatter } from "../../demolib/numberFormatters.js";
     import Numeric from "../../demolib/Numeric.svelte";
     import Cell from "./Cell.svelte";
+    import { salesColumns } from "./columnHierarchy.svelte.js";
     import DataViewCaption from "./DataViewCaption.svelte";
     import DetailedView from "./DetailedView.svelte";
     import DrilldownButton from "./DrilldownButton.svelte";
@@ -24,47 +25,6 @@
         countryName,
     }: Props = $props();
 
-    let columns = $state<HeaderColumn<GeoSaleByCity, GeoSaleColumn>[]>([
-        {
-            key: 'city',
-            text: 'City',
-            alignment: 'start',
-            dataType: 'string',
-            pinnedFunctions: {},
-        },
-        {
-            key: 'sales_amount',
-            text: 'Total Amount',
-            alignment: 'end',
-            dataType: 'real-amount',
-            numberFormatter: amountFormatterFactory(2),
-            pinnedFunctions: {},
-        },
-        {
-            key: 'quantity_sold',
-            text: 'Total Quantity',
-            alignment: 'end',
-            dataType: 'int-amount',
-            numberFormatter: amountFormatterFactory(0),
-            pinnedFunctions: {},
-        },
-        {
-            key: 'total_sales',
-            text: 'Total Sales',
-            alignment: 'end',
-            dataType: 'currency',
-            numberFormatter: currencyFormatter,
-            pinnedFunctions: {},
-        },
-        {
-            key: 'total_costs',
-            text: 'Total Costs',
-            alignment: 'end',
-            dataType: 'currency',
-            numberFormatter: currencyFormatter,
-            pinnedFunctions: {},
-        },
-    ]);
     let data = $state(defineData(
         sourceData.byCity.filter(r => r.country_code === countryCode),
         r => `${r.country_code}_${r.city}`
@@ -74,18 +34,20 @@
         rowSelectionHighlight: true,
         rowTracking: true,
         striping: true,
+        fillerPattern: 'diagstriped',
     });
 </script>
 
 <Toolbar bind:options={dvOptions} moreInfoTarget="secondLevelCanvas" />
 <WjDataView
-    bind:columns
+    bind:columns={salesColumns.byCity}
     bind:data
     noViewport={globalOptions.noViewportInChildren}
     rowTracking={dvOptions.rowTracking}
     rowSelectionHighlight={dvOptions.rowSelectionHighlight}
     striped={dvOptions.striping}
     gridLines={dvOptions.gridLines}
+    fillerPattern={dvOptions.fillerPattern}
     defaultWidth={12}
     controlColumn={{
         width: 3,
@@ -113,7 +75,7 @@
         </Cell>
     {/snippet}
     {#snippet controlHeaderCell()}
-        <AllColumnsDropdown bind:columns />
+        <AllColumnsDropdown bind:columns={salesColumns.byCity} />
     {/snippet}
     {#snippet controlDataCell(ctx)}
         <!-- svelte-ignore binding_property_non_reactive -->

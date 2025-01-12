@@ -1,23 +1,23 @@
 <script lang="ts">
-    import { goto } from "$app/navigation";
-    import { base } from "$app/paths";
-    import { page } from "$app/stores";
-    import WjDataView, { type WjDvRow } from "$lib/WjDataView/WjDataView.svelte";
-    import WjDataViewTheme from "$lib/WjDataViewTheme/WjDataViewTheme.svelte";
-    import type { Person } from "../data-models.js";
-    import AllColumnsDropdown from "../demolib/AllColumnsDropdown.svelte";
-    import { demoOptions } from "../demolib/demoOptions.svelte.js";
-    import EditInGitHub from "../demolib/EditInGitHub.svelte";
-    import HeaderCell, { type HeaderColumn } from "../demolib/HeaderCell.svelte";
-    import Numeric from "../demolib/Numeric.svelte";
-    import { themeOptions } from "../demolib/themeOptions.svelte.js";
-    import MoreInfo from "./MoreInfo.svelte";
-    import Toolbar from "./Toolbar.svelte";
+    import { goto } from '$app/navigation';
+    import { base } from '$app/paths';
+    import { page } from '$app/stores';
+    import WjDataView, { type WjDvRow } from '$lib/WjDataView/WjDataView.svelte';
+    import WjDataViewTheme from '$lib/WjDataViewTheme/WjDataViewTheme.svelte';
+    import type { Person } from '../data-models.js';
+    import AllColumnsDropdown from '../demolib/AllColumnsDropdown.svelte';
+    import { demoOptions } from '../demolib/demoOptions.svelte.js';
+    import EditInGitHub from '../demolib/EditInGitHub.svelte';
+    import HeaderCell, { type HeaderColumn } from '../demolib/HeaderCell.svelte';
+    import Numeric from '../demolib/Numeric.svelte';
+    import { themeOptions } from '../demolib/themeOptions.svelte.js';
+    import MoreInfo from './MoreInfo.svelte';
+    import Toolbar from './Toolbar.svelte';
 
     let {
         data,
     }: {
-        data: { data: WjDvRow<Person>[]; }
+        data: { data: WjDvRow<Person>[] };
     } = $props();
 
     let gridData = $state([] as WjDvRow<Person>[]);
@@ -54,7 +54,7 @@
             key: 'full_name',
             text: 'Full Name',
             width: 9,
-            get: (r) => `${r.gender === 'Female' ? 'Mrs.' : 'Mr.' } ${r.last_name}, ${r.first_name}`,
+            get: (r) => `${r.gender === 'Female' ? 'Mrs.' : 'Mr.'} ${r.last_name}, ${r.first_name}`,
             alignment: 'start',
             pinnedFunctions: {},
         },
@@ -157,9 +157,7 @@ import &#123; WjDataView &#125; from '@wjfe/dataview';</pre>
     </div>
     <MoreInfo />
     <Toolbar />
-    <div
-        class="flex-fill position-relative"
-    >
+    <div class="flex-fill position-relative">
         <WjDataViewTheme theme={themeOptions.currentTheme}>
             <WjDataView
                 bind:columns
@@ -177,6 +175,8 @@ import &#123; WjDataView &#125; from '@wjfe/dataview';</pre>
                     hidden: !demoOptions.showControlColumn,
                     headerClass: 'header-background pinned-header',
                     dataClass: 'pinned-cell',
+                    alignment: 'start',
+                    pinnedFunctions: {},
                 }}
             >
                 {#snippet controlHeaderCell()}
@@ -184,21 +184,21 @@ import &#123; WjDataView &#125; from '@wjfe/dataview';</pre>
                         <input
                             type="checkbox"
                             class="form-check-input"
-                            indeterminate="{allSelected === null}"
+                            indeterminate={allSelected === null}
                             checked={!!allSelected}
-                            oninput="{ev => selectAllData(ev.currentTarget.checked)}"
-                        >
+                            oninput={(ev) => selectAllData(ev.currentTarget.checked)}
+                        />
                         <AllColumnsDropdown bind:columns />
                     </div>
                 {/snippet}
                 {#snippet controlDataCell(ctx)}
                     <div class="px-2 d-flex flex-row gap-1">
                         <!-- svelte-ignore binding_property_non_reactive -->
-                        <input type="checkbox" class="form-check-input" bind:checked={ctx.row.wjdv.selected}>
+                        <input type="checkbox" class="form-check-input" bind:checked={ctx.row.wjdv.selected} />
                         <button
                             type="button"
                             class="btn btn-sm btn-neutral"
-                            onclick={() => ctx.row.wjdv.expanded = !ctx.row.wjdv.expanded}
+                            onclick={() => (ctx.row.wjdv.expanded = !ctx.row.wjdv.expanded)}
                             aria-label={ctx.row.wjdv.expanded ? 'contract' : 'expand'}
                         >
                             <i class="bi bi-chevron-bar-{ctx.row.wjdv.expanded ? 'contract' : 'expand'}"></i>
@@ -222,8 +222,22 @@ import &#123; WjDataView &#125; from '@wjfe/dataview';</pre>
                     <div class="card mx-3 my-2">
                         <h4 class="card-header">Data Drilldown</h4>
                         <div class="card-body">
-                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Tenetur vero voluptatibus libero laboriosam nisi explicabo quia ab nam mollitia, rem beatae soluta inventore doloribus. Iure omnis saepe blanditiis, fugit voluptates, sit eaque perferendis minima doloremque ea quia dolores hic ipsam! Odit esse voluptatibus minus corrupti harum, mollitia, temporibus corporis quam enim velit vitae eaque? Dolor sunt laudantium possimus ea iusto quam suscipit exercitationem dicta? Id reiciendis iusto magni vitae animi corrupti illum quaerat nisi repudiandae enim, saepe officiis ab cupiditate in, aliquid totam incidunt dolores nam recusandae at sequi ipsa? Ipsa, placeat! Debitis maiores quos eum nihil ducimus eligendi eaque.</p>
-                            <p>To see an actual data drill-down scenario, visit the <a href="{base}/sales">sales demo page</a>.</p>
+                            <p>
+                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Tenetur vero voluptatibus
+                                libero laboriosam nisi explicabo quia ab nam mollitia, rem beatae soluta inventore
+                                doloribus. Iure omnis saepe blanditiis, fugit voluptates, sit eaque perferendis minima
+                                doloremque ea quia dolores hic ipsam! Odit esse voluptatibus minus corrupti harum,
+                                mollitia, temporibus corporis quam enim velit vitae eaque? Dolor sunt laudantium
+                                possimus ea iusto quam suscipit exercitationem dicta? Id reiciendis iusto magni vitae
+                                animi corrupti illum quaerat nisi repudiandae enim, saepe officiis ab cupiditate in,
+                                aliquid totam incidunt dolores nam recusandae at sequi ipsa? Ipsa, placeat! Debitis
+                                maiores quos eum nihil ducimus eligendi eaque.
+                            </p>
+                            <p>
+                                To see an actual data drill-down scenario, visit the <a href="{base}/sales"
+                                    >sales demo page</a
+                                >.
+                            </p>
                         </div>
                     </div>
                 {/snippet}
@@ -238,21 +252,21 @@ import &#123; WjDataView &#125; from '@wjfe/dataview';</pre>
         --header-bg-color: rgba(0, 0, 0, 0.1);
         box-shadow: 0 9999px 9999px var(--header-bg-color) inset;
 
-        :global(*[data-bs-theme="dark"]) & {
+        :global(*[data-bs-theme='dark']) & {
             --header-bg-color: rgba(255, 255, 255, 0.15);
         }
     }
     :global(.pinned-header) {
         --header-bg-color: rgba(5, 128, 102, 0.15);
-        
-        :global(*[data-bs-theme="dark"]) & {
+
+        :global(*[data-bs-theme='dark']) & {
             --header-bg-color: rgba(72, 250, 212, 0.332);
         }
     }
     :global(.pinned-cell) {
         --pinned-cell-bg-color: rgba(13, 174, 139, 0.05);
         box-shadow: 0 9999px 9999px var(--pinned-cell-bg-color) inset;
-        :global(*[data-bs-theme="dark"]) & {
+        :global(*[data-bs-theme='dark']) & {
             --pinned-cell-bg-color: rgba(72, 250, 211, 0.086);
         }
     }
