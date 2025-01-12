@@ -237,6 +237,8 @@ The complete list of CSS variables that can be set for the data view component a
 | `--wjdv-grid-line-width` | `0.01em` | `0.01em` | Width of the table's border lines. |
 | `--wjdv-grid-line-style` | `solid` | `solid` | Style used in the table's border lines. |
 | `--wjdv-grid-line-color` | `currentColor` | `currentColor` | Color used in the table's border lines. |
+| `--wjdv-i-filler-color` | `#ddd` | `#ddd` | Color used to render the pattern in filler columns. |
+| `--wjdv-filler-pattern-size` | `5px` | `5px` | Size of the pattern in filler columns. |
 
 ### Styling the Header Row
 
@@ -284,6 +286,15 @@ If you **must** set `background-color`, you'll have to fight the component using
 
 Remember:  If you set the background color, it must be opaque so pinned columns work as expected.
 
+## Cross Column Synchronization
+
+> Since **v0.12.0**
+
+It is possible to synchronize any property of a column with the same property in the column object of another dataview 
+instance, up to the point where they can be visually aligned.  This is a desirable feature in master-child scenarios 
+because users can have related columns perfectly aligned between master and child tables.  See 
+[this detailed README](./docs/ColSync.md) to learn how to make use of this one-in-a-kind feature.
+
 ## Reference
 
 ### Props
@@ -303,6 +314,7 @@ Remember:  If you set the background color, it must be opaque so pinned columns 
 | `controlColumn` | `ControlColumn<TRow, TCol>` | `undefined` | Yes | Specifies the shape of the control column, which an extra column that is always the first pinned column. |
 | `noViewport` | `boolean` | `false` | | Allows the exclusion of the component's viewport. |
  `propSpreadingTarget` | `PropSpreadingTarget` | `root` | | Establishes the target for property spreading. |
+| `fillerPattern` | `'checkered' \| 'diagstriped' \| 'triangles'` | `'diagstriped'` | | Sets the desired pattern for the filler columns that may appear when columns are cross-synchronized. |
 
 ### Snippets
 
@@ -337,5 +349,6 @@ None.
 - [x] Row selection
 - [x] Control column
 - [x] Header styling
+- [x] Cross Column Synchronization
 - [ ] Make cell/row/column padding themeable
 - [ ] dataRow snippet (complex)

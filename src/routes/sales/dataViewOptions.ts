@@ -13,5 +13,6 @@ export function dataViewOptions() {
     newOpts.rowSelectionHighlight = true;
     newOpts.rowTracking = true;
     newOpts.striping = true;
+    newOpts.fillerPattern = 'diagstriped';
     return newOpts;
 };

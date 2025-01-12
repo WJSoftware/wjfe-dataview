@@ -1,4 +1,4 @@
-<script lang="ts" generics="TRow extends Record<string, any> = Record<string, any>">
+<script lang="ts" generics="TRow extends Record<string, any> = {}">
     import type { WjDvRow } from '$lib/WjDataView/WjDataView.svelte';
 
     type Props = {

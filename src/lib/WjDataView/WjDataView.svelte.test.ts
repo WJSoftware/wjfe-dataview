@@ -1,7 +1,8 @@
-import { render } from '@testing-library/svelte';
+import { render, screen } from '@testing-library/svelte';
 import { createRawSnippet, flushSync } from 'svelte';
 import { describe, expect, test, vi } from 'vitest';
 import WjDataView, { defineData, GridLines, type ColAlignment, type ControlColumn, type DataCellContext, type GridLinesEnum, type PropSpreadingTarget, type WjDvColumn, type WjDvRow } from './WjDataView.svelte';
+import { CrossSynchronizer, crossVisualSync } from '$lib/cross-sync/CrossSynchronizer.svelte.js';
 
 describe('WjDataView', () => {
     describe('Initial Render', () => {
@@ -1306,7 +1307,7 @@ describe('WjDataView', () => {
                     },
                 ]);
                 const data = $state(defineData([{ id: 1 }]));
-                const controlColumn= $state<ControlColumn>({
+                const controlColumn = $state<ControlColumn>({
                     resizable: false,
                     width: 5,
                 });
@@ -1341,7 +1342,7 @@ describe('WjDataView', () => {
                     },
                 ]);
                 const data = $state(defineData([{ id: 1 }]));
-                const controlColumn= $state<ControlColumn>({
+                const controlColumn = $state<ControlColumn>({
                     resizable: false,
                     minWidth: 5,
                     useMinWidthAsWidth: !useMinWidthAsWidth
@@ -1384,7 +1385,7 @@ describe('WjDataView', () => {
                     },
                 ]);
                 const data = $state(defineData([{ id: 1 }]));
-                const controlColumn= $state<ControlColumn>({
+                const controlColumn = $state<ControlColumn>({
                     resizable: false,
                     hidden: !hidden
                 });
@@ -1720,7 +1721,7 @@ describe('WjDataView', () => {
                 expect(headerCells.length).toEqual(column.hidden ? 2 : 3);
                 expect(dataCells.length).toEqual(column.hidden ? 1 : 2);
                 expect(headerCells[1]?.textContent?.trim()).toEqual(column.hidden ? '' : column.text);
-                expect(dataCells[1]?.textContent?.trim()).toEqual(column.hidden ? undefined : data[0][column.key]);
+                expect(dataCells[1]?.textContent?.trim()).toEqual(column.hidden ? undefined : data[0][column.key as keyof typeof data[0]]);
             });
             test.each<{ alignment: ColAlignment; text: string; }>([
                 {
@@ -2125,6 +2126,145 @@ describe('WjDataView', () => {
 
                 // Assert.
                 expect(getFn).toHaveBeenCalledOnce();
+            });
+        });
+        describe('Column Synchronization', () => {
+            /*
+            The following test merely asserts the existence of filler columns in the right places because jsdom does 
+            not support things like getBoundingClientRect().  So actual assertion of the left coordinate of the columns 
+            is currently not possible.
+            */
+            test.each<{
+                cols1: WjDvColumn[];
+                cols2: WjDvColumn[];
+                syncCol1: WjDvColumn;
+                syncCol2: WjDvColumn;
+                expectFiller1: boolean;
+                expectFiller2: boolean;
+                text: string;
+            }>([
+                {
+                    cols1: [
+                        {
+                            key: 'a',
+                            text: 'A',
+                            resizable: false,
+                            width: 10,
+                        },
+                        {
+                            key: 'b',
+                            text: 'B',
+                            resizable: false,
+                            width: 5,
+                        },
+                    ],
+                    cols2: [
+                        {
+                            key: 'a',
+                            text: 'A',
+                            resizable: false,
+                            width: 10,
+                        },
+                        {
+                            key: 'b',
+                            text: 'B',
+                            resizable: false,
+                            width: 5,
+                        },
+                    ],
+                    get syncCol1() { return this.cols1[1]; },
+                    get syncCol2() { return this.cols2[1]; },
+                    expectFiller1: false,
+                    expectFiller2: false,
+                    text: 'Identical columns',
+                },
+                {
+                    cols1: [
+                        {
+                            key: 'a',
+                            text: 'A',
+                            resizable: false,
+                            width: 5,
+                        },
+                        {
+                            key: 'b',
+                            text: 'B',
+                            resizable: false,
+                            width: 5,
+                        },
+                    ],
+                    cols2: [
+                        {
+                            key: 'a',
+                            text: 'A',
+                            resizable: false,
+                            width: 10,
+                        },
+                        {
+                            key: 'b',
+                            text: 'B',
+                            resizable: false,
+                            width: 5,
+                        },
+                    ],
+                    get syncCol1() { return this.cols1[1]; },
+                    get syncCol2() { return this.cols2[1]; },
+                    expectFiller1: true,
+                    expectFiller2: false,
+                    text: 'First column in first set is narrower',
+                },
+                {
+                    cols1: [
+                        {
+                            key: 'a',
+                            text: 'A',
+                            resizable: false,
+                            width: 10,
+                        },
+                        {
+                            key: 'b',
+                            text: 'B',
+                            resizable: false,
+                            width: 5,
+                        },
+                    ],
+                    cols2: [
+                        {
+                            key: 'a',
+                            text: 'A',
+                            resizable: false,
+                            width: 5,
+                        },
+                        {
+                            key: 'b',
+                            text: 'B',
+                            resizable: false,
+                            width: 5,
+                        },
+                    ],
+                    get syncCol1() { return this.cols1[1]; },
+                    get syncCol2() { return this.cols2[1]; },
+                    expectFiller1: false,
+                    expectFiller2: true,
+                    text: 'First column in second set is narrower',
+                },
+            ])("Should ensure same left coordinate on synchronized columns: $text", async (tc) => {
+                // Arrange.
+                const synchronizer = new CrossSynchronizer();
+                const cols1 = $state(synchronizer.createProperty<WjDvColumn>(tc.cols1, ...crossVisualSync));
+                const cols2 = $state(synchronizer.createProperty<WjDvColumn>(tc.cols2, ...crossVisualSync));
+                const data = $state(defineData([{ id: 1 }]));
+                synchronizer.syncColumns(tc.syncCol1, tc.syncCol2);
+
+                // Act.
+                render(WjDataView, { columns: cols1, data, 'data-testid': 'dv1' });
+                render(WjDataView, { columns: cols2, data, 'data-testid': 'dv2' });
+
+                // Assert.
+                const headers1 = (await screen.findByTestId('dv1')).querySelectorAll('[role="columnheader"]');
+                const headers2 = (await screen.findByTestId('dv2')).querySelectorAll('[role="columnheader"]');
+                expect(headers1.length).toEqual(tc.cols1.length + 1 + (tc.expectFiller1 ? 1 : 0));
+                expect(headers2.length).toEqual(tc.cols2.length + 1 + (tc.expectFiller2 ? 1 : 0));
             });
         });
     });
