@@ -9,7 +9,6 @@
     import { salesColumns } from './columnHierarchy.svelte.js';
     import DataViewCaption from './DataViewCaption.svelte';
     import type { WjDataViewOptions } from './Toolbar.svelte';
-    import Toolbar from './Toolbar.svelte';
 
     type Props = {
         sourceData: GeoSalesResult;
@@ -29,7 +28,6 @@
     });
 </script>
 
-<Toolbar bind:options={dvOptions} moreInfoTarget="thirdLevelCanvas" />
 <WjDataView
     bind:columns={salesColumns.detailed}
     bind:data
@@ -49,7 +47,7 @@
     class="mb-5"
 >
     {#snippet caption()}
-        <DataViewCaption title="Raw Data: {city}" />
+        <DataViewCaption title="Raw Data: {city}" bind:dvOptions moreInfoTarget="thirdLevelCanvas" />
     {/snippet}
     {#snippet headerCell(ctx)}
         <!-- svelte-ignore binding_property_non_reactive -->
