@@ -36,7 +36,7 @@
 		"@types/node": "^22.10.1",
 		"gh-pages": "^6.1.1",
 		"jsdom": "^25.0.1",
-		"publint": "^0.2.12",
+		"publint": "^0.3.2",
 		"sass": "^1.81.0",
 		"svelte-check": "^4.1.1",
 		"tslib": "^2.7.0",
