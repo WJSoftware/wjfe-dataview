@@ -109,7 +109,7 @@
 <svelte:document on:mousemove="{handleMouseMove}" on:mouseup="{handleMouseUp}" />
 
 {#if dragStart !== null}
-	<div class="parent-overlay" style:height={`${parentH}px`} transition:fade={{ duration: 170 }}>
+	<div class="parent-overlay" transition:fade={{ duration: 170 }}>
 		<div class="overlay item-overlay" style:width="{itemOverlayWidth}px"></div>
 		<div
 			class={combineClasses('overlay delta-overlay', { 'delta-neg': delta < 0, 'delta-pos': delta > 0 })}
@@ -123,24 +123,28 @@
 	class="handle"
 	bind:this={handle}
 	onmousedown={handleMouseDown}
-	style:height="{parentH}px"
 	role="separator"
 	aria-valuenow={delta}
 >
-	<svg viewBox="0 0 2 50" xmlns="http://www.w3.org/2000/svg">
-		<line x1="0" y1="10" x2="0" y2="40" stroke="currentColor" stroke-width="2" />
+	<!-- Needed to give width to the div... for some reason explicit CSS width doesn't work -->
+	<svg viewBox="0 0 2 1" xmlns="http://www.w3.org/2000/svg">
 	</svg>
 </div>
 
 <style lang="scss">
 	div.handle {
 		width: var(--wjdv-resizer-width, 0.3em);
+		height: 100%;
 		cursor: col-resize;
 		margin-left: auto;
 
-		& > svg {
-			height: 100%;
-			width: 100%;
+		&::before {
+			content: '';
+			position: absolute;
+			top: 10%;
+			bottom: 10%;
+			border-left: 0.15em solid currentColor;
+			pointer-events: none;
 		}
 	}
 
@@ -159,6 +163,7 @@
 		position: absolute;
 		top: 0;
 		left: 0;
+		height: 100%;
 		box-sizing: border-box;
 		z-index: 10;
 	}
