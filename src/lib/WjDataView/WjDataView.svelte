@@ -1019,6 +1019,11 @@ const data = defineData<MyData>([
         display: flex;
         flex-direction: column;
 
+        & [role="row"] {
+            content-visibility: auto;
+            contain: layout paint;
+        }
+
         &.striped {
             & > div.dataview-row-bg:nth-of-type(2n) {
                 & > div.dataview-row-s {
