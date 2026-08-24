@@ -26,7 +26,6 @@
 	let dragStart = $state<number | null>(null);
 	let delta = $state(0);
 	let parentW = $state(0);
-	let parentH = $state(0);
 	let minSizePx = $state(0);
 	let maxSizePx = $state<number | undefined>(undefined);
 	let handle: HTMLDivElement;
@@ -117,7 +116,7 @@
 		></div>
 	</div>
 {/if}
-<div class="parent-template" bind:clientWidth={parentW} bind:clientHeight={parentH}></div>
+<div class="parent-template" bind:clientWidth={parentW}></div>
 <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 <div
 	class="handle"
