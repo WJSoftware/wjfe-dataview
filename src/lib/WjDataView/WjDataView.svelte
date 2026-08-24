@@ -930,6 +930,7 @@ const data = defineData<MyData>([
         & > div {
             display: flex;
             flex-direction: row;
+            align-items: stretch;
         }
     }
 
@@ -987,6 +988,10 @@ const data = defineData<MyData>([
     }
 
     div.col-header {
+        & > div {
+            height: 100%;
+        }
+        
         &.sticky-header {
             position: sticky;
             top: 0;
