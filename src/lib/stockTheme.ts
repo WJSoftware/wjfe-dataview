@@ -117,7 +117,7 @@ export type Theme = {
  */
 export const stockLight: Theme = {
     table: {
-        backgroundColor: '255, 255, 255',
+        backgroundColor: '250, 250, 250',
         opacity: 1,
         color: 'inherit'
     },
@@ -171,7 +171,7 @@ export const stockLight: Theme = {
  */
 export const stockDark: Theme = {
     table: {
-        backgroundColor: '0, 0, 0',
+        backgroundColor: '7, 7, 7',
         opacity: 1,
         color: 'inherit'
     },

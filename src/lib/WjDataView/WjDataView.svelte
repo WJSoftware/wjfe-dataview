@@ -930,6 +930,7 @@ const data = defineData<MyData>([
         & > div {
             display: flex;
             flex-direction: row;
+            align-items: stretch;
         }
     }
 
@@ -987,6 +988,10 @@ const data = defineData<MyData>([
     }
 
     div.col-header {
+        & > div {
+            height: 100%;
+        }
+        
         &.sticky-header {
             position: sticky;
             top: 0;
@@ -1018,6 +1023,11 @@ const data = defineData<MyData>([
     div.dataview-body {
         display: flex;
         flex-direction: column;
+
+        & [role="row"] {
+            content-visibility: auto;
+            contain: layout paint;
+        }
 
         &.striped {
             & > div.dataview-row-bg:nth-of-type(2n) {

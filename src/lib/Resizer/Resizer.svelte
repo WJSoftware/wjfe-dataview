@@ -25,8 +25,8 @@
 
 	let dragStart = $state<number | null>(null);
 	let delta = $state(0);
+	let keyboardResizing = $state(false);
 	let parentW = $state(0);
-	let parentH = $state(0);
 	let minSizePx = $state(0);
 	let maxSizePx = $state<number | undefined>(undefined);
 	let handle: HTMLDivElement;
@@ -50,24 +50,27 @@
 		maxSizePx = convert(maxSize, 'em', 'px');
 	});
 
-	function handleMouseDown(e: MouseEvent) {
+	function handlePointerDown(e: PointerEvent) {
 		e.preventDefault();
 		e.stopPropagation();
+		(e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
 		dragStart = e.screenX;
 		document.body.style.cursor = 'col-resize';
 		resizeStart?.();
 	}
 
-	function handleMouseMove(e: MouseEvent) {
-		if (dragStart !== null) {
+	function handlePointerMove(e: PointerEvent) {
+		if (dragStart !== null && !keyboardResizing) {
+			e.preventDefault();
 			delta = e.screenX - dragStart;
 		}
 	}
 
-	function handleMouseUp(e: MouseEvent) {
+	function handlePointerUp(e?: PointerEvent) {
 		if (dragStart === null) {
 			return;
 		}
+		(e?.currentTarget as HTMLElement | null)?.releasePointerCapture(e?.pointerId ?? 0);
 		dragStart = null;
 		document.body.style.cursor = 'auto';
 		resizeEnd?.();
@@ -75,6 +78,49 @@
 			return;
 		}
 		resize?.(convert(itemOverlayWidth + (delta < 0 ? 0 : deltaOverlayWidth), 'px', 'em'));
+	}
+
+	function handleKeyDown(e: KeyboardEvent) {
+		if (e.key === 'Escape' && dragStart !== null) {
+			cancelResize();
+			e.preventDefault();
+			return;
+		}
+		if (e.key === 'Enter' && !e.shiftKey && !e.ctrlKey && !e.altKey && !e.metaKey) {
+			if (dragStart !== null) {
+				handlePointerUp();
+				keyboardResizing = false;
+				delta = 0;
+			}
+			else {
+				dragStart = 0;
+				keyboardResizing = true;
+				resizeStart?.();
+			}
+			e.preventDefault();
+			return;
+		}
+		if (!e.shiftKey || (e.ctrlKey || e.altKey || e.metaKey)) {
+			return;
+		}
+		const amount = 10;
+		switch (e.key) {
+			case 'ArrowLeft':
+				delta -= amount;
+				break;
+			case 'ArrowRight':
+				delta += amount;
+				break;
+			default:
+				return;
+		}
+		e.preventDefault();
+	}
+
+	function cancelResize() {
+		dragStart = null;
+		keyboardResizing = false;
+		document.body.style.cursor = 'auto';
 	}
 
 	function convert(value: number | undefined, fromUnit: string, toUnit: string) {
@@ -106,10 +152,8 @@
 	}
 </script>
 
-<svelte:document on:mousemove="{handleMouseMove}" on:mouseup="{handleMouseUp}" />
-
 {#if dragStart !== null}
-	<div class="parent-overlay" style:height={`${parentH}px`} transition:fade={{ duration: 170 }}>
+	<div class="parent-overlay" transition:fade={{ duration: 170 }}>
 		<div class="overlay item-overlay" style:width="{itemOverlayWidth}px"></div>
 		<div
 			class={combineClasses('overlay delta-overlay', { 'delta-neg': delta < 0, 'delta-pos': delta > 0 })}
@@ -117,30 +161,41 @@
 		></div>
 	</div>
 {/if}
-<div class="parent-template" bind:clientWidth={parentW} bind:clientHeight={parentH}></div>
+<div class="parent-template" bind:clientWidth={parentW}></div>
 <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
 <div
 	class="handle"
 	bind:this={handle}
-	onmousedown={handleMouseDown}
-	style:height="{parentH}px"
+	onpointerdown={handlePointerDown}
+	onpointermove={handlePointerMove}
+	onpointerup={handlePointerUp}
 	role="separator"
 	aria-valuenow={delta}
+	tabindex="0"
+	onkeydown={handleKeyDown}
+	onblur={cancelResize}
 >
-	<svg viewBox="0 0 2 50" xmlns="http://www.w3.org/2000/svg">
-		<line x1="0" y1="10" x2="0" y2="40" stroke="currentColor" stroke-width="2" />
+	<!-- Needed to give width to the div... for some reason explicit CSS width doesn't work -->
+	<svg viewBox="0 0 2 1" xmlns="http://www.w3.org/2000/svg">
 	</svg>
 </div>
 
 <style lang="scss">
 	div.handle {
 		width: var(--wjdv-resizer-width, 0.3em);
+		height: 100%;
 		cursor: col-resize;
 		margin-left: auto;
+		touch-action: none;
 
-		& > svg {
-			height: 100%;
-			width: 100%;
+		&::before {
+			content: '';
+			position: absolute;
+			top: 10%;
+			bottom: 10%;
+			border-left: 0.15em solid currentColor;
+			pointer-events: none;
 		}
 	}
 
@@ -159,6 +214,7 @@
 		position: absolute;
 		top: 0;
 		left: 0;
+		height: 100%;
 		box-sizing: border-box;
 		z-index: 10;
 	}
