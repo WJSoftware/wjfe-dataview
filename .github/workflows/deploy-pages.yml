@@ -1,0 +1,22 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/deploy-pages.yml'
+      - 'svelte.config.js'
+      - 'vite.config.ts'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    uses: WJSoftware/cicd/.github/workflows/build-and-deploy-pages.yml@main
+    with:
+      project_folder: ./
+      output_folder: build
+      environment: Production
