@@ -682,6 +682,7 @@
                     class="dataview-row-bg"
                     class:selected={rowSelectionHighlight && row.wjdv.selected}
                     class:row-grid-line={!!(gridLines & GridLines.Row)}
+                    class:contained={!row.wjdv.expanded || !rowExpansion}
                     role="row"
                     aria-selected={row.wjdv.selected ?? false}
                     aria-expanded={rowExpansion ? (row.wjdv.expanded ?? false) : undefined}
@@ -1024,9 +1025,8 @@ const data = defineData<MyData>([
         display: flex;
         flex-direction: column;
 
-        & [role="row"] {
+        .contained {
             content-visibility: auto;
-            contain: layout paint;
         }
 
         &.striped {
