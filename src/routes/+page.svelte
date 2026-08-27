@@ -1,7 +1,7 @@
 <script lang="ts">
     import { goto } from '$app/navigation';
-    import { base } from '$app/paths';
-    import { page } from '$app/stores';
+    import { resolve } from '$app/paths';
+    import { page } from '$app/state';
     import WjDataView, { type WjDvRow } from '$lib/WjDataView/WjDataView.svelte';
     import WjDataViewTheme from '$lib/WjDataViewTheme/WjDataViewTheme.svelte';
     import type { Person } from '../data-models.js';
@@ -53,6 +53,7 @@
         {
             key: 'full_name',
             text: 'Full Name',
+            pinned: true,
             width: 9,
             get: (r) => `${r.gender === 'Female' ? 'Mrs.' : 'Mr.'} ${r.last_name}, ${r.first_name}`,
             alignment: 'start',
@@ -61,7 +62,7 @@
         {
             key: 'email',
             text: 'E-Mail',
-            pinned: true,
+            pinned: false,
             alignment: 'start',
             pinnedFunctions: {},
         },
@@ -79,8 +80,16 @@
             pinnedFunctions: {},
         },
         {
+            key: 'age',
+            text: 'Age',
+            width: 5,
+            alignment: 'end',
+            get: (r) => new Date().getFullYear() - new Date(r.birth_date).getFullYear(),
+            pinnedFunctions: {},
+        },
+        {
             key: 'country_code',
-            text: 'Country Code',
+            text: 'Country',
             alignment: 'start',
             pinnedFunctions: {},
         },
@@ -119,10 +128,10 @@
     $effect(() => reloadData(demoOptions.records));
 
     function reloadData(records: number) {
-        if (($page.url.searchParams.get('records') ?? 200) == records) {
+        if ((page.url.searchParams.get('records') ?? 400) == records) {
             return;
         }
-        const url = new URL($page.url);
+        const url = new URL(page.url);
         url.searchParams.set('records', records.toString());
         goto(url);
     }
@@ -207,12 +216,19 @@ import &#123; WjDataView &#125; from '@wjfe/dataview';</pre>
                 {/snippet}
                 {#snippet headerCell(ctx)}
                     <!-- svelte-ignore binding_property_non_reactive -->
-                    <HeaderCell bind:col={ctx.col} maxWidth="20em" />
+                    <HeaderCell bind:col={ctx.col} maxWidth={20} />
                 {/snippet}
                 {#snippet dataCell(ctx)}
                     <div class="data px-2" class:text-truncate={ctx.col.noTextWrap}>
                         {#if ctx.col.key === 'credit_score' || ctx.col.key === 'net_worth'}
                             <Numeric value={ctx.row[ctx.col.key]} />
+                        {:else if ctx.col.key === 'country_code'}
+                            <img
+                                src="https://flagfeed.com/country/{ctx.row.country_code.toLocaleLowerCase()}"
+                                style:height="1em"
+                                alt={ctx.row.country_code}
+                            />
+                            {ctx.getFn(ctx.row)}
                         {:else}
                             {ctx.getFn(ctx.row)}
                         {/if}
@@ -234,9 +250,10 @@ import &#123; WjDataView &#125; from '@wjfe/dataview';</pre>
                                 maiores quos eum nihil ducimus eligendi eaque.
                             </p>
                             <p>
-                                To see an actual data drill-down scenario, visit the <a href="{base}/sales"
-                                    >sales demo page</a
-                                >.
+                                To see an actual data drill-down scenario, visit the
+                                <a href={resolve('/sales')}>
+                                    sales demo page
+                                </a>.
                             </p>
                         </div>
                     </div>

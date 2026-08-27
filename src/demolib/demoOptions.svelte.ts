@@ -4,7 +4,7 @@ export const demoOptions = $state({
     striped: true,
     rowTracking: true,
     rowSelectionHighlight: true,
-    records: 200,
+    records: 400,
     grid_lines: [] as GridLinesEnum[],
     get gridLines() {
         return this.grid_lines.reduce((p, c) => (p | c) as GridLinesEnum, GridLines.None);

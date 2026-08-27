@@ -81,7 +81,7 @@
                     </a>
                 </div>
                 <div class="col d-none d-lg-block">
-                    WjDataView only works with Svelte v5 - <span class="fw-bold">EXPERIMENTAL</span>
+                    WjDataView only works with Svelte v5
                 </div>
                 <div class="col d-lg-none">
                     Svelve v5 <strong>only!</strong>

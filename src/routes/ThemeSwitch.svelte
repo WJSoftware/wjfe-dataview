@@ -64,6 +64,7 @@
     ];
     let systemPreferenceHandlerCleaner: Function | undefined;
     let currentOption = options.findIndex(o => o === theme);
+    // svelte-ignore state_referenced_locally
     let effectiveTheme = $state<EffectiveThemeOption>(theme === 'system' ? fallbackTheme : theme);
 
     $effect.pre(() => {

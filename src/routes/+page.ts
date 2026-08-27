@@ -4,7 +4,7 @@ import type { Person } from "../data-models.js";
 import { demoOptions } from "../demolib/demoOptions.svelte.js";
 
 export async function load(ev: LoadEvent): Promise<{ total: number; data: Person[] }> {
-    const numRecords = +(ev.url.searchParams.get('records') ?? '200');
+    const numRecords = +(ev.url.searchParams.get('records') ?? '400');
     console.log('Loading page data for records = %d...', numRecords);
     demoOptions.records = numRecords;
     const response = await ev.fetch(`https://my.api.mockaroo.com/people.json?key=a53dac10&records=${numRecords}`);

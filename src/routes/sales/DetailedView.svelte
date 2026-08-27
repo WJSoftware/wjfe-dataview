@@ -18,6 +18,7 @@
 
     let { sourceData, countryCode, city }: Props = $props();
 
+    // svelte-ignore state_referenced_locally
     let data = $state(defineData(sourceData.detail.filter((r) => r.country_code === countryCode && r.city === city)));
     let dvOptions = $state<WjDataViewOptions>({
         gridLines: GridLines.None,

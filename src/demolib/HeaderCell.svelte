@@ -34,11 +34,12 @@
 
     type Props = {
         col: HeaderColumn<TRow, TCol>;
-        maxWidth?: string;
+        maxWidth?: number;
     };
 
-    let { col = $bindable(), maxWidth }: Props = $props();
+    let { col = $bindable(), maxWidth = 15 }: Props = $props();
 
+    col.minWidth ??= 3;
     let id = nextControlId();
     let pinIcon = $derived(`bi-pin-${col.pinned ? 'fill' : 'angle'}`);
     let textWrap = $state(!col.noTextWrap);
@@ -96,7 +97,7 @@
                     list="{id}_{col.key}_minwidth_dl"
                     id="{id}_{col.key}_minwidth"
                     min="3"
-                    max="15"
+                    max={maxWidth}
                     step="0.1"
                     bind:value={col.minWidth}
                 />

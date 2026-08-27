@@ -25,6 +25,7 @@
     }: Props = $props();
 
     let data = $state(defineData(
+        // svelte-ignore state_referenced_locally
         sourceData.byCity.filter(r => r.country_code === countryCode),
         r => `${r.country_code}_${r.city}`
     ));

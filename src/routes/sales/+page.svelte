@@ -26,6 +26,7 @@
     let { data }: Props = $props();
 
     let dvOptions = $state(dataViewOptions());
+    // svelte-ignore state_referenced_locally
     let data1 = $state(defineData(data.byCountry, (m) => m.country_code));
 </script>
 
