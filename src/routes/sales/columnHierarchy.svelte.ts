@@ -3,9 +3,9 @@ import type { GeoSale, GeoSaleByCity, GeoSaleByCountry, GeoSaleColumn } from "..
 import type { HeaderColumn } from "../../demolib/HeaderCell.svelte";
 import { amountFormatterFactory, currencyFormatter, fractionFormatter } from "../../demolib/numberFormatters.js";
 
-const syncrhonizer = new CrossSynchronizer();
+const synchronizer = new CrossSynchronizer();
 
-const masterCols = $state(syncrhonizer.createProperty<HeaderColumn<GeoSaleByCountry, GeoSaleColumn>>([
+const masterCols = $state(synchronizer.createProperty<HeaderColumn<GeoSaleByCountry, GeoSaleColumn>>([
     {
         key: 'country',
         text: 'Country',
@@ -49,7 +49,7 @@ const masterCols = $state(syncrhonizer.createProperty<HeaderColumn<GeoSaleByCoun
     },
 ], ...crossVisualSync, 'pinnedFunctions'));
 
-const byCityCols = $state(syncrhonizer.createProperty<HeaderColumn<GeoSaleByCountry, GeoSaleColumn>>([
+const byCityCols = $state(synchronizer.createProperty<HeaderColumn<GeoSaleByCountry, GeoSaleColumn>>([
     {
         key: 'city',
         text: 'City',
@@ -91,7 +91,7 @@ const byCityCols = $state(syncrhonizer.createProperty<HeaderColumn<GeoSaleByCoun
     },
 ], ...crossVisualSync, 'pinnedFunctions'));
 
-const detailedColumns = $state(syncrhonizer.createProperty<HeaderColumn<GeoSale, GeoSaleColumn>>([
+const detailedColumns = $state(synchronizer.createProperty<HeaderColumn<GeoSale, GeoSaleColumn>>([
     {
         key: 'id',
         text: 'ID',
@@ -184,17 +184,17 @@ const detailedColumns = $state(syncrhonizer.createProperty<HeaderColumn<GeoSale,
     },
 ], ...crossVisualSync, 'pinnedFunctions'));
 
-export const salesColumns = {
+export const salesColumns = $state({
     master: masterCols,
     byCity: byCityCols,
     detailed: detailedColumns,
-};
+});
 
-syncrhonizer.syncColumns(masterCols[1], byCityCols[1]);
-syncrhonizer.syncColumns(masterCols[3], byCityCols[3]);
-syncrhonizer.syncColumns(masterCols[1], detailedColumns[6]);
-syncrhonizer.syncColumns(masterCols[3], detailedColumns[9]);
-syncrhonizer.syncColumns(byCityCols[0], detailedColumns[3]);
+synchronizer.syncColumns(masterCols[1], byCityCols[1]);
+synchronizer.syncColumns(masterCols[3], byCityCols[3]);
+synchronizer.syncColumns(masterCols[1], detailedColumns[6]);
+synchronizer.syncColumns(masterCols[3], detailedColumns[9]);
+synchronizer.syncColumns(byCityCols[0], detailedColumns[3]);
 
 function getCountry(record: { country_code: string; country_name: string; }) {
     return `${record['country_name']} (${record['country_code']})`;
